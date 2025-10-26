@@ -1,16 +1,20 @@
 ﻿namespace SistemasDeGestionCitasPeluqueria.Models;
 
+public enum AppointmentState
+{
+    Pendiente,
+    Confirmada,
+    Cancelada,
+    Completada
+}
+
 public class Appointment
 {
-    public int? Id { get; set; }
-    public int? ClientId { get; set; }
-    public int? BarberId { get; set; }
+    public int Id { get; set; }             // CITA.id
+    public int UserId { get; set; }         // CITA.usuario_id (FK USUARIO)
+    public int BarberId { get; set; }       // CITA.barbero_id (FK BARBERO)
+    public int ServiceId { get; set; }      // CITA.servicio_id (FK SERVICIO)
 
-    // Antes: ServiceId
-    public int? ServiceOfferingId { get; set; }
-
-    public DateTimeOffset? StartAt { get; set; }
-    public DateTimeOffset? EndAt { get; set; }
-    public string? Status { get; set; }   // "Scheduled", "Confirmed", "Completed", "Canceled"
-    public string? Notes { get; set; }
+    public DateTimeOffset ScheduledAt { get; set; }     // CITA.fecha_hora
+    public AppointmentState State { get; set; } = AppointmentState.Pendiente; // CITA.estado
 }

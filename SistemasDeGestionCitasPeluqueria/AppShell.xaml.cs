@@ -6,14 +6,14 @@ namespace SistemasDeGestionCitasPeluqueria
         public AppShell()
         {
             InitializeComponent();
-            InitializeRouting();
+            //InitializeRouting();
         }
 
-        private void InitializeRouting()
-        {
-            //Routing.RegisterRoute("home/person_details", typeof(PersonDetailPage));
-            //Routing.RegisterRoute("home/character_details", typeof(CharacterDetailPage));
-            //Routing.RegisterRoute("home/artist_details", typeof(ArtistDetailPage));
-        }
+        //private void InitializeRouting()
+        //{
+        //    //Routing.RegisterRoute("home/person_details", typeof(PersonDetailPage));
+        //    //Routing.RegisterRoute("home/character_details", typeof(CharacterDetailPage));
+        //    //Routing.RegisterRoute("home/artist_details", typeof(ArtistDetailPage));
+        //}
     }
 }

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Usa OnPlatform como recurso (no dentro de x:String) -->
+    <OnPlatform x:Key="FluentIconFontFamily" x:TypeArguments="x:String">
+        <On Platform="WinUI" Value="Segoe Fluent Icons" />
+        <On Platform="Android" Value="FluentIcons" />
+        <On Platform="iOS" Value="FluentIcons" />
+        <On Platform="MacCatalyst" Value="FluentIcons" />
+    </OnPlatform>
+
+    <!-- Glifos -->
+    <x:String x:Key="IconGlyph.Home">&#xEA8A;</x:String>
+    <x:String x:Key="IconGlyph.Services">&#xE8C6;</x:String>
+    <x:String x:Key="IconGlyph.Products">&#xE719;</x:String>
+    <x:String x:Key="IconGlyph.Reviews">&#xE735;</x:String>
+    <x:String x:Key="IconGlyph.Settings">&#xE713;</x:String>
+    <x:String x:Key="IconGlyph.Profile">&#xE77B;</x:String>
+</ResourceDictionary>

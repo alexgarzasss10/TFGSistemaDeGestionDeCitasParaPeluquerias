@@ -2,10 +2,9 @@
 
 public class User
 {
-    public int? Id { get; set; }
-    public string? Username { get; set; }
-    public string? PasswordHash { get; set; }
-    public string? Role { get; set; } // e.g., "Admin", "Barber", "FrontDesk"
-    public int? BarberId { get; set; } // Linked barber (optional)
-    public DateTimeOffset? LastAccess { get; set; }
+    public int Id { get; set; }                 // USUARIO.id
+    public string Name { get; set; } = string.Empty;    // USUARIO.nombre
+    public string Email { get; set; } = string.Empty;   // USUARIO.email
+    public string Phone { get; set; } = string.Empty;   // USUARIO.telefono
+    public string PasswordHash { get; set; } = string.Empty; // USUARIO.password_hash
 }

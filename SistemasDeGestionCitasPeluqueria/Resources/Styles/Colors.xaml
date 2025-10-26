@@ -42,4 +42,23 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- PALETA SIDEBAR (estilo similar a la captura) -->
+    <Color x:Key="SidebarBg">#22313F</Color>
+    <Color x:Key="SidebarBg2">#1F2A36</Color>
+    <Color x:Key="SidebarAccent">#27C9A6</Color>
+    <Color x:Key="SidebarIconBg">#294556</Color>
+    <Color x:Key="SidebarText">#E7EEF5</Color>
+    <Color x:Key="SidebarMuted">#9FB0BF</Color>
+    <Color x:Key="SidebarItem">#2B3D4D</Color>
+    <Color x:Key="SidebarItemHover">#2C3E50</Color>
+
+    <SolidColorBrush x:Key="SidebarBgBrush" Color="{StaticResource SidebarBg}" />
+    <SolidColorBrush x:Key="SidebarBg2Brush" Color="{StaticResource SidebarBg2}" />
+    <SolidColorBrush x:Key="SidebarAccentBrush" Color="{StaticResource SidebarAccent}" />
+    <SolidColorBrush x:Key="SidebarIconBgBrush" Color="{StaticResource SidebarIconBg}" />
+    <SolidColorBrush x:Key="SidebarTextBrush" Color="{StaticResource SidebarText}" />
+    <SolidColorBrush x:Key="SidebarMutedBrush" Color="{StaticResource SidebarMuted}" />
+    <SolidColorBrush x:Key="SidebarItemBrush" Color="{StaticResource SidebarItem}" />
+    <SolidColorBrush x:Key="SidebarItemHoverBrush" Color="{StaticResource SidebarItemHover}" />
 </ResourceDictionary>
