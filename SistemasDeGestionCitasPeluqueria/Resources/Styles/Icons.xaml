@@ -2,7 +2,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Usa OnPlatform como recurso (no dentro de x:String) -->
+    <!-- Familia de iconos (WinUI usa Segoe Fluent Icons; en Android/iOS necesitas empaquetar una fuente compatible) -->
     <OnPlatform x:Key="FluentIconFontFamily" x:TypeArguments="x:String">
         <On Platform="WinUI" Value="Segoe Fluent Icons" />
         <On Platform="Android" Value="FluentIcons" />
@@ -10,11 +10,30 @@
         <On Platform="MacCatalyst" Value="FluentIcons" />
     </OnPlatform>
 
-    <!-- Glifos -->
+    <!-- Alias para compatibilidad con tu referencia SymbolThemeFontFamily -->
+    <OnPlatform x:Key="SymbolThemeFontFamily" x:TypeArguments="x:String">
+        <On Platform="WinUI" Value="Segoe Fluent Icons" />
+        <On Platform="Android" Value="FluentIcons" />
+        <On Platform="iOS" Value="FluentIcons" />
+        <On Platform="MacCatalyst" Value="FluentIcons" />
+    </OnPlatform>
+
+    <!-- Glifos existentes -->
     <x:String x:Key="IconGlyph.Home">&#xEA8A;</x:String>
     <x:String x:Key="IconGlyph.Services">&#xE8C6;</x:String>
     <x:String x:Key="IconGlyph.Products">&#xE719;</x:String>
     <x:String x:Key="IconGlyph.Reviews">&#xE735;</x:String>
     <x:String x:Key="IconGlyph.Settings">&#xE713;</x:String>
     <x:String x:Key="IconGlyph.Profile">&#xE77B;</x:String>
+
+    <!-- Glifos nuevos según tu lista -->
+    <x:String x:Key="IconGlyph.Phone">&#xE717;</x:String>
+    <x:String x:Key="IconGlyph.Location">&#xE7B7;</x:String>
+    <x:String x:Key="IconGlyph.Calendar">&#xE8BF;</x:String>
+    <x:String x:Key="IconGlyph.Error">&#xEB90;</x:String>
+    <x:String x:Key="IconGlyph.Notification">&#xEDAC;</x:String>
+    <x:String x:Key="IconGlyph.History">&#xF738;</x:String>
+    <x:String x:Key="IconGlyph.Upcoming">&#xECC5;</x:String>
+    <!-- Reloj simple para "Horario" (ajústalo si prefieres otro) -->
+    <x:String x:Key="IconGlyph.Schedule">&#xE121;</x:String>
 </ResourceDictionary>

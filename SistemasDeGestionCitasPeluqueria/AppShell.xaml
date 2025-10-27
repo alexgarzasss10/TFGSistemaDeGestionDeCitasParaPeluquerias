@@ -74,7 +74,7 @@
 
   <!-- Navegación -->
   <FlyoutItem Title="Inicio" Route="home">
-    <ShellContent Title="Inicio" ContentTemplate="{DataTemplate pages:HomePage}" />
+    <ShellContent Title="Inicio" ContentTemplate="{DataTemplate pages:MainPage}" />
   </FlyoutItem>
   <FlyoutItem Title="Servicios" Route="services">
     <ShellContent Title="Servicios" ContentTemplate="{DataTemplate pages:ServicesPage}" />

@@ -3,7 +3,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Tipografías -->
+    <!-- Tipografías Sidebar (existente) -->
     <Style x:Key="SidebarTitleStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource SidebarText}" />
         <Setter Property="FontSize" Value="18" />
@@ -25,14 +25,14 @@
         <Setter Property="FontSize" Value="12" />
     </Style>
 
-    <!-- Ítem del flyout: sin fondo propio (evita doble recuadro) -->
+    <!-- Ítem del flyout -->
     <Style x:Key="FlyoutItemContainerStyle" TargetType="Grid">
         <Setter Property="Padding" Value="16,12"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
 
-    <!-- Icono tipográfico sobrio con Fluent -->
+    <!-- Icono con Fluent -->
     <Style x:Key="IconGlyphStyle" TargetType="Label">
       <Setter Property="FontFamily" Value="{DynamicResource FluentIconFontFamily}" />
       <Setter Property="FontSize" Value="18" />
@@ -41,4 +41,93 @@
       <Setter Property="HorizontalOptions" Value="Center" />
       <Setter Property="VerticalOptions" Value="Center" />
     </Style>
+
+    <!-- Tipografías generales -->
+    <Style x:Key="TitleLargeStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="SectionTitleStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="Margin" Value="0,8,0,4" />
+    </Style>
+
+    <Style x:Key="BodyTextStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="1.2" />
+    </Style>
+
+    <Style x:Key="MutedTextStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Botones -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Accent}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="18,10" />
+    </Style>
+
+    <Style x:Key="OutlineButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource Accent}" />
+        <Setter Property="BorderColor" Value="{DynamicResource Accent}" />
+        <Setter Property="BorderWidth" Value="2" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="16,8" />
+    </Style>
+
+    <!-- Card -->
+    <Style x:Key="CardFrameStyle" TargetType="Frame">
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="14" />
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+        <Setter Property="BorderColor" Value="{DynamicResource CardBorder}" />
+    </Style>
+
+    <!-- Chip / Etiqueta -->
+    <Style x:Key="ChipStyle" TargetType="Border">
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="10,4" />
+    </Style>
+
+    <!-- Icono circular (para pictogramas en tarjetas) -->
+    <Style x:Key="IconCircleStyle" TargetType="Frame">
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource SidebarIconBg}" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="WidthRequest" Value="40" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Label Style="{StaticResource IconGlyphStyle}" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Imagen en card (para galería) -->
+    <Style x:Key="ImageCardStyle" TargetType="Frame">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0,0,12,0" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
 </ResourceDictionary>
