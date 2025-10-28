@@ -1,12 +1,121 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
+             xmlns:models="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ProductsPage"
-             Title="ProductsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             x:DataType="vm:ProductsPageModel"
+             x:Name="Root"
+             Title="Productos"
+             BackgroundColor="{DynamicResource Surface}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Encabezado -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Productos" Style="{StaticResource TitleLargeStyle}" />
+                <Label Text="Productos profesionales disponibles en tienda"
+                       Style="{StaticResource BodyTextStyle}" />
+            </VerticalStackLayout>
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+
+            <!-- Error -->
+            <Border BackgroundColor="#FFF4F4" Stroke="#F5C2C7" Padding="10" IsVisible="True">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding Error}" Value="{x:Null}">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Label Text="{Binding Error}" TextColor="#B42318" />
+            </Border>
+
+            <!-- Chips categorías -->
+            <CollectionView ItemsSource="{Binding Categories}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource ChipStyle}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal" />
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="Background" Value="{DynamicResource Accent}" />
+                                            <Setter Property="Stroke" Value="{DynamicResource Accent}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Label Text="{Binding .}" TextColor="{DynamicResource TextPrimary}" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Rejilla de productos -->
+            <CollectionView ItemsSource="{Binding Products}"
+                            SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="{OnIdiom Phone=1, Tablet=2, Desktop=3}" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.EmptyView>
+                    <Label Text="No hay productos disponibles." Style="{StaticResource MutedTextStyle}" />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:InventoryItem">
+                        <Frame Style="{StaticResource CardFrameStyle}" Margin="6" HasShadow="True">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+
+                                <!-- Imagen -->
+                                <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource ImageCardStyle}">
+                                    <Image Source="{Binding ImageUrl}"
+                                           Aspect="AspectFill"
+                                           HeightRequest="220" />
+                                </Frame>
+
+                                <!-- Etiqueta (marca) -->
+                                <Border Grid.Row="1" Grid.Column="0"
+                                        Style="{StaticResource ChipStyle}" Margin="0,8,0,0">
+                                    <Label Text="{Binding Brand}" />
+                                </Border>
+
+                                <!-- Precio -->
+                                <Label Grid.Row="1" Grid.Column="1"
+                                       Text="{Binding Price, StringFormat='{}{0:C}'}"
+                                       TextColor="{DynamicResource Accent}"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="Center"
+                                       Margin="8,8,0,0"/>
+
+                                <!-- Nombre -->
+                                <Label Grid.Row="2" Grid.ColumnSpan="2"
+                                       Text="{Binding Name}"
+                                       Style="{StaticResource SectionTitleStyle}" />
+
+                                <!-- Descripción + Stock -->
+                                <VerticalStackLayout Grid.Row="3" Grid.ColumnSpan="2" Spacing="6">
+                                    <Label Text="{Binding Description}"
+                                           Style="{StaticResource BodyTextStyle}" />
+                                    <Label Text="{Binding Stock, StringFormat='Stock: {0} unidades'}"
+                                           Style="{StaticResource MutedTextStyle}" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

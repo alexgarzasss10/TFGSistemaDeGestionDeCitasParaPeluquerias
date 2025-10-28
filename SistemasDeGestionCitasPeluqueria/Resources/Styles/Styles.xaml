@@ -34,12 +34,12 @@
 
     <!-- Icono con Fluent -->
     <Style x:Key="IconGlyphStyle" TargetType="Label">
-      <Setter Property="FontFamily" Value="{DynamicResource FluentIconFontFamily}" />
-      <Setter Property="FontSize" Value="18" />
-      <Setter Property="TextColor" Value="{DynamicResource SidebarText}" />
-      <Setter Property="Opacity" Value="0.92" />
-      <Setter Property="HorizontalOptions" Value="Center" />
-      <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="FontFamily" Value="{DynamicResource FluentIconFontFamily}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="{DynamicResource SidebarText}" />
+        <Setter Property="Opacity" Value="0.92" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
     <!-- Tipografías generales -->

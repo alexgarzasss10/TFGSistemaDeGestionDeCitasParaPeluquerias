@@ -1,12 +1,124 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
+             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
+             xmlns:models="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ReviewsPage"
-             Title="ReviewsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             x:DataType="vm:ReviewsPageModel"
+             x:Name="Root"
+             Title="Reseñas"
+             BackgroundColor="{DynamicResource Surface}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:RatingToStarsConverter x:Key="StarsConverter" />
+            <conv:TimeAgoConverter x:Key="TimeAgoConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <!-- Cabecera + botón -->
+            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Reseñas" Style="{StaticResource TitleLargeStyle}" />
+                    <Label Text="Lo que dicen nuestros clientes" Style="{StaticResource BodyTextStyle}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1"
+                        Text="＋ Añadir reseña"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Clicked="OnAddReviewClicked" />
+            </Grid>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+
+            <!-- Error -->
+            <Border BackgroundColor="#FFF4F4" Stroke="#F5C2C7" Padding="10" IsVisible="True">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding Error}" Value="{x:Null}">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Label Text="{Binding Error}" TextColor="#B42318" />
+            </Border>
+
+            <!-- Tarjeta de estadísticas -->
+            <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True">
+                <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto" ColumnSpacing="16">
+                    <VerticalStackLayout Grid.RowSpan="2" Spacing="4" VerticalOptions="Center">
+                        <Label Text="{Binding AverageRating, StringFormat='{}{0:F1}'}"
+                               FontSize="44" FontAttributes="Bold"
+                               TextColor="{DynamicResource TextPrimary}" />
+                        <Label Text="{Binding AverageRating, Converter={StaticResource StarsConverter}}"
+                               FontSize="20" TextColor="{DynamicResource Accent}" />
+                        <Label Text="{Binding TotalReviews, StringFormat='{}{0} reseñas'}"
+                               Style="{StaticResource MutedTextStyle}" />
+                    </VerticalStackLayout>
+
+                    <!-- Barras 5..1 -->
+                    <Grid Grid.Column="1" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="20,*,Auto" RowSpacing="6">
+                        <!-- 5 -->
+                        <Label Grid.Row="0" Text="5" VerticalOptions="Center" />
+                        <ProgressBar Grid.Row="0" Grid.Column="1"
+                                     Progress="{Binding Count5, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
+                        <Label Grid.Row="0" Grid.Column="2" Text="{Binding Count5}" />
+                        <!-- 4 -->
+                        <Label Grid.Row="1" Text="4" VerticalOptions="Center" />
+                        <ProgressBar Grid.Row="1" Grid.Column="1"
+                                     Progress="{Binding Count4, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
+                        <Label Grid.Row="1" Grid.Column="2" Text="{Binding Count4}" />
+                        <!-- 3 -->
+                        <Label Grid.Row="2" Text="3" VerticalOptions="Center" />
+                        <ProgressBar Grid.Row="2" Grid.Column="1"
+                                     Progress="{Binding Count3, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
+                        <Label Grid.Row="2" Grid.Column="2" Text="{Binding Count3}" />
+                        <!-- 2 -->
+                        <Label Grid.Row="3" Text="2" VerticalOptions="Center" />
+                        <ProgressBar Grid.Row="3" Grid.Column="1"
+                                     Progress="{Binding Count2, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
+                        <Label Grid.Row="3" Grid.Column="2" Text="{Binding Count2}" />
+                        <!-- 1 -->
+                        <Label Grid.Row="4" Text="1" VerticalOptions="Center" />
+                        <ProgressBar Grid.Row="4" Grid.Column="1"
+                                     Progress="{Binding Count1, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
+                        <Label Grid.Row="4" Grid.Column="2" Text="{Binding Count1}" />
+                    </Grid>
+                </Grid>
+            </Frame>
+
+            <!-- Lista de reseñas -->
+            <CollectionView ItemsSource="{Binding Reviews}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ServiceReview">
+                        <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True" Margin="0,6">
+                            <Grid ColumnDefinitions="48,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12">
+                                <!-- Avatar simple -->
+                                <Frame Grid.RowSpan="2" HeightRequest="40" WidthRequest="40" CornerRadius="20"
+                                       BackgroundColor="{DynamicResource SidebarIconBg}" HasShadow="False" Padding="0" VerticalOptions="Start">
+                                    <Label Text="U" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Frame>
+
+                                <Label Grid.Column="1" Text="Usuario"
+                                       TextColor="{DynamicResource TextPrimary}" FontAttributes="Bold" />
+                                <Label Grid.Column="2" Text="{Binding Date, Converter={StaticResource TimeAgoConverter}}"
+                                       Style="{StaticResource MutedTextStyle}" HorizontalTextAlignment="End" />
+
+                                <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                       Text="{Binding Rating, Converter={StaticResource StarsConverter}}"
+                                       TextColor="{DynamicResource Accent}" />
+
+                                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                                       Text="{Binding Comment}" Style="{StaticResource BodyTextStyle}"
+                                       Margin="0,6,0,0"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

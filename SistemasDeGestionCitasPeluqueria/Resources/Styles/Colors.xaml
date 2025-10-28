@@ -63,7 +63,8 @@
     <SolidColorBrush x:Key="SidebarItemHoverBrush" Color="{StaticResource SidebarItemHover}" />
 
     <!-- NUEVO: paleta de la UI general -->
-    <Color x:Key="Accent">#27C9A6</Color> <!-- alineado con SidebarAccent -->
+    <Color x:Key="Accent">#27C9A6</Color>
+    <!-- alineado con SidebarAccent -->
     <Color x:Key="Surface">#F3F4F6</Color>
     <Color x:Key="SurfaceAlt">#F9FAFB</Color>
     <Color x:Key="CardBackground">#FFFFFF</Color>

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using SistemasDeGestionCitasPeluqueria.PageModels;
 using SistemasDeGestionCitasPeluqueria.Services;
 using SistemasDeGestionCitasPeluqueria.Services.Fake;
+using SistemasDeGestionCitasPeluqueria.PageModels;
+using SistemasDeGestionCitasPeluqueria.Pages;
 
 namespace SistemasDeGestionCitasPeluqueria;
 
@@ -18,18 +19,31 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // DI: Servicios fake (sustituibles por implementación HTTP más adelante)
+        // Servicios fake
         builder.Services.AddSingleton<IServiceOfferingService, FakeServiceOfferingService>();
         builder.Services.AddSingleton<IBarberService, FakeBarberService>();
         builder.Services.AddSingleton<IInventoryService, FakeInventoryService>();
+        builder.Services.AddSingleton<IReviewService, FakeReviewService>();
 
-        // ViewModels
+        // VM y páginas
         builder.Services.AddSingleton<MainPageModel>();
+        builder.Services.AddSingleton<MainPage>();
+        builder.Services.AddTransient<BookingPage>();
+
+        builder.Services.AddSingleton<ServicesPageModel>();
+        builder.Services.AddSingleton<ServicesPage>();
+
+        builder.Services.AddSingleton<ProductsPageModel>();
+        builder.Services.AddSingleton<ProductsPage>();
+
+
+
+        builder.Services.AddSingleton<ReviewsPageModel>();
+        builder.Services.AddSingleton<ReviewsPage>();
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
-
         return builder.Build();
     }
 }
