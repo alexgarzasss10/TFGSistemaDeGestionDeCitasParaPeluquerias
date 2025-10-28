@@ -121,7 +121,7 @@
         </Setter>
     </Style>
 
-    <!-- Imagen en card (para galería) -->
+    <!-- Imagen en card para galería -->
     <Style x:Key="ImageCardStyle" TargetType="Frame">
         <Setter Property="Padding" Value="0" />
         <Setter Property="Margin" Value="0,0,12,0" />
