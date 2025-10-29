@@ -3,7 +3,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Tipografías Sidebar (existente) -->
+    <!-- Sidebar -->
     <Style x:Key="SidebarTitleStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource SidebarText}" />
         <Setter Property="FontSize" Value="18" />
@@ -32,7 +32,7 @@
         <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
 
-    <!-- Icono con Fluent -->
+    <!-- Iconos de fuente -->
     <Style x:Key="IconGlyphStyle" TargetType="Label">
         <Setter Property="FontFamily" Value="{DynamicResource FluentIconFontFamily}" />
         <Setter Property="FontSize" Value="18" />
@@ -42,7 +42,7 @@
         <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
-    <!-- Tipografías generales -->
+    <!-- Tipografía general -->
     <Style x:Key="TitleLargeStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
         <Setter Property="FontSize" Value="24" />
@@ -70,10 +70,13 @@
     <!-- Botones -->
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{DynamicResource Accent}" />
-        <Setter Property="TextColor" Value="White" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Padding" Value="18,10" />
     </Style>
+
+    <!-- Alias para coincidir con la página -->
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}" />
 
     <Style x:Key="OutlineButtonStyle" TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent" />
@@ -93,6 +96,30 @@
         <Setter Property="BorderColor" Value="{DynamicResource CardBorder}" />
     </Style>
 
+    <!-- Chip pequeño para horas (modo no seleccionado) -->
+    <Style x:Key="TimeSlotPillStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="HeightRequest" Value="36" />
+        <Setter Property="MinimumWidthRequest" Value="72" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="14" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Botón principal más contenido (compacto) -->
+    <Style x:Key="PrimaryButtonSmall" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="14,10" />
+    </Style>
+
     <!-- Chip / Etiqueta -->
     <Style x:Key="ChipStyle" TargetType="Border">
         <Setter Property="StrokeShape">
@@ -106,7 +133,7 @@
         <Setter Property="Padding" Value="10,4" />
     </Style>
 
-    <!-- Icono circular (para pictogramas en tarjetas) -->
+    <!-- Icono circular (card) -->
     <Style x:Key="IconCircleStyle" TargetType="Frame">
         <Setter Property="Padding" Value="8" />
         <Setter Property="CornerRadius" Value="24" />
@@ -121,7 +148,6 @@
         </Setter>
     </Style>
 
-    <!-- Imagen en card (para galería) -->
     <Style x:Key="ImageCardStyle" TargetType="Frame">
         <Setter Property="Padding" Value="0" />
         <Setter Property="Margin" Value="0,0,12,0" />

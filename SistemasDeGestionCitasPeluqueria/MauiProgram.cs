@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using SistemasDeGestionCitasPeluqueria.Services;
-using SistemasDeGestionCitasPeluqueria.Services.Fake;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using SistemasDeGestionCitasPeluqueria.PageModels;
 using SistemasDeGestionCitasPeluqueria.Pages;
+using SistemasDeGestionCitasPeluqueria.Services;
+using SistemasDeGestionCitasPeluqueria.Services.Fake;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace SistemasDeGestionCitasPeluqueria;
 
@@ -11,8 +13,11 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+
+        builder.ConfigureSyncfusionCore();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -30,12 +35,15 @@ public static class MauiProgram
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddTransient<BookingPage>();
 
+
         builder.Services.AddSingleton<ServicesPageModel>();
         builder.Services.AddSingleton<ServicesPage>();
 
         builder.Services.AddSingleton<ProductsPageModel>();
         builder.Services.AddSingleton<ProductsPage>();
 
+        builder.Services.AddTransient<BookingPageModel>();
+        builder.Services.AddTransient<BookingPage>();
 
 
         builder.Services.AddSingleton<ReviewsPageModel>();

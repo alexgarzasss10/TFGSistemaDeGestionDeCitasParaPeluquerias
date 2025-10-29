@@ -1,14 +1,130 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
+             xmlns:models="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
+             xmlns:calendar="clr-namespace:Syncfusion.Maui.Calendar;assembly=Syncfusion.Maui.Calendar"
+             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.BookingPage"
-             Title="Reserva">
-    <VerticalStackLayout Padding="16" Spacing="12">
-        <Label Text="Reserva de servicio" FontSize="22" FontAttributes="Bold" />
-        <Label Text="{Binding ServiceName}" />
-        <Label Text="{Binding Price, StringFormat='Precio: {0:C}'}" />
-        <Label Text="{Binding DurationMinutes, StringFormat='Duración: {0} min'}" />
-        <Label Text="(Aquí irá el flujo de selección de barbero, fecha y confirmación)" 
-               TextColor="Gray" FontSize="12"/>
-    </VerticalStackLayout>
+             x:Name="BookingRoot"
+             Title="Reserva"
+             BackgroundColor="{DynamicResource Surface}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="CardSection" TargetType="Frame" BasedOn="{StaticResource CardFrameStyle}">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="Margin" Value="0,0,0,12" />
+            </Style>
+            <conv:AreEqualConverter x:Key="AreEqual" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Padding="16" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*">
+        <VerticalStackLayout Grid.Row="0" Spacing="4">
+            <Label Text="Reserva de servicio" Style="{StaticResource TitleLargeStyle}" />
+            <HorizontalStackLayout Spacing="16">
+                <Label Text="{Binding ServiceName}" Style="{StaticResource SectionTitleStyle}" />
+                <Label Text="{Binding Price, StringFormat='{}{0:C}'}" Style="{StaticResource BodyTextStyle}" />
+                <Label Text="{Binding DurationMinutes, StringFormat='Duración: {0} min'}" Style="{StaticResource MutedTextStyle}" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1" ColumnDefinitions="2*,*" ColumnSpacing="16" RowDefinitions="Auto,*" RowSpacing="16">
+
+            <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource CardSection}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Selecciona fecha" Style="{StaticResource SectionTitleStyle}" />
+                    <calendar:SfCalendar x:Name="Calendar"
+                               View="Month"
+                               SelectionMode="Single"
+                               SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                               HeightRequest="280" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource CardSection}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Selecciona barbero" Style="{StaticResource SectionTitleStyle}" />
+                    <CollectionView ItemsSource="{Binding Barbers}"
+                          SelectionMode="Single"
+                          SelectedItem="{Binding SelectedBarber}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Barber">
+                                <Grid ColumnDefinitions="Auto,*" Padding="8">
+                                    <Image Source="{Binding PhotoUrl}" HeightRequest="40" WidthRequest="40" Aspect="AspectFill">
+                                        <Image.Clip>
+                                            <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20" />
+                                        </Image.Clip>
+                                    </Image>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" Margin="8,0,0,0">
+                                        <Label Text="{Binding Name}" Style="{StaticResource BodyTextStyle}" />
+                                        <Label Text="{Binding Specialty}" Style="{StaticResource MutedTextStyle}" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource CardSection}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Selecciona hora" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="Elige un barbero y una fecha para ver los horarios disponibles."
+                 Style="{StaticResource MutedTextStyle}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding AvailableSlots.Count}" Value="0">
+                                <Setter Property="IsVisible" Value="True" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+
+                    <CollectionView ItemsSource="{Binding AvailableSlots}"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedSlot}"
+                        ItemsLayout="HorizontalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource TimeSlotPillStyle}">
+                                    <Label x:Name="TimeText"
+                                       Text="{Binding ., StringFormat='{}{0:hh\\:mm}'}"
+                                       Style="{StaticResource BodyTextStyle}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                                    <Border.Triggers>
+                                        <!-- Si este item == SelectedSlot => pinta en verde de acento -->
+                                        <DataTrigger TargetType="Border" Value="True">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource AreEqual}">
+                                                    <!-- Item actual -->
+                                                    <Binding Path="." />
+                                                    <!-- SelectedSlot del VM via x:Reference a la página -->
+                                                    <Binding Path="BindingContext.SelectedSlot"
+                                                             Source="{x:Reference BookingRoot}" />
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                                            <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
+                                            <Setter TargetName="TimeText" Property="Label.TextColor" Value="{StaticResource White}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        <CollectionView.Triggers>
+                            <DataTrigger TargetType="CollectionView" Binding="{Binding AvailableSlots.Count}" Value="0">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </CollectionView.Triggers>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+
+        <Button Grid.Row="2"
+            Text="Confirmar Reserva"
+            Style="{StaticResource PrimaryButtonSmall}"
+            Command="{Binding ConfirmCommand}" />
+    </Grid>
 </ContentPage>

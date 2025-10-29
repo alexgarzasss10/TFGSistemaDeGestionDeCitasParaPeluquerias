@@ -1,19 +1,28 @@
+using SistemasDeGestionCitasPeluqueria.PageModels;
+
 namespace SistemasDeGestionCitasPeluqueria.Pages;
 
-[QueryProperty(nameof(ServiceId), "ServiceId")]
-[QueryProperty(nameof(ServiceName), "ServiceName")]
-[QueryProperty(nameof(Price), "Price")]
-[QueryProperty(nameof(DurationMinutes), "DurationMinutes")]
-public partial class BookingPage : ContentPage
+public partial class BookingPage : ContentPage, IQueryAttributable
 {
-    public int ServiceId { get; set; }
-    public string ServiceName { get; set; } = string.Empty;
-    public decimal Price { get; set; }
-    public int DurationMinutes { get; set; }
+    private readonly BookingPageModel _vm;
 
-    public BookingPage()
+    public BookingPage(BookingPageModel vm)
     {
         InitializeComponent();
-        BindingContext = this;
+        BindingContext = _vm = vm;
+    }
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("ServiceId", out var id)) _vm.ServiceId = (int)id;
+        if (query.TryGetValue("ServiceName", out var name)) _vm.ServiceName = (string)name;
+        if (query.TryGetValue("Price", out var price)) _vm.Price = (decimal)price;
+        if (query.TryGetValue("DurationMinutes", out var dur)) _vm.DurationMinutes = (int)dur;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _vm.LoadAsync();
     }
 }
