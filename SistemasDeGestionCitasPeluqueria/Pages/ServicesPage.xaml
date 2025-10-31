@@ -25,23 +25,6 @@
 
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
 
-            <Border BackgroundColor="{StaticResource ErrorAlertBg}"
-                    Stroke="{StaticResource ErrorAlertBorder}"
-                    Padding="10"
-                    IsVisible="True">
-                <Border.Triggers>
-                    <DataTrigger TargetType="Border" Binding="{Binding Error}" Value="{x:Null}">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </Border.Triggers>
-                <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
-                           Text="{StaticResource IconGlyph.Error}"
-                           TextColor="{StaticResource ErrorAlertText}" />
-                    <Label Text="{Binding Error}" TextColor="{StaticResource ErrorAlertText}" />
-                </HorizontalStackLayout>
-            </Border>
-
             <!-- Rejilla de tarjetas -->
             <CollectionView ItemsSource="{Binding Services}"
                             SelectionMode="None">

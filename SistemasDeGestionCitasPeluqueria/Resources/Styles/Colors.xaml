@@ -85,6 +85,14 @@
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackground}"/>
     <SolidColorBrush x:Key="CardBorderBrush" Color="{StaticResource CardBorder}"/>
 
+    <!-- Brushes para ítems seleccionables (barberos) -->
+    <SolidColorBrush x:Key="BarberItemBackgroundBrush" Color="{StaticResource CardBackground}"/>
+    <SolidColorBrush x:Key="BarberItemStrokeBrush" Color="{StaticResource CardBorder}"/>
+    <SolidColorBrush x:Key="BarberItemHoverBackgroundBrush" Color="{StaticResource Gray100}"/>
+    <SolidColorBrush x:Key="BarberItemHoverStrokeBrush" Color="{StaticResource Gray300}"/>
+    <SolidColorBrush x:Key="BarberItemSelectedBackgroundBrush" Color="{StaticResource Gray200}"/>
+    <SolidColorBrush x:Key="BarberItemSelectedStrokeBrush" Color="{StaticResource Gray300}"/>
+
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimary}"/>
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondary}"/>
 
@@ -92,6 +100,11 @@
     <SolidColorBrush x:Key="WarningBrush" Color="#F59E0B"/>
     <SolidColorBrush x:Key="ErrorBrush" Color="#EF4444"/>
     <SolidColorBrush x:Key="InfoBrush" Color="#3B82F6"/>
+
+    <!-- Brushes para estado hover/pressed del accent (horas) -->
+    <Color x:Key="AccentHover">#1A27C9A6</Color> <!-- ~10% opacidad sobre el accent -->
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="{StaticResource AccentHover}"/>
+    <SolidColorBrush x:Key="AccentStrokeHoverBrush" Color="{StaticResource AccentHover}"/>
 
     <!-- NUEVO: colores del gradiente del héroe (referenciados, no hex inline) -->
     <Color x:Key="HeroOverlayTop">#00000000</Color>

@@ -5,6 +5,7 @@ using SistemasDeGestionCitasPeluqueria.Pages;
 using SistemasDeGestionCitasPeluqueria.Services;
 using SistemasDeGestionCitasPeluqueria.Services.Fake;
 using Syncfusion.Maui.Core.Hosting;
+using Syncfusion.Licensing;
 
 namespace SistemasDeGestionCitasPeluqueria;
 
@@ -12,6 +13,9 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        // Registrar la licencia de Syncfusion (evita el diálogo de evaluación)
+        SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF5cXGRCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH9dcXRSQmhdUUB1WEJWYEg=");
+
         var builder = MauiApp.CreateBuilder();
 
         builder.ConfigureSyncfusionCore();
@@ -34,7 +38,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<MainPageModel>();
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddTransient<BookingPage>();
-
+        
 
         builder.Services.AddSingleton<ServicesPageModel>();
         builder.Services.AddSingleton<ServicesPage>();
@@ -44,7 +48,7 @@ public static class MauiProgram
 
         builder.Services.AddTransient<BookingPageModel>();
         builder.Services.AddTransient<BookingPage>();
-
+        
 
         builder.Services.AddSingleton<ReviewsPageModel>();
         builder.Services.AddSingleton<ReviewsPage>();

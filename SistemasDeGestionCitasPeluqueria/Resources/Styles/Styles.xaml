@@ -106,9 +106,33 @@
         <Setter Property="MinimumWidthRequest" Value="72" />
         <Setter Property="HorizontalOptions" Value="Start" />
         <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Margin" Value="8,0,0,0" />
         <Setter Property="StrokeShape">
             <Setter.Value>
                 <RoundRectangle CornerRadius="14" />
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource AccentStrokeHoverBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled" />
+                    </VisualStateGroup>
+                </VisualStateGroupList>
             </Setter.Value>
         </Setter>
     </Style>
@@ -154,6 +178,43 @@
         <Setter Property="CornerRadius" Value="12" />
         <Setter Property="HasShadow" Value="False" />
         <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
+    <!-- Estilo reutilizable para ítems seleccionables (barberos) -->
+    <Style x:Key="SelectableListItemBorder" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource BarberItemBackgroundBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource BarberItemStrokeBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Margin" Value="0,4" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10" />
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource BarberItemHoverBackgroundBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource BarberItemHoverStrokeBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource BarberItemHoverBackgroundBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource BarberItemHoverStrokeBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled" />
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>
