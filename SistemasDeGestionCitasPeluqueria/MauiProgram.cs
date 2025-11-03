@@ -28,6 +28,10 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+        // Clientes HTTP hacia FastAPI (puerto/host según plataforma)
+        builder.Services.AddBackendClients(ServiceRegistration.GetDevBaseAddress(), replaceFakes: true);
+
+
         // Servicios fake
         builder.Services.AddSingleton<IServiceOfferingService, FakeServiceOfferingService>();
         builder.Services.AddSingleton<IBarberService, FakeBarberService>();
