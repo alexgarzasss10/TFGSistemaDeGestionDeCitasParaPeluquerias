@@ -34,16 +34,6 @@
 
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
 
-            <!-- Error -->
-            <Border BackgroundColor="#FFF4F4" Stroke="#F5C2C7" Padding="10" IsVisible="True">
-                <Border.Triggers>
-                    <DataTrigger TargetType="Border" Binding="{Binding Error}" Value="{x:Null}">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </Border.Triggers>
-                <Label Text="{Binding Error}" TextColor="#B42318" />
-            </Border>
-
             <!-- Tarjeta de estadísticas -->
             <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True">
                 <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto" ColumnSpacing="16">

@@ -242,21 +242,22 @@
                                Style="{StaticResource BodyTextStyle}" />
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout Grid.Column="1" Spacing="10">
-                        <HorizontalStackLayout Spacing="8">
-                            <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Notification}" />
+                    <!-- Lista con viñetas de acento -->
+                    <VerticalStackLayout Grid.Column="1" Spacing="14">
+                        <HorizontalStackLayout Spacing="10">
+                            <Border Style="{StaticResource AccentDotStyle}" />
                             <Label Text="Profesionales certificados" Style="{StaticResource BodyTextStyle}" />
                         </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Products}" />
+                        <HorizontalStackLayout Spacing="10">
+                            <Border Style="{StaticResource AccentDotStyle}" />
                             <Label Text="Productos premium" Style="{StaticResource BodyTextStyle}" />
                         </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Home}" />
+                        <HorizontalStackLayout Spacing="10">
+                            <Border Style="{StaticResource AccentDotStyle}" />
                             <Label Text="Ambiente moderno y limpio" Style="{StaticResource BodyTextStyle}" />
                         </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="8">
-                            <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Profile}" />
+                        <HorizontalStackLayout Spacing="10">
+                            <Border Style="{StaticResource AccentDotStyle}" />
                             <Label Text="Atención personalizada" Style="{StaticResource BodyTextStyle}" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>

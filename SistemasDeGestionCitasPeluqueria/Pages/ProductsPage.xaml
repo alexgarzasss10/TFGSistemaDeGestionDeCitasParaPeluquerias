@@ -21,16 +21,6 @@
 
             <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
 
-            <!-- Error -->
-            <Border BackgroundColor="#FFF4F4" Stroke="#F5C2C7" Padding="10" IsVisible="True">
-                <Border.Triggers>
-                    <DataTrigger TargetType="Border" Binding="{Binding Error}" Value="{x:Null}">
-                        <Setter Property="IsVisible" Value="False" />
-                    </DataTrigger>
-                </Border.Triggers>
-                <Label Text="{Binding Error}" TextColor="#B42318" />
-            </Border>
-
             <!-- Chips categorías -->
             <CollectionView ItemsSource="{Binding Categories}"
                             SelectionMode="Single"
@@ -39,19 +29,9 @@
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Style="{StaticResource ChipStyle}">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup Name="CommonStates">
-                                    <VisualState Name="Normal" />
-                                    <VisualState Name="Selected">
-                                        <VisualState.Setters>
-                                            <Setter Property="Background" Value="{DynamicResource Accent}" />
-                                            <Setter Property="Stroke" Value="{DynamicResource Accent}" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
+                    <DataTemplate x:DataType="x:String">
+                        <!-- Usa el estilo centralizado; sin códigos de color en la página -->
+                        <Border Style="{StaticResource CategoryChipStyle}">
                             <Label Text="{Binding .}" TextColor="{DynamicResource TextPrimary}" />
                         </Border>
                     </DataTemplate>

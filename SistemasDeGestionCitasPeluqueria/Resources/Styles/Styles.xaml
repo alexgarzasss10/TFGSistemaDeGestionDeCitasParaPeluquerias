@@ -144,7 +144,7 @@
         <Setter Property="Padding" Value="14,10" />
     </Style>
 
-    <!-- Chip / Etiqueta -->
+    <!-- Chip / Etiqueta base -->
     <Style x:Key="ChipStyle" TargetType="Border">
         <Setter Property="StrokeShape">
             <Setter.Value>
@@ -155,6 +155,38 @@
         <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
         <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="Padding" Value="10,4" />
+    </Style>
+
+    <!-- Chip categorías (hover/pressed/selected desde recursos) -->
+    <Style x:Key="CategoryChipStyle" TargetType="Border" BasedOn="{StaticResource ChipStyle}">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource AccentStrokeHoverBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled" />
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Icono circular (card) -->
@@ -213,6 +245,21 @@
                         <VisualState x:Name="Disabled" />
                     </VisualStateGroup>
                 </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Viñeta/acento para listas -->
+    <Style x:Key="AccentDotStyle" TargetType="Border">
+        <Setter Property="HeightRequest" Value="8" />
+        <Setter Property="WidthRequest" Value="8" />
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="4" />
             </Setter.Value>
         </Setter>
     </Style>
