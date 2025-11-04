@@ -14,6 +14,8 @@
         <ResourceDictionary>
             <conv:RatingToStarsConverter x:Key="StarsConverter" />
             <conv:TimeAgoConverter x:Key="TimeAgoConverter" />
+            <!-- FALTABA ESTE RECURSO -->
+            <conv:RatingToProgressConverter x:Key="ProgressConv" />
         </ResourceDictionary>
     </ContentPage.Resources>
 

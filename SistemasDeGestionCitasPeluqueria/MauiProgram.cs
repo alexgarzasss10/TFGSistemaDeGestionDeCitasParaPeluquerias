@@ -13,7 +13,6 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-        // Registrar la licencia de Syncfusion (evita el diálogo de evaluación)
         SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF5cXGRCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH9dcXRSQmhdUUB1WEJWYEg=");
 
         var builder = MauiApp.CreateBuilder();
@@ -28,31 +27,36 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // Clientes HTTP hacia FastAPI (puerto/host según plataforma)
-        builder.Services.AddBackendClients(ServiceRegistration.GetDevBaseAddress(), replaceFakes: true);
+        // Cambia este flag según necesites backend real o datos fake
+        var useFakes = false;
 
-
-        // Servicios fake
-        builder.Services.AddSingleton<IServiceOfferingService, FakeServiceOfferingService>();
-        builder.Services.AddSingleton<IBarberService, FakeBarberService>();
-        builder.Services.AddSingleton<IInventoryService, FakeInventoryService>();
-        builder.Services.AddSingleton<IReviewService, FakeReviewService>();
+        if (!useFakes)
+        {
+            // Clientes HTTP hacia FastAPI (puerto/host según plataforma)
+            builder.Services.AddBackendClients(ServiceRegistration.GetDevBaseAddress(), replaceFakes: true);
+        }
+        else
+        {
+            // Servicios fake
+            builder.Services.AddSingleton<IServiceOfferingService, FakeServiceOfferingService>();
+            builder.Services.AddSingleton<IBarberService, FakeBarberService>();
+            builder.Services.AddSingleton<IInventoryService, FakeInventoryService>();
+            builder.Services.AddSingleton<IReviewService, FakeReviewService>();
+        }
 
         // VM y páginas
         builder.Services.AddSingleton<MainPageModel>();
         builder.Services.AddSingleton<MainPage>();
-        builder.Services.AddTransient<BookingPage>();
-        
 
         builder.Services.AddSingleton<ServicesPageModel>();
         builder.Services.AddSingleton<ServicesPage>();
 
-        builder.Services.AddSingleton<ProductsPageModel>();
-        builder.Services.AddSingleton<ProductsPage>();
+        // Products page + VM: transient to avoid shared state/cancellation between navigations
+        builder.Services.AddTransient<ProductsPageModel>();
+        builder.Services.AddTransient<ProductsPage>();
 
         builder.Services.AddTransient<BookingPageModel>();
         builder.Services.AddTransient<BookingPage>();
-        
 
         builder.Services.AddSingleton<ReviewsPageModel>();
         builder.Services.AddSingleton<ReviewsPage>();

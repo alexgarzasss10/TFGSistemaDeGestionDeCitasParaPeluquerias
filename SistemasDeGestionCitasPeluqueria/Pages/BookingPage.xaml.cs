@@ -1,10 +1,12 @@
 using SistemasDeGestionCitasPeluqueria.PageModels;
+using System.Threading;
 
 namespace SistemasDeGestionCitasPeluqueria.Pages;
 
 public partial class BookingPage : ContentPage, IQueryAttributable
 {
     private readonly BookingPageModel _vm;
+    private CancellationTokenSource? _cts;
 
     public BookingPage(BookingPageModel vm)
     {
@@ -23,6 +25,23 @@ public partial class BookingPage : ContentPage, IQueryAttributable
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _vm.LoadAsync();
+
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = new CancellationTokenSource();
+
+        try
+        {
+            await _vm.LoadAsync(_cts.Token);
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    protected override void OnDisappearing()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
+        base.OnDisappearing();
     }
 }

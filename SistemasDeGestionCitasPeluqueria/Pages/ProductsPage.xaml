@@ -9,93 +9,97 @@
              Title="Productos"
              BackgroundColor="{DynamicResource Surface}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="16">
+    <!-- Un único CollectionView con Header. Sin ScrollView exterior -->
+    <CollectionView ItemsSource="{Binding Products}"
+                    SelectionMode="None"
+                    ItemSizingStrategy="MeasureFirstItem">
+        <CollectionView.Header>
+            <VerticalStackLayout Padding="16" Spacing="16">
+                <!-- Encabezado -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Productos" Style="{StaticResource TitleLargeStyle}" />
+                    <Label Text="Productos profesionales disponibles en tienda"
+                           Style="{StaticResource BodyTextStyle}" />
+                </VerticalStackLayout>
 
-            <!-- Encabezado -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Productos" Style="{StaticResource TitleLargeStyle}" />
-                <Label Text="Productos profesionales disponibles en tienda"
-                       Style="{StaticResource BodyTextStyle}" />
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+
+                <!-- Chips categorías -->
+                <CollectionView ItemsSource="{Binding Categories}"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border Style="{StaticResource CategoryChipStyle}">
+                                <Label Text="{Binding .}" TextColor="{DynamicResource TextPrimary}" />
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
             </VerticalStackLayout>
+        </CollectionView.Header>
 
-            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+        <CollectionView.EmptyView>
+            <Label Text="No hay productos disponibles." Style="{StaticResource MutedTextStyle}" />
+        </CollectionView.EmptyView>
 
-            <!-- Chips categorías -->
-            <CollectionView ItemsSource="{Binding Categories}"
-                            SelectionMode="Single"
-                            SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <!-- Usa el estilo centralizado; sin códigos de color en la página -->
-                        <Border Style="{StaticResource CategoryChipStyle}">
-                            <Label Text="{Binding .}" TextColor="{DynamicResource TextPrimary}" />
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical"
+                             Span="{OnIdiom Phone=1, Tablet=2, Desktop=3}" />
+        </CollectionView.ItemsLayout>
 
-            <!-- Rejilla de productos -->
-            <CollectionView ItemsSource="{Binding Products}"
-                            SelectionMode="None">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"
-                                     Span="{OnIdiom Phone=1, Tablet=2, Desktop=3}" />
-                </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="models:InventoryItem">
+                <Frame Style="{StaticResource CardFrameStyle}" Margin="6" HasShadow="True">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
 
-                <CollectionView.EmptyView>
-                    <Label Text="No hay productos disponibles." Style="{StaticResource MutedTextStyle}" />
-                </CollectionView.EmptyView>
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:InventoryItem">
-                        <Frame Style="{StaticResource CardFrameStyle}" Margin="6" HasShadow="True">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
-
-                                <!-- Imagen -->
-                                <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource ImageCardStyle}">
-                                    <Image Source="{Binding ImageUrl}"
-                                           Aspect="AspectFill"
-                                           HeightRequest="220" />
-                                </Frame>
-
-                                <!-- Etiqueta (marca) -->
-                                <Border Grid.Row="1" Grid.Column="0"
-                                        Style="{StaticResource ChipStyle}" Margin="0,8,0,0">
-                                    <Label Text="{Binding Brand}" />
-                                </Border>
-
-                                <!-- Precio -->
-                                <Label Grid.Row="1" Grid.Column="1"
-                                       Text="{Binding Price, StringFormat='{}{0:C}'}"
-                                       TextColor="{DynamicResource Accent}"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="End"
-                                       VerticalOptions="Center"
-                                       Margin="8,8,0,0"/>
-
-                                <!-- Nombre -->
-                                <Label Grid.Row="2" Grid.ColumnSpan="2"
-                                       Text="{Binding Name}"
-                                       Style="{StaticResource SectionTitleStyle}" />
-
-                                <!-- Descripción + Stock -->
-                                <VerticalStackLayout Grid.Row="3" Grid.ColumnSpan="2" Spacing="6">
-                                    <Label Text="{Binding Description}"
-                                           Style="{StaticResource BodyTextStyle}" />
-                                    <Label Text="{Binding Stock, StringFormat='Stock: {0} unidades'}"
-                                           Style="{StaticResource MutedTextStyle}" />
-                                </VerticalStackLayout>
-
-                            </Grid>
+                        <!-- Imagen -->
+                        <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource ImageCardStyle}">
+                            <Image Aspect="AspectFill"
+                                   HeightRequest="220">
+                                <Image.Source>
+                                    <!-- Cachea imágenes y evita recargar en cada navegación -->
+                                    <UriImageSource Uri="{Binding ImageUrl}"
+                                                    CachingEnabled="True"
+                                                    CacheValidity="7.00:00:00" />
+                                </Image.Source>
+                            </Image>
                         </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                        <!-- Etiqueta (marca) -->
+                        <Border Grid.Row="1" Grid.Column="0"
+                                Style="{StaticResource ChipStyle}" Margin="0,8,0,0">
+                            <Label Text="{Binding Brand}" />
+                        </Border>
+
+                        <!-- Precio -->
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Text="{Binding Price, StringFormat='{}{0:C}'}"
+                               TextColor="{DynamicResource Accent}"
+                               FontAttributes="Bold"
+                               HorizontalOptions="End"
+                               VerticalOptions="Center"
+                               Margin="8,8,0,0"/>
+
+                        <!-- Nombre -->
+                        <Label Grid.Row="2" Grid.ColumnSpan="2"
+                               Text="{Binding Name}"
+                               Style="{StaticResource SectionTitleStyle}" />
+
+                        <!-- Descripción + Stock -->
+                        <VerticalStackLayout Grid.Row="3" Grid.ColumnSpan="2" Spacing="6">
+                            <Label Text="{Binding Description}"
+                                   Style="{StaticResource BodyTextStyle}" />
+                            <Label Text="{Binding Stock, StringFormat='Stock: {0} unidades'}"
+                                   Style="{StaticResource MutedTextStyle}" />
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
 </ContentPage>
