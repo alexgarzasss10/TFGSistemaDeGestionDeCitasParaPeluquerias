@@ -12,22 +12,14 @@ using SistemasDeGestionCitasPeluqueria.Services;
 
 namespace SistemasDeGestionCitasPeluqueria.PageModels
 {
-    public partial class ProductsPageModel(IInventoryService inventoryService) : ObservableObject
+    public partial class ProductsPageModel(IInventoryService inventoryService, IProductCategoryService categoryService) : ObservableObject
     {
         private readonly IInventoryService _inventoryService = inventoryService;
+        private readonly IProductCategoryService _categoryService = categoryService;
         private List<InventoryItem> _all = [];
 
         [ObservableProperty] private ObservableCollection<InventoryItem> products = [];
-        [ObservableProperty] private ObservableCollection<string> categories =
-        [
-            "Todos",
-            "Champús",
-            "Ceras y Pomadas",
-            "Cuidado de Barba",
-            "Tratamientos",
-            "Afeitado",
-            "Polvos y Sprays"
-        ];
+        [ObservableProperty] private ObservableCollection<string> categories = ["Todos"];
         [ObservableProperty] private string? selectedCategory = "Todos";
         [ObservableProperty] private bool isBusy;
         [ObservableProperty] private string? error;
@@ -41,6 +33,17 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
                 IsBusy = true;
                 Error = null;
 
+                // 1) Cargar categorías si aún no están cargadas (dejamos "Todos" como primer elemento)
+                if (Categories.Count <= 1)
+                {
+                    var cats = await _categoryService.GetAllAsync(ct);
+                    var names = new[] { "Todos" }.Concat(cats.OrderBy(c => c.Order).Select(c => c.Name));
+                    Categories = new ObservableCollection<string>(names);
+                    // Mantener la selección en "Todos" si no hay otra
+                    SelectedCategory ??= "Todos";
+                }
+
+                // 2) Cargar productos
                 var items = await _inventoryService.GetAllAsync(ct);
                 _all = items.ToList();
                 ApplyFilter();
@@ -77,6 +80,7 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
                 "Tratamientos" => text.Contains("mascarilla") || text.Contains("tratam"),
                 "Afeitado" => text.Contains("afeit") || text.Contains("aftershave") || text.Contains("shav"),
                 "Polvos y Sprays" => text.Contains("spray") || text.Contains("polvo") || text.Contains("polvos") || text.Contains("gel"),
+                "Accesorios y Herramientas" => text.Contains("tijeras") || text.Contains("peine") || text.Contains("cepillo") || text.Contains("toalla"),
                 _ => true
             };
         }

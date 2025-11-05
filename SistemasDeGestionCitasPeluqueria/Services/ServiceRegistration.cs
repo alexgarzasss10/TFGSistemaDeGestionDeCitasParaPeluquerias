@@ -32,6 +32,22 @@ public static class ServiceRegistration
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
             });
+            services.AddHttpClient<IProductCategoryService, HttpProductCategoryService>(c =>
+            {
+                c.BaseAddress = baseAddress;
+                c.Timeout = timeout;
+            });
+            // nuevos
+            services.AddHttpClient<IBarbershopService, HttpBarbershopService>(c =>
+            {
+                c.BaseAddress = baseAddress;
+                c.Timeout = timeout;
+            });
+            services.AddHttpClient<IGalleryService, HttpGalleryService>(c =>
+            {
+                c.BaseAddress = baseAddress;
+                c.Timeout = timeout;
+            });
         }
         return services;
     }

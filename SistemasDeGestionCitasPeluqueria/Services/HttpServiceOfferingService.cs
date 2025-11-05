@@ -15,7 +15,7 @@ namespace SistemasDeGestionCitasPeluqueria.Services
 
         public async Task<IReadOnlyList<ServiceOffering>> GetAllAsync(CancellationToken ct = default)
         {
-            var list = await _http.GetFromJsonAsync<List<ServiceOffering>>("services", cancellationToken: ct)
+            var list = await _http.GetFromJsonAsync<List<ServiceOffering>>("services", JsonDefaults.Web, ct)
                        ?? new List<ServiceOffering>();
             return list;
         }

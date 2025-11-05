@@ -9,16 +9,28 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels;
 public partial class MainPageModel(
     IServiceOfferingService serviceOfferingService,
     IBarberService barberService,
-    IInventoryService inventoryService
+    IInventoryService inventoryService,
+    IBarbershopService barbershopService,
+    IGalleryService galleryService
 ) : ObservableObject
 {
     private readonly IServiceOfferingService _serviceOfferingService = serviceOfferingService;
     private readonly IBarberService _barberService = barberService;
     private readonly IInventoryService _inventoryService = inventoryService;
+    private readonly IBarbershopService _barbershopService = barbershopService;
+    private readonly IGalleryService _galleryService = galleryService;
 
     [ObservableProperty] private ObservableCollection<ServiceOffering> services = [];
     [ObservableProperty] private ObservableCollection<Barber> barbers = [];
     [ObservableProperty] private ObservableCollection<InventoryItem> featuredProducts = [];
+    [ObservableProperty] private ObservableCollection<GalleryItem> gallery = [];
+
+    [ObservableProperty] private string barbershopName = string.Empty;
+    [ObservableProperty] private string heroImageUrl = string.Empty;
+    [ObservableProperty] private string openingText = string.Empty;
+    [ObservableProperty] private string addressText = string.Empty;
+    [ObservableProperty] private string contactText = string.Empty;
+
     [ObservableProperty] private bool isBusy;
     [ObservableProperty] private string? error;
 
@@ -31,34 +43,66 @@ public partial class MainPageModel(
             IsBusy = true;
             Error = null;
 
-            // Lanza en paralelo
+            // 1) Primero la barbería (para mostrar hero rápido)
+            Barbershop? shop = null;
+            try
+            {
+                shop = await _barbershopService.GetAsync(ct);
+                if (shop is not null)
+                {
+                    BarbershopName = shop.Name;
+                    HeroImageUrl = shop.Images?.FirstOrDefault() ?? "https://picsum.photos/1200/400?blur=2";
+                    AddressText = string.IsNullOrWhiteSpace(shop.Address) ? string.Empty : $"{shop.Address}\n{shop.City}, {shop.Country}";
+                    ContactText = $"{shop.Phone}\n{shop.Email}";
+                    OpeningText = BuildOpeningText(shop.OpeningHours);
+                }
+            }
+            catch (Exception ex) { Error = ex.Message; }
+
+            // 2) Luego el resto en paralelo pero con manejo individual de errores
             var servicesTask = _serviceOfferingService.GetAllAsync(ct);
             var barbersTask = _barberService.GetAllAsync(ct);
             var productsTask = _inventoryService.GetFeaturedAsync(6, ct);
+            var galleryTask = _galleryService.GetAllAsync(ct);
 
-            // Espera a que todas terminen
-            await Task.WhenAll(servicesTask, barbersTask, productsTask);
+            try { Services = new ObservableCollection<ServiceOffering>(await servicesTask); }
+            catch (Exception ex) { Error = ex.Message; }
 
-            // Recupera resultados (ya completados)
-            var svc = await servicesTask;
-            var brb = await barbersTask;
-            var prods = await productsTask;
+            try { Barbers = new ObservableCollection<Barber>(await barbersTask); }
+            catch (Exception ex) { Error = ex.Message; }
 
-            Services = new ObservableCollection<ServiceOffering>(svc);
-            Barbers = new ObservableCollection<Barber>(brb);
-            FeaturedProducts = new ObservableCollection<InventoryItem>(prods);
+            try { FeaturedProducts = new ObservableCollection<InventoryItem>(await productsTask); }
+            catch (Exception ex) { Error = ex.Message; }
+
+            try { Gallery = new ObservableCollection<GalleryItem>(await galleryTask); }
+            catch (Exception ex) { Error = ex.Message; }
         }
-        catch (OperationCanceledException)
-        {
-            // Cancelación: opcional manejar silenciosamente
-        }
-        catch (Exception ex)
-        {
-            Error = ex.Message;
-        }
+        catch (OperationCanceledException) { }
         finally
         {
             IsBusy = false;
         }
     }
+
+    private static string BuildOpeningText(OpeningHours? oh)
+    {
+        if (oh is null) return "Horario no disponible";
+        string Today(DayHours? d) => d is null ? "Cerrado" : $"{d.Open} - {d.Close}";
+        var now = DateTime.Now.DayOfWeek;
+        var today = GetDay(oh, now);
+        var sunday = GetDay(oh, DayOfWeek.Sunday);
+        return $"Hoy: {Today(today)}\nDom: {Today(sunday)}";
+    }
+
+    private static DayHours? GetDay(OpeningHours oh, DayOfWeek d) => d switch
+    {
+        DayOfWeek.Monday => oh.Monday,
+        DayOfWeek.Tuesday => oh.Tuesday,
+        DayOfWeek.Wednesday => oh.Wednesday,
+        DayOfWeek.Thursday => oh.Thursday,
+        DayOfWeek.Friday => oh.Friday,
+        DayOfWeek.Saturday => oh.Saturday,
+        DayOfWeek.Sunday => oh.Sunday,
+        _ => null
+    };
 }

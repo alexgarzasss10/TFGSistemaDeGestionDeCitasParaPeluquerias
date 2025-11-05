@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
+             xmlns:m="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
              xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.MainPage"
              x:DataType="vm:MainPageModel"
@@ -12,7 +13,7 @@
                 HorizontalScrollBarVisibility="Never">
         <VerticalStackLayout Padding="16" Spacing="16">
 
-            <!-- HERO -->
+            <!-- HERO (dinámico) -->
             <Frame Padding="0" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                 <Border>
                     <Border.StrokeShape>
@@ -21,7 +22,7 @@
 
                     <Grid HeightRequest="220">
                         <Image Aspect="AspectFill"
-                               Source="https://images.unsplash.com/photo-1603656977181-2e8b5fcacffd?q=80&amp;w=1400&amp;auto=format&amp;fit=crop" />
+                               Source="{Binding HeroImageUrl, FallbackValue=https://picsum.photos/1200/400?blur=2}" />
                         <Grid>
                             <Grid.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -33,7 +34,7 @@
                         </Grid>
 
                         <VerticalStackLayout Padding="16" Spacing="6" VerticalOptions="End" HorizontalOptions="Start">
-                            <Label Text="Barbería Premium"
+                            <Label Text="{Binding BarbershopName}"
                                    TextColor="{StaticResource White}"
                                    FontAttributes="Bold"
                                    FontSize="24" />
@@ -45,8 +46,8 @@
                 </Border>
             </Frame>
 
-            <!-- Tarjetas de información (4) -->
-            <Grid x:Name="InfoGrid" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+            <!-- Tarjetas de información (dinámicas) -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
                 <!-- Horario -->
                 <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource CardFrameStyle}" Padding="14">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
@@ -61,7 +62,7 @@
                         </Border>
                         <VerticalStackLayout Spacing="2">
                             <Label Text="Horario" FontAttributes="Bold" />
-                            <Label Text="Lun - Sáb: 9:00 - 20:00&#10;Dom: 10:00 - 18:00"
+                            <Label Text="{Binding OpeningText}"
                                    FontSize="12" TextColor="{DynamicResource TextSecondary}" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
@@ -81,7 +82,7 @@
                         </Border>
                         <VerticalStackLayout Spacing="2">
                             <Label Text="Ubicación" FontAttributes="Bold" />
-                            <Label Text="Calle Principal 123&#10;Madrid, España"
+                            <Label Text="{Binding AddressText}"
                                    FontSize="12" TextColor="{DynamicResource TextSecondary}" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
@@ -101,13 +102,13 @@
                         </Border>
                         <VerticalStackLayout Spacing="2">
                             <Label Text="Contacto" FontAttributes="Bold" />
-                            <Label Text="+34 912 345 678&#10;info@barberia.es"
+                            <Label Text="{Binding ContactText}"
                                    FontSize="12" TextColor="{DynamicResource TextSecondary}" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
 
-                <!-- Reservas -->
+                <!-- Reservas (texto fijo por ahora) -->
                 <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource CardFrameStyle}" Padding="14">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
@@ -128,39 +129,28 @@
                 </Frame>
             </Grid>
 
-            <!-- Nuestros Trabajos -->
+            <!-- Nuestros Trabajos (desde /gallery) -->
             <Label Text="Nuestros Trabajos" Style="{StaticResource SectionTitleStyle}" />
             <ScrollView Orientation="Horizontal"
                         HorizontalScrollBarVisibility="Always"
                         VerticalScrollBarVisibility="Never">
-                <HorizontalStackLayout Spacing="12">
-                    <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
-                        <Image Aspect="AspectFill"
-                               Source="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" />
-                    </Frame>
-                    <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
-                        <Image Aspect="AspectFill"
-                               Source="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" />
-                    </Frame>
-                    <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
-                        <Image Aspect="AspectFill"
-                               Source="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" />
-                    </Frame>
-                    <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
-                        <Image Aspect="AspectFill"
-                               Source="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" />
-                    </Frame>
-                    <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
-                        <Image Aspect="AspectFill"
-                               Source="https://images.unsplash.com/photo-1542623024-a797a755b8f6?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" />
-                    </Frame>
+                <HorizontalStackLayout Spacing="12"
+                                       BindableLayout.ItemsSource="{Binding Gallery}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="m:GalleryItem">
+                            <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
+                                <Image Aspect="AspectFill"
+                                       Source="{Binding ImageUrl}" />
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
                 </HorizontalStackLayout>
             </ScrollView>
 
             <!-- Estado de carga -->
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
 
-            <!-- Servicios -->
+            <!-- Servicios (sin cambios) -->
             <Label Text="Servicios" Style="{StaticResource SectionTitleStyle}" />
             <ScrollView Orientation="Horizontal"
                         HorizontalScrollBarVisibility="Always"
@@ -169,7 +159,7 @@
                 <HorizontalStackLayout Spacing="12"
                                        BindableLayout.ItemsSource="{Binding Services}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="m:ServiceOffering">
                             <Frame Padding="12" WidthRequest="230" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                                 <VerticalStackLayout Spacing="4">
                                     <Label Text="{Binding Name}" FontAttributes="Bold" />
@@ -188,7 +178,7 @@
                 </HorizontalStackLayout>
             </ScrollView>
 
-            <!-- Barberos -->
+            <!-- Barberos (sin cambios) -->
             <Label Text="Barberos" Style="{StaticResource SectionTitleStyle}" />
             <ScrollView Orientation="Horizontal"
                         HorizontalScrollBarVisibility="Always"
@@ -197,7 +187,7 @@
                 <HorizontalStackLayout Spacing="12"
                                        BindableLayout.ItemsSource="{Binding Barbers}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="m:Barber">
                             <Frame Padding="10" WidthRequest="180" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                                 <VerticalStackLayout Spacing="6">
                                     <Image Source="{Binding PhotoUrl}" HeightRequest="90" Aspect="AspectFill" />
@@ -210,6 +200,7 @@
                 </HorizontalStackLayout>
             </ScrollView>
 
+            <!-- Productos destacados (sin cambios) -->
             <Label Text="Productos destacados" Style="{StaticResource SectionTitleStyle}" />
             <CollectionView ItemsSource="{Binding FeaturedProducts}" HeightRequest="260">
                 <CollectionView.ItemsLayout>
@@ -219,7 +210,7 @@
                     <Label Text="No hay productos disponibles." Style="{StaticResource MutedTextStyle}" />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="m:InventoryItem">
                         <Frame Padding="8" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                             <VerticalStackLayout Spacing="6">
                                 <Image Source="{Binding ImageUrl}" HeightRequest="110" Aspect="AspectFill" />
@@ -231,7 +222,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <!-- SOBRE NOSOTROS (al final) -->
+            <!-- SOBRE NOSOTROS (se mantiene) -->
             <Frame Style="{StaticResource CardFrameStyle}">
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowSpacing="6">
                     <VerticalStackLayout Spacing="8">
@@ -242,7 +233,6 @@
                                Style="{StaticResource BodyTextStyle}" />
                     </VerticalStackLayout>
 
-                    <!-- Lista con viñetas de acento -->
                     <VerticalStackLayout Grid.Column="1" Spacing="14">
                         <HorizontalStackLayout Spacing="10">
                             <Border Style="{StaticResource AccentDotStyle}" />

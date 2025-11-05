@@ -15,7 +15,7 @@ public sealed class HttpInventoryService(HttpClient http) : IInventoryService
 
     public async Task<IReadOnlyList<InventoryItem>> GetAllAsync(CancellationToken ct = default)
     {
-        var list = await _http.GetFromJsonAsync<List<InventoryItem>>("products", cancellationToken: ct)
+        var list = await _http.GetFromJsonAsync<List<InventoryItem>>("products", JsonDefaults.Web, ct)
                    ?? new List<InventoryItem>();
         return list;
     }

@@ -9,8 +9,7 @@ public sealed class HttpBarberService(HttpClient http) : IBarberService
 
     public async Task<IReadOnlyList<Barber>> GetAllAsync(CancellationToken ct = default)
     {
-        // Campos extra del JSON (teléfono, bio, etc.) se ignoran automáticamente
-        var list = await _http.GetFromJsonAsync<List<Barber>>("barbers", cancellationToken: ct)
+        var list = await _http.GetFromJsonAsync<List<Barber>>("barbers", JsonDefaults.Web, ct)
                    ?? new List<Barber>();
         return list;
     }
