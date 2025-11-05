@@ -27,7 +27,14 @@ public partial class MainPageModel(
 
     [ObservableProperty] private string barbershopName = string.Empty;
     [ObservableProperty] private string heroImageUrl = string.Empty;
+
+    // Horario: seguimos exponiendo OpeningText por compatibilidad, pero ahora usamos líneas con label+value
     [ObservableProperty] private string openingText = string.Empty;
+    [ObservableProperty] private string openingLine1Label = string.Empty;
+    [ObservableProperty] private string openingLine1Value = string.Empty;
+    [ObservableProperty] private string openingLine2Label = string.Empty;
+    [ObservableProperty] private string openingLine2Value = string.Empty;
+
     [ObservableProperty] private string addressText = string.Empty;
     [ObservableProperty] private string contactText = string.Empty;
 
@@ -43,7 +50,6 @@ public partial class MainPageModel(
             IsBusy = true;
             Error = null;
 
-            // 1) Primero la barbería (para mostrar hero rápido)
             Barbershop? shop = null;
             try
             {
@@ -52,36 +58,33 @@ public partial class MainPageModel(
                 {
                     BarbershopName = shop.Name;
                     HeroImageUrl = shop.Images?.FirstOrDefault() ?? "https://picsum.photos/1200/400?blur=2";
-                    AddressText = string.IsNullOrWhiteSpace(shop.Address) ? string.Empty : $"{shop.Address}\n{shop.City}, {shop.Country}";
+
+                    AddressText = string.IsNullOrWhiteSpace(shop.Address)
+                        ? string.Empty
+                        : $"{shop.Address}\n{shop.City}, {shop.Country}";
+
                     ContactText = $"{shop.Phone}\n{shop.Email}";
+
+                    // Mantén el texto antiguo por si lo usas en otro sitio
                     OpeningText = BuildOpeningText(shop.OpeningHours);
+                    // Nuevas líneas con prefijo en negrita
+                    BuildOpeningLines(shop.OpeningHours);
                 }
             }
             catch (Exception ex) { Error = ex.Message; }
 
-            // 2) Luego el resto en paralelo pero con manejo individual de errores
             var servicesTask = _serviceOfferingService.GetAllAsync(ct);
             var barbersTask = _barberService.GetAllAsync(ct);
             var productsTask = _inventoryService.GetFeaturedAsync(6, ct);
             var galleryTask = _galleryService.GetAllAsync(ct);
 
-            try { Services = new ObservableCollection<ServiceOffering>(await servicesTask); }
-            catch (Exception ex) { Error = ex.Message; }
-
-            try { Barbers = new ObservableCollection<Barber>(await barbersTask); }
-            catch (Exception ex) { Error = ex.Message; }
-
-            try { FeaturedProducts = new ObservableCollection<InventoryItem>(await productsTask); }
-            catch (Exception ex) { Error = ex.Message; }
-
-            try { Gallery = new ObservableCollection<GalleryItem>(await galleryTask); }
-            catch (Exception ex) { Error = ex.Message; }
+            try { Services = new ObservableCollection<ServiceOffering>(await servicesTask); } catch (Exception ex) { Error = ex.Message; }
+            try { Barbers = new ObservableCollection<Barber>(await barbersTask); } catch (Exception ex) { Error = ex.Message; }
+            try { FeaturedProducts = new ObservableCollection<InventoryItem>(await productsTask); } catch (Exception ex) { Error = ex.Message; }
+            try { Gallery = new ObservableCollection<GalleryItem>(await galleryTask); } catch (Exception ex) { Error = ex.Message; }
         }
         catch (OperationCanceledException) { }
-        finally
-        {
-            IsBusy = false;
-        }
+        finally { IsBusy = false; }
     }
 
     private static string BuildOpeningText(OpeningHours? oh)
@@ -92,6 +95,26 @@ public partial class MainPageModel(
         var today = GetDay(oh, now);
         var sunday = GetDay(oh, DayOfWeek.Sunday);
         return $"Hoy: {Today(today)}\nDom: {Today(sunday)}";
+    }
+
+    private void BuildOpeningLines(OpeningHours? oh)
+    {
+        // Por simplicidad, mostramos "Hoy:" y "Dom:" con el valor correspondiente.
+        if (oh is null)
+        {
+            OpeningLine1Label = "Hoy:";
+            OpeningLine1Value = "Horario no disponible";
+            OpeningLine2Label = "Dom:";
+            OpeningLine2Value = "—";
+            return;
+        }
+
+        string Today(DayHours? d) => d is null ? "Cerrado" : $"{d.Open} - {d.Close}";
+        var now = DateTime.Now.DayOfWeek;
+        OpeningLine1Label = "Hoy:";
+        OpeningLine1Value = Today(GetDay(oh, now));
+        OpeningLine2Label = "Dom:";
+        OpeningLine2Value = Today(GetDay(oh, DayOfWeek.Sunday));
     }
 
     private static DayHours? GetDay(OpeningHours oh, DayOfWeek d) => d switch

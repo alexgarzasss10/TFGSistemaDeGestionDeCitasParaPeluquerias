@@ -48,22 +48,37 @@
 
             <!-- Tarjetas de información (dinámicas) -->
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+
                 <!-- Horario -->
                 <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource CardFrameStyle}" Padding="14">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
-                            <Border.StrokeShape>
-                                <shapes:RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
+                            <Border.StrokeShape><shapes:RoundRectangle CornerRadius="10" /></Border.StrokeShape>
                             <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
                                    Text="{StaticResource IconGlyph.Schedule}"
                                    FontSize="18"
                                    TextColor="{DynamicResource ServiceIconAccent}" />
                         </Border>
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="Horario" FontAttributes="Bold" />
-                            <Label Text="{Binding OpeningText}"
-                                   FontSize="12" TextColor="{DynamicResource TextSecondary}" />
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Horario" Style="{StaticResource InfoCardTitleStyle}" />
+                            <Label Style="{StaticResource InfoCardSubTextStyle}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding OpeningLine1Label}" FontAttributes="Bold" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding OpeningLine1Value}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Style="{StaticResource InfoCardSubTextStyle}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding OpeningLine2Label}" FontAttributes="Bold" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding OpeningLine2Value}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
@@ -72,18 +87,15 @@
                 <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource CardFrameStyle}" Padding="14">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
-                            <Border.StrokeShape>
-                                <shapes:RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
+                            <Border.StrokeShape><shapes:RoundRectangle CornerRadius="10" /></Border.StrokeShape>
                             <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
                                    Text="{StaticResource IconGlyph.Location}"
                                    FontSize="18"
                                    TextColor="{DynamicResource ServiceIconAccent}" />
                         </Border>
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="Ubicación" FontAttributes="Bold" />
-                            <Label Text="{Binding AddressText}"
-                                   FontSize="12" TextColor="{DynamicResource TextSecondary}" />
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Ubicación" Style="{StaticResource InfoCardTitleStyle}" />
+                            <Label Text="{Binding AddressText}" Style="{StaticResource InfoCardSubTextStyle}" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
@@ -92,41 +104,37 @@
                 <Frame Grid.Row="1" Grid.Column="0" Style="{StaticResource CardFrameStyle}" Padding="14">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
-                            <Border.StrokeShape>
-                                <shapes:RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
+                            <Border.StrokeShape><shapes:RoundRectangle CornerRadius="10" /></Border.StrokeShape>
                             <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
                                    Text="{StaticResource IconGlyph.Phone}"
                                    FontSize="18"
                                    TextColor="{DynamicResource ServiceIconAccent}" />
                         </Border>
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="Contacto" FontAttributes="Bold" />
-                            <Label Text="{Binding ContactText}"
-                                   FontSize="12" TextColor="{DynamicResource TextSecondary}" />
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Contacto" Style="{StaticResource InfoCardTitleStyle}" />
+                            <Label Text="{Binding ContactText}" Style="{StaticResource InfoCardSubTextStyle}" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
 
-                <!-- Reservas (texto fijo por ahora) -->
+                <!-- Reservas -->
                 <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource CardFrameStyle}" Padding="14">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
-                            <Border.StrokeShape>
-                                <shapes:RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
+                            <Border.StrokeShape><shapes:RoundRectangle CornerRadius="10" /></Border.StrokeShape>
                             <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
                                    Text="{StaticResource IconGlyph.Calendar}"
                                    FontSize="18"
                                    TextColor="{DynamicResource ServiceIconAccent}" />
                         </Border>
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="Reservas" FontAttributes="Bold" />
-                            <Label Text="Reserva en línea&#10;Fácil y rápido"
-                                   FontSize="12" TextColor="{DynamicResource TextSecondary}" />
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Reservas" Style="{StaticResource InfoCardTitleStyle}" />
+                            <Label Text="Reserva en línea" Style="{StaticResource InfoCardSubTextStyle}" />
+                            <Label Text="Fácil y rápido" Style="{StaticResource InfoCardSubTextStyle}" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
+
             </Grid>
 
             <!-- Nuestros Trabajos (desde /gallery) -->
@@ -139,8 +147,7 @@
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="m:GalleryItem">
                             <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
-                                <Image Aspect="AspectFill"
-                                       Source="{Binding ImageUrl}" />
+                                <Image Aspect="AspectFill" Source="{Binding ImageUrl}" />
                             </Frame>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
@@ -150,7 +157,7 @@
             <!-- Estado de carga -->
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
 
-            <!-- Servicios (sin cambios) -->
+            <!-- Servicios -->
             <Label Text="Servicios" Style="{StaticResource SectionTitleStyle}" />
             <ScrollView Orientation="Horizontal"
                         HorizontalScrollBarVisibility="Always"
@@ -178,7 +185,7 @@
                 </HorizontalStackLayout>
             </ScrollView>
 
-            <!-- Barberos (sin cambios) -->
+            <!-- Barberos -->
             <Label Text="Barberos" Style="{StaticResource SectionTitleStyle}" />
             <ScrollView Orientation="Horizontal"
                         HorizontalScrollBarVisibility="Always"
@@ -200,7 +207,7 @@
                 </HorizontalStackLayout>
             </ScrollView>
 
-            <!-- Productos destacados (sin cambios) -->
+            <!-- Productos destacados -->
             <Label Text="Productos destacados" Style="{StaticResource SectionTitleStyle}" />
             <CollectionView ItemsSource="{Binding FeaturedProducts}" HeightRequest="260">
                 <CollectionView.ItemsLayout>

@@ -67,6 +67,20 @@
         <Setter Property="FontSize" Value="12" />
     </Style>
 
+    <!-- NUEVO: Títulos y subtítulos para tarjetas de información -->
+    <Style x:Key="InfoCardTitleStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <!-- Si lo quieres todo en mayúsculas, descomenta: -->
+        <!-- <Setter Property="TextTransform" Value="Uppercase" /> -->
+    </Style>
+
+    <Style x:Key="InfoCardSubTextStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
     <!-- Botones -->
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{DynamicResource Accent}" />
