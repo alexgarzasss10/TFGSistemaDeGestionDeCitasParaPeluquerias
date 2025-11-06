@@ -4,16 +4,22 @@
              xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
              xmlns:m="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
              xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
+             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.MainPage"
              x:DataType="vm:MainPageModel"
              Title="Inicio"
              BackgroundColor="{DynamicResource Surface}">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:ImageSourceFromStringConverter x:Key="ImageSourceFromStringConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ScrollView VerticalScrollBarVisibility="Always"
                 HorizontalScrollBarVisibility="Never">
         <VerticalStackLayout Padding="16" Spacing="16">
 
-            <!-- HERO (dinámico) -->
             <Frame Padding="0" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                 <Border>
                     <Border.StrokeShape>
@@ -22,7 +28,7 @@
 
                     <Grid HeightRequest="220">
                         <Image Aspect="AspectFill"
-                               Source="{Binding HeroImageUrl, FallbackValue=https://picsum.photos/1200/400?blur=2}" />
+                               Source="{Binding HeroImageUrl, Converter={StaticResource ImageSourceFromStringConverter}, TargetNullValue=https://picsum.photos/1200/400?blur=2}" />
                         <Grid>
                             <Grid.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -46,7 +52,7 @@
                 </Border>
             </Frame>
 
-            <!-- Tarjetas de información (dinámicas) -->
+            <!-- Tarjetas de información -->
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
 
                 <!-- Horario -->
@@ -147,7 +153,8 @@
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="m:GalleryItem">
                             <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
-                                <Image Aspect="AspectFill" Source="{Binding ImageUrl}" />
+                                <Image Aspect="AspectFill"
+                                       Source="{Binding ImageUrl, Converter={StaticResource ImageSourceFromStringConverter}}" />
                             </Frame>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
@@ -197,7 +204,8 @@
                         <DataTemplate x:DataType="m:Barber">
                             <Frame Padding="10" WidthRequest="180" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                                 <VerticalStackLayout Spacing="6">
-                                    <Image Source="{Binding PhotoUrl}" HeightRequest="90" Aspect="AspectFill" />
+                                    <Image Source="{Binding PhotoUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
+                                           HeightRequest="90" Aspect="AspectFill" />
                                     <Label Text="{Binding Name}" FontAttributes="Bold" />
                                     <Label Text="{Binding Specialty}" FontSize="12" TextColor="{DynamicResource TextSecondary}" />
                                 </VerticalStackLayout>
@@ -220,7 +228,8 @@
                     <DataTemplate x:DataType="m:InventoryItem">
                         <Frame Padding="8" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                             <VerticalStackLayout Spacing="6">
-                                <Image Source="{Binding ImageUrl}" HeightRequest="110" Aspect="AspectFill" />
+                                <Image Source="{Binding ImageUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
+                                       HeightRequest="110" Aspect="AspectFill" />
                                 <Label Text="{Binding Name}" FontAttributes="Bold" />
                                 <Label Text="{Binding Price, StringFormat='{}{0:C}'}" TextColor="{DynamicResource Accent}" />
                             </VerticalStackLayout>
@@ -229,7 +238,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <!-- SOBRE NOSOTROS (se mantiene) -->
+            <!-- SOBRE NOSOTROS  -->
             <Frame Style="{StaticResource CardFrameStyle}">
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowSpacing="6">
                     <VerticalStackLayout Spacing="8">

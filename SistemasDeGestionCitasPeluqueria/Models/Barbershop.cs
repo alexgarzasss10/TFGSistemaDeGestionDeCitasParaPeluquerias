@@ -15,11 +15,11 @@ public class Barbershop
     public string Address { get; set; } = string.Empty;  // BARBERIA.direccion
     public string City { get; set; } = string.Empty;     // BARBERIA.ciudad
     public string Country { get; set; } = string.Empty;  // BARBERIA.pais
-    public decimal Latitude { get; set; }                // BARBERIA.latitud (decimal(9,6))
-    public decimal Longitude { get; set; }               // BARBERIA.longitud (decimal(9,6))
+    public decimal Latitude { get; set; }                // BARBERIA.latitud 
+    public decimal Longitude { get; set; }               // BARBERIA.longitud 
     public bool IsActive { get; set; } = true;           // BARBERIA.activo
 
-    // Campos adicionales del endpoint /barbershop
+    
     public string Timezone { get; set; } = "Europe/Madrid";
     public List<string> Images { get; set; } = [];       // barbershop.images
     public string? About { get; set; }                   // barbershop.about

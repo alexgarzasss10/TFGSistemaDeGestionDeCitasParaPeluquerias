@@ -11,12 +11,12 @@ public enum AppointmentState
 public class Appointment
 {
     public int Id { get; set; }                          // CITA.id
-    public int UserId { get; set; }                      // CITA.usuario_id (FK USUARIO)
-    public int BarbershopId { get; set; }                // CITA.barberia_id (FK BARBERIA)
-    public int BarberId { get; set; }                    // CITA.barbero_id (FK BARBERO)
-    public int ServiceId { get; set; }                   // CITA.servicio_id (FK SERVICIO)
+    public int UserId { get; set; }                      // CITA.usuario_id 
+    public int BarbershopId { get; set; }                // CITA.barberia_id 
+    public int BarberId { get; set; }                    // CITA.barbero_id 
+    public int ServiceId { get; set; }                   // CITA.servicio_id 
 
-    public DateTimeOffset ScheduledAt { get; set; }      // (compat) usado en UI; opcional respecto a BD
+    public DateTimeOffset ScheduledAt { get; set; }      
     public DateTimeOffset StartAt { get; set; }          // CITA.fecha_inicio
     public DateTimeOffset EndAt { get; set; }            // CITA.fecha_fin
 

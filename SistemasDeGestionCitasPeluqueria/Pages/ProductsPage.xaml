@@ -3,19 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
              xmlns:models="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
+             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ProductsPage"
              x:DataType="vm:ProductsPageModel"
              x:Name="Root"
              Title="Productos"
              BackgroundColor="{DynamicResource Surface}">
 
-    <!-- Un único CollectionView con Header. Sin ScrollView exterior -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:ImageSourceFromStringConverter x:Key="ImageSourceFromStringConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <CollectionView ItemsSource="{Binding Products}"
                     SelectionMode="None"
                     ItemSizingStrategy="MeasureFirstItem">
         <CollectionView.Header>
             <VerticalStackLayout Padding="16" Spacing="16">
-                <!-- Encabezado -->
                 <VerticalStackLayout Spacing="4">
                     <Label Text="Productos" Style="{StaticResource TitleLargeStyle}" />
                     <Label Text="Productos profesionales disponibles en tienda"
@@ -24,7 +29,6 @@
 
                 <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
 
-                <!-- Chips categorías -->
                 <CollectionView ItemsSource="{Binding Categories}"
                                 SelectionMode="Single"
                                 SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
@@ -59,14 +63,11 @@
                         <!-- Imagen -->
                         <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource ImageCardStyle}">
                             <Image Aspect="AspectFill"
-                                   HeightRequest="220">
-                                <Image.Source>
-                                    <!-- Cachea imágenes y evita recargar en cada navegación -->
-                                    <UriImageSource Uri="{Binding ImageUrl}"
-                                                    CachingEnabled="True"
-                                                    CacheValidity="7.00:00:00" />
-                                </Image.Source>
-                            </Image>
+                                   HeightRequest="220"
+                                   Source="{Binding ImageUrl,
+                                                    Converter={StaticResource ImageSourceFromStringConverter},
+                                                    TargetNullValue='https://picsum.photos/800/400?blur=2',
+                                                    FallbackValue='https://picsum.photos/800/400?blur=2'}" />
                         </Frame>
 
                         <!-- Etiqueta (marca) -->

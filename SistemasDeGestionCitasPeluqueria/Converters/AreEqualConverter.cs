@@ -35,7 +35,7 @@ public sealed class AreEqualConverter : IMultiValueConverter
         if (a is string || b is string)
             return string.Equals(a?.ToString(), b?.ToString(), StringComparison.Ordinal);
 
-        // Fallback: usa Equals por si alguno implementa IEquatable<T>
+        
         return Equals(a, b);
     }
 

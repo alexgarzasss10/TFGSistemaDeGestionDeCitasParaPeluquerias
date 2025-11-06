@@ -10,7 +10,7 @@ namespace SistemasDeGestionCitasPeluqueria.Models;
 public class Product
 {
     public int Id { get; set; }                          // PRODUCTO.id
-    public int CategoryId { get; set; }                  // PRODUCTO.categoria_id (FK CATEGORIA_PRODUCTO)
+    public int CategoryId { get; set; }                  // PRODUCTO.categoria_id 
     public string Name { get; set; } = string.Empty;     // PRODUCTO.nombre
     public string? Brand { get; set; }                   // PRODUCTO.marca
     public string? Description { get; set; }             // PRODUCTO.descripcion
