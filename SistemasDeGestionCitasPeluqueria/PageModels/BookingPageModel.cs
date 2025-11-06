@@ -42,7 +42,7 @@ public partial class BookingPageModel(IBarberService barberService) : Observable
             Error = null;
             var list = await _barberService.GetAllAsync(ct);
             Barbers = new ObservableCollection<Barber>(list);
-            UpdateSlots(); // en caso de que ya hubiese fecha/selección
+            UpdateSlots();
         }
         catch (OperationCanceledException) { }
         catch (Exception ex) { Error = ex.Message; }
@@ -59,17 +59,17 @@ public partial class BookingPageModel(IBarberService barberService) : Observable
 
         if (SelectedBarber is null) return;
 
-        // Demo: genera huecos cada 60 min de 09:00 a 20:00, respetando la duración
+        
         var open = new TimeSpan(9, 0, 0);
         var close = new TimeSpan(20, 0, 0);
         var step = TimeSpan.FromMinutes(60);
         var serviceDuration = TimeSpan.FromMinutes(Math.Max(15, DurationMinutes > 0 ? DurationMinutes : 30));
 
-        // Evita horas pasadas si la fecha es hoy
+        
         var now = DateTime.Now;
         if (SelectedDate.Date == now.Date && now.TimeOfDay > open)
         {
-            // redondea al siguiente bloque
+            
             var minutes = (int)Math.Ceiling(now.TimeOfDay.TotalMinutes / step.TotalMinutes) * (int)step.TotalMinutes;
             open = TimeSpan.FromMinutes(minutes);
         }
@@ -84,7 +84,7 @@ public partial class BookingPageModel(IBarberService barberService) : Observable
         if (SelectedBarber is null || SelectedSlot is null)
             return;
 
-        // Aquí podrías navegar a una pantalla de confirmación o llamar a un servicio
+        
         await Shell.Current.DisplayAlert(
             "Reserva",
             $"Servicio: {ServiceName}\nBarbero: {SelectedBarber.Name}\nFecha: {SelectedDate:dd/MM/yyyy}\nHora: {SelectedSlot:hh\\:mm}",

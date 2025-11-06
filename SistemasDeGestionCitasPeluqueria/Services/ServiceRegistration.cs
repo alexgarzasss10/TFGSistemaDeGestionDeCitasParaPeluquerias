@@ -37,7 +37,7 @@ public static class ServiceRegistration
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
             });
-            // nuevos
+           
             services.AddHttpClient<IBarbershopService, HttpBarbershopService>(c =>
             {
                 c.BaseAddress = baseAddress;

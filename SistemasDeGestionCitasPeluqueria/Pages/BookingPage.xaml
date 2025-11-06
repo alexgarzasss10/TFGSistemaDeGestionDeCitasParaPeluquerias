@@ -53,10 +53,10 @@
                                     SelectedItem="{Binding SelectedBarber, Mode=TwoWay}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:Barber">
-                                <!-- ítem envolvido en Border reutilizable con VisualStates -->
+                                
                                 <Border Style="{StaticResource SelectableListItemBorder}">
                                     <Border.Triggers>
-                                        <!-- Selección: usa brushes de Resources (gris sutil) -->
+                                       
                                         <DataTrigger TargetType="Border" Value="True">
                                             <DataTrigger.Binding>
                                                 <MultiBinding Converter="{StaticResource AreEqual}">
@@ -113,7 +113,7 @@
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center" />
                                     <Border.Triggers>
-                                        <!-- Selección de hora: pinta con AccentBrush (verde) y texto blanco -->
+                                       
                                         <DataTrigger TargetType="Border" Value="True">
                                             <DataTrigger.Binding>
                                                 <MultiBinding Converter="{StaticResource AreEqual}">

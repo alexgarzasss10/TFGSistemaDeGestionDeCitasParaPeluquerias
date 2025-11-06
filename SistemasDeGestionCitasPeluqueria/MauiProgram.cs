@@ -27,12 +27,12 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // Cambia este flag según necesites backend real o datos fake
+        
         var useFakes = false;
 
         if (!useFakes)
         {
-            // Clientes HTTP hacia FastAPI (puerto/host según plataforma)
+            // Clientes HTTP hacia FastAPI 
             builder.Services.AddBackendClients(ServiceRegistration.GetDevBaseAddress(), replaceFakes: true);
         }
         else
@@ -51,7 +51,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ServicesPageModel>();
         builder.Services.AddSingleton<ServicesPage>();
 
-        // Products page + VM: transient to avoid shared state/cancellation between navigations
+        // Products page + VM
         builder.Services.AddTransient<ProductsPageModel>();
         builder.Services.AddTransient<ProductsPage>();
 

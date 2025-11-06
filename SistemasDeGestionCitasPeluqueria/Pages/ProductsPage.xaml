@@ -70,7 +70,7 @@
                                                     FallbackValue='https://picsum.photos/800/400?blur=2'}" />
                         </Frame>
 
-                        <!-- Etiqueta (marca) -->
+                        <!-- Etiqueta -->
                         <Border Grid.Row="1" Grid.Column="0"
                                 Style="{StaticResource ChipStyle}" Margin="0,8,0,0">
                             <Label Text="{Binding Brand}" />

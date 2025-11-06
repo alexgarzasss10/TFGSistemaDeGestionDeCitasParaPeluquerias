@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -33,7 +32,7 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
                 IsBusy = true;
                 Error = null;
 
-                // 1) Cargar categorías si aún no están cargadas (dejamos "Todos" como primer elemento)
+                // 1) Cargar categorías si aún no están cargadas 
                 if (Categories.Count <= 1)
                 {
                     var cats = await _categoryService.GetAllAsync(ct);
@@ -51,6 +50,15 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             catch (OperationCanceledException) { }
             catch (Exception ex) { Error = ex.Message; }
             finally { IsBusy = false; }
+        }
+
+        // Se invoca al tocar un chip
+        [RelayCommand]
+        private void SelectCategory(string? category)
+        {
+            if (string.IsNullOrWhiteSpace(category)) return;
+            if (!string.Equals(SelectedCategory, category, StringComparison.Ordinal))
+                SelectedCategory = category;
         }
 
         partial void OnSelectedCategoryChanged(string? value) => ApplyFilter();

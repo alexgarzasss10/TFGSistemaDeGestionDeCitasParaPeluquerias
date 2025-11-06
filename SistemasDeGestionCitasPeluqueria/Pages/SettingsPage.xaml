@@ -64,7 +64,7 @@
                         </VerticalStackLayout>
                     </Frame>
 
-                    <!-- Idioma y Región (ARREGLADO: filas explícitas y pickers con HorizontalOptions) -->
+                    <!-- Idioma y Región -->
                     <Frame BackgroundColor="White" CornerRadius="8" HasShadow="True" Padding="16">
                         <VerticalStackLayout Spacing="12">
                             <HorizontalStackLayout Spacing="12" VerticalOptions="Center">

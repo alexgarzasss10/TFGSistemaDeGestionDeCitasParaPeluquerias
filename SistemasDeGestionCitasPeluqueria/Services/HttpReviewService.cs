@@ -25,7 +25,7 @@ namespace SistemasDeGestionCitasPeluqueria.Services
             var response = await _http.PostAsJsonAsync("reviews", review, ct);
             response.EnsureSuccessStatusCode();
 
-            // Intenta leer el creado (por si el backend asigna Id/Date)
+            // Intenta leer el creado 
             var created = await response.Content.ReadFromJsonAsync<ServiceReview>(cancellationToken: ct);
             if (created is not null)
             {

@@ -13,14 +13,14 @@ public sealed class ImageSourceFromStringConverter : IValueConverter
 
         try
         {
-            // data:[mime];base64,xxxxx
+            
             if (s.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
             {
                 var comma = s.IndexOf(',');
                 if (comma >= 0)
                     s = s[(comma + 1)..];
 
-                // Limpia espacios/CR/LF que rompen el FromBase64String
+               
                 s = s.Trim();
                 s = Regex.Replace(s, @"\s+", string.Empty);
 
@@ -28,14 +28,14 @@ public sealed class ImageSourceFromStringConverter : IValueConverter
                 return ImageSource.FromStream(() => new MemoryStream(bytes));
             }
 
-            // URL absoluta (http/https)
+            // URL absoluta 
             if (Uri.TryCreate(s, UriKind.Absolute, out var uri) &&
                 (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
             {
                 return ImageSource.FromUri(uri);
             }
 
-            // Heurística: base64 sin prefijo
+            
             if (LooksLikeBase64(s))
             {
                 var cleaned = Regex.Replace(s.Trim(), @"\s+", string.Empty);
@@ -43,7 +43,7 @@ public sealed class ImageSourceFromStringConverter : IValueConverter
                 return ImageSource.FromStream(() => new MemoryStream(bytes));
             }
 
-            // Fichero/alias local
+            // Fichero local
             return ImageSource.FromFile(s);
         }
         catch

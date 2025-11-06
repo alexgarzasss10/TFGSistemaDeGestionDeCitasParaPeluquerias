@@ -22,7 +22,7 @@ namespace SistemasDeGestionCitasPeluqueria.Services.Fake
         public async Task<IReadOnlyList<ServiceReview>> GetAllAsync(CancellationToken ct = default)
         {
             await Task.Delay(200, ct);
-            // Orden más reciente primero
+            
             return _reviews.OrderByDescending(r => r.Date).ToList();
         }
 

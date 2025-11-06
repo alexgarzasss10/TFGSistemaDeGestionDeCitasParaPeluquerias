@@ -28,7 +28,7 @@ public partial class MainPageModel(
     [ObservableProperty] private string barbershopName = string.Empty;
     [ObservableProperty] private string heroImageUrl = string.Empty;
 
-    // Horario: seguimos exponiendo OpeningText por compatibilidad, pero ahora usamos líneas con label+value
+    
     [ObservableProperty] private string openingText = string.Empty;
     [ObservableProperty] private string openingLine1Label = string.Empty;
     [ObservableProperty] private string openingLine1Value = string.Empty;
@@ -65,9 +65,9 @@ public partial class MainPageModel(
 
                     ContactText = $"{shop.Phone}\n{shop.Email}";
 
-                    // Mantén el texto antiguo por si lo usas en otro sitio
+                    
                     OpeningText = BuildOpeningText(shop.OpeningHours);
-                    // Nuevas líneas con prefijo en negrita
+                   
                     BuildOpeningLines(shop.OpeningHours);
                 }
             }
@@ -99,7 +99,7 @@ public partial class MainPageModel(
 
     private void BuildOpeningLines(OpeningHours? oh)
     {
-        // Por simplicidad, mostramos "Hoy:" y "Dom:" con el valor correspondiente.
+        
         if (oh is null)
         {
             OpeningLine1Label = "Hoy:";
