@@ -27,7 +27,10 @@
                     </Border.StrokeShape>
 
                     <Grid HeightRequest="220">
-                        <Image Aspect="AspectFill"
+                        <!-- Mostrar la imagen completa sin recortar -->
+                        <Image Aspect="AspectFit"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
                                Source="{Binding HeroImageUrl, Converter={StaticResource ImageSourceFromStringConverter}, TargetNullValue=https://picsum.photos/1200/400?blur=2}" />
                         <Grid>
                             <Grid.Background>
@@ -143,7 +146,7 @@
 
             </Grid>
 
-            <!-- Nuestros Trabajos (desde /gallery) -->
+            <!-- Nuestros Trabajos -->
             <Label Text="Nuestros Trabajos" Style="{StaticResource SectionTitleStyle}" />
             <ScrollView Orientation="Horizontal"
                         HorizontalScrollBarVisibility="Always"
@@ -152,9 +155,34 @@
                                        BindableLayout.ItemsSource="{Binding Gallery}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="m:GalleryItem">
-                            <Frame Style="{StaticResource ImageCardStyle}" WidthRequest="260" HeightRequest="160">
-                                <Image Aspect="AspectFill"
-                                       Source="{Binding ImageUrl, Converter={StaticResource ImageSourceFromStringConverter}}" />
+                            <!-- tarjeta más pequeña -->
+                            <Frame Padding="0"
+                                   HasShadow="True"
+                                   BackgroundColor="Transparent"
+                                   CornerRadius="12"
+                                   IsClippedToBounds="True"
+                                   WidthRequest="200"
+                                   HeightRequest="240">
+                                <Grid>
+                                    <!-- imagen que rellena y queda recortada por el Frame -->
+                                    <Image Source="{Binding ImageUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
+                                           Aspect="AspectFill"
+                                           HorizontalOptions="Fill"
+                                           VerticalOptions="Fill" />
+
+                                    <!-- overlay oscuro en la parte inferior con texto -->
+                                    <BoxView Color="#000000" Opacity="0.22"
+                                             HeightRequest="44"
+                                             VerticalOptions="End"
+                                             HorizontalOptions="Fill" />
+                                    <Label Text="{Binding Title}"
+                                           TextColor="White"
+                                           FontAttributes="Bold"
+                                           FontSize="13"
+                                           Margin="10,0,10,8"
+                                           VerticalOptions="End"
+                                           HorizontalOptions="Start" />
+                                </Grid>
                             </Frame>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
@@ -163,35 +191,6 @@
 
             <!-- Estado de carga -->
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-
-            <!-- Servicios -->
-            <Label Text="Servicios" Style="{StaticResource SectionTitleStyle}" />
-            <ScrollView Orientation="Horizontal"
-                        HorizontalScrollBarVisibility="Always"
-                        VerticalScrollBarVisibility="Never"
-                        HeightRequest="170">
-                <HorizontalStackLayout Spacing="12"
-                                       BindableLayout.ItemsSource="{Binding Services}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="m:ServiceOffering">
-                            <Frame Padding="12" WidthRequest="230" HasShadow="True" Style="{StaticResource CardFrameStyle}">
-                                <VerticalStackLayout Spacing="4">
-                                    <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                    <Label Text="{Binding Description}"
-                                           FontSize="12"
-                                           TextColor="{DynamicResource TextSecondary}"
-                                           LineBreakMode="TailTruncation" />
-                                    <HorizontalStackLayout Spacing="12">
-                                        <Label Text="{Binding Price, StringFormat='{}{0:C}'}" TextColor="{DynamicResource Accent}" />
-                                        <Label Text="{Binding DurationMinutes, StringFormat='{}{0} min'}" FontSize="12" />
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-                            </Frame>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </HorizontalStackLayout>
-            </ScrollView>
-
             <!-- Barberos -->
             <Label Text="Barberos" Style="{StaticResource SectionTitleStyle}" />
             <ScrollView Orientation="Horizontal"
@@ -204,8 +203,22 @@
                         <DataTemplate x:DataType="m:Barber">
                             <Frame Padding="10" WidthRequest="180" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                                 <VerticalStackLayout Spacing="6">
-                                    <Image Source="{Binding PhotoUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
-                                           HeightRequest="90" Aspect="AspectFill" />
+                                    <!-- foto con bordes redondeados (no círculo) -->
+                                    <Frame Padding="0"
+                                           WidthRequest="90"
+                                           HeightRequest="90"
+                                           CornerRadius="12"
+                                           IsClippedToBounds="True"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           BackgroundColor="Transparent"
+                                           HasShadow="False">
+                                        <Image Source="{Binding PhotoUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
+                                               Aspect="AspectFit"
+                                               HorizontalOptions="Fill"
+                                               VerticalOptions="Fill" />
+                                    </Frame>
+
                                     <Label Text="{Binding Name}" FontAttributes="Bold" />
                                     <Label Text="{Binding Specialty}" FontSize="12" TextColor="{DynamicResource TextSecondary}" />
                                 </VerticalStackLayout>
@@ -228,8 +241,12 @@
                     <DataTemplate x:DataType="m:InventoryItem">
                         <Frame Padding="8" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                             <VerticalStackLayout Spacing="6">
+                                <!-- Mostrar el producto entero sin recortar -->
                                 <Image Source="{Binding ImageUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
-                                       HeightRequest="110" Aspect="AspectFill" />
+                                       HeightRequest="110"
+                                       Aspect="AspectFit"
+                                       HorizontalOptions="Fill"
+                                       VerticalOptions="Center" />
                                 <Label Text="{Binding Name}" FontAttributes="Bold" />
                                 <Label Text="{Binding Price, StringFormat='{}{0:C}'}" TextColor="{DynamicResource Accent}" />
                             </VerticalStackLayout>

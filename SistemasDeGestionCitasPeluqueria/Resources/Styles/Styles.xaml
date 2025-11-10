@@ -278,4 +278,12 @@
         </Setter>
     </Style>
 
+    <!-- Style para tarjetas de imagen redondeadas -->
+    <Style x:Key="RoundedImageCard" TargetType="Frame">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="CornerRadius" Value="12" />
+    </Style>
+
 </ResourceDictionary>
