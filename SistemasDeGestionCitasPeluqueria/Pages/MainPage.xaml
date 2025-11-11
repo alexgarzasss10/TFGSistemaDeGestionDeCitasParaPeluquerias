@@ -202,7 +202,7 @@
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="m:Barber">
                             <Frame Padding="10" WidthRequest="180" HasShadow="True" Style="{StaticResource CardFrameStyle}">
-                                <VerticalStackLayout Spacing="6">
+                                <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
                                     <!-- foto con bordes redondeados (no círculo) -->
                                     <Frame Padding="0"
                                            WidthRequest="90"
@@ -241,14 +241,31 @@
                     <DataTemplate x:DataType="m:InventoryItem">
                         <Frame Padding="8" HasShadow="True" Style="{StaticResource CardFrameStyle}">
                             <VerticalStackLayout Spacing="6">
-                                <!-- Mostrar el producto entero sin recortar -->
-                                <Image Source="{Binding ImageUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
-                                       HeightRequest="110"
-                                       Aspect="AspectFit"
-                                       HorizontalOptions="Fill"
-                                       VerticalOptions="Center" />
-                                <Label Text="{Binding Name}" FontAttributes="Bold" />
-                                <Label Text="{Binding Price, StringFormat='{}{0:C}'}" TextColor="{DynamicResource Accent}" />
+
+                                <!-- Contenedor blanco para la imagen (igual que en otras tarjetas) -->
+                                <Frame Padding="0"
+                                       CornerRadius="12"
+                                       HasShadow="False"
+                                       IsClippedToBounds="True"
+                                       BackgroundColor="{DynamicResource CardBackground}">
+                                    <Image Source="{Binding ImageUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
+                                           HeightRequest="110"
+                                           Aspect="AspectFit"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Frame>
+
+                                <!-- Nombre del producto (visible, con estilo de sección) -->
+                                <Label Text="{Binding Name}"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2" />
+
+                                <!-- Precio -->
+                                <Label Text="{Binding Price, StringFormat='{}{0:C}'}"
+                                       TextColor="{DynamicResource Accent}"
+                                       FontAttributes="Bold" />
+
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>

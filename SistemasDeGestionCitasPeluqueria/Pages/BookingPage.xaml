@@ -17,6 +17,17 @@
                 <Setter Property="Margin" Value="0,0,0,12" />
             </Style>
 
+            <!-- Misma tipografía que el título de sección pero sin márgenes para alinear en la misma línea -->
+            <Style x:Key="InlineTitleStyle" TargetType="Label" BasedOn="{StaticResource SectionTitleStyle}">
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <!-- Versión atenuada (sigue en negrita) para la duración -->
+            <Style x:Key="InlineTitleMutedStyle" TargetType="Label" BasedOn="{StaticResource InlineTitleStyle}">
+                <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+            </Style>
+
             <conv:AreEqualConverter x:Key="AreEqual" />
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -24,10 +35,17 @@
     <Grid Padding="16" RowDefinitions="Auto,*,Auto" ColumnDefinitions="*">
         <VerticalStackLayout Grid.Row="0" Spacing="4">
             <Label Text="Reserva de servicio" Style="{StaticResource TitleLargeStyle}" />
-            <HorizontalStackLayout Spacing="16">
-                <Label Text="{Binding ServiceName}" Style="{StaticResource SectionTitleStyle}" />
-                <Label Text="{Binding Price, StringFormat='{}{0:C}'}" Style="{StaticResource BodyTextStyle}" />
-                <Label Text="{Binding DurationMinutes, StringFormat='Duración: {0} min'}" Style="{StaticResource MutedTextStyle}" />
+
+            <!-- Nombre + precio + duración en la misma línea, todos en negrita y a la misma altura -->
+            <HorizontalStackLayout Spacing="12" HorizontalOptions="Start" VerticalOptions="Center">
+                <Label Text="{Binding ServiceName}"
+                       Style="{StaticResource InlineTitleStyle}"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1" />
+                <Label Text="{Binding Price, StringFormat='{}{0:C}'}"
+                       Style="{StaticResource InlineTitleStyle}" />
+                <Label Text="{Binding DurationMinutes, StringFormat='Duración: {0} min'}"
+                       Style="{StaticResource InlineTitleMutedStyle}" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
 

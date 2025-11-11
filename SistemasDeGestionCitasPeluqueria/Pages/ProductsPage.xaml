@@ -60,10 +60,17 @@
                 <Frame Style="{StaticResource CardFrameStyle}" Margin="6" HasShadow="True">
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
 
-                        <!-- Imagen -->
-                        <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource ImageCardStyle}">
-                            <Image Aspect="AspectFill"
+                        <!-- Imagen (como en Main: fondo blanco + AspectFit, sin recortes) -->
+                        <Frame Grid.Row="0" Grid.ColumnSpan="2"
+                               Style="{StaticResource ImageCardStyle}"
+                               Padding="0"
+                               IsClippedToBounds="True"
+                               BackgroundColor="{DynamicResource CardBackground}">
+                            <Image Aspect="AspectFit"
                                    HeightRequest="220"
+                                   HorizontalOptions="Fill"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="{DynamicResource CardBackground}"
                                    Source="{Binding ImageUrl,
                                                     Converter={StaticResource ImageSourceFromStringConverter},
                                                     TargetNullValue='https://picsum.photos/800/400?blur=2',

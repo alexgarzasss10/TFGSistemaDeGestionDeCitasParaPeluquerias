@@ -11,6 +11,12 @@
              Title="Servicios"
              BackgroundColor="{DynamicResource Surface}">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:DurationMinutesToTextConverter x:Key="DurationConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
 
