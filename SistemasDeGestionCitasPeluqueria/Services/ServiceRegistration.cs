@@ -58,12 +58,24 @@ public static class ServiceRegistration
         if (!string.IsNullOrWhiteSpace(env) && Uri.TryCreate(env, UriKind.Absolute, out var u))
             return u;
 
+        //MI API ANTERIOR
+
+        //#if ANDROID
+        //        return new Uri("http://10.0.2.2:5180/");
+        //#elif IOS || MACCATALYST
+        //        return new Uri("http://localhost:5180/");
+        //#else
+        //        return new Uri("http://localhost:5180/");
+        //#endif
+
+        //API NUEVA FASTAPI CRUZ
+
 #if ANDROID
-        return new Uri("http://10.0.2.2:5180/");
+    return new Uri("http://10.0.2.2:8000/");
 #elif IOS || MACCATALYST
-        return new Uri("http://localhost:5180/");
+        return new Uri("http://localhost:8000/");
 #else
-        return new Uri("http://localhost:5180/");
+        return new Uri("http://localhost:8000/");
 #endif
     }
 }
