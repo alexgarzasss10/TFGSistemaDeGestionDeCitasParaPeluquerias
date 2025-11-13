@@ -28,7 +28,6 @@ public partial class MainPageModel(
     [ObservableProperty] private string barbershopName = string.Empty;
     [ObservableProperty] private string heroImageUrl = string.Empty;
 
-    
     [ObservableProperty] private string openingText = string.Empty;
     [ObservableProperty] private string openingLine1Label = string.Empty;
     [ObservableProperty] private string openingLine1Value = string.Empty;
@@ -50,14 +49,20 @@ public partial class MainPageModel(
             IsBusy = true;
             Error = null;
 
-            Barbershop? shop = null;
             try
             {
-                shop = await _barbershopService.GetAsync(ct);
+                var shop = await _barbershopService.GetAsync(ct);
                 if (shop is not null)
                 {
                     BarbershopName = shop.Name;
-                    HeroImageUrl = shop.Images?.FirstOrDefault() ?? "https://picsum.photos/1200/400?blur=2";
+
+                    // Selecciona la primera imagen válida (corrigiendo "data:https://...")
+                    HeroImageUrl = shop.Images?
+                        .Select(SanitizePotentialDataUrl)
+                        .Where(IsSupportedImage)
+                        .FirstOrDefault() ?? string.Empty;
+
+                    OnPropertyChanged(nameof(HeroImageUrl));
 
                     AddressText = string.IsNullOrWhiteSpace(shop.Address)
                         ? string.Empty
@@ -65,13 +70,14 @@ public partial class MainPageModel(
 
                     ContactText = $"{shop.Phone}\n{shop.Email}";
 
-                    
                     OpeningText = BuildOpeningText(shop.OpeningHours);
-                   
                     BuildOpeningLines(shop.OpeningHours);
                 }
             }
-            catch (Exception ex) { Error = ex.Message; }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
 
             var servicesTask = _serviceOfferingService.GetAllAsync(ct);
             var barbersTask = _barberService.GetAllAsync(ct);
@@ -81,7 +87,26 @@ public partial class MainPageModel(
             try { Services = new ObservableCollection<ServiceOffering>(await servicesTask); } catch (Exception ex) { Error = ex.Message; }
             try { Barbers = new ObservableCollection<Barber>(await barbersTask); } catch (Exception ex) { Error = ex.Message; }
             try { FeaturedProducts = new ObservableCollection<InventoryItem>(await productsTask); } catch (Exception ex) { Error = ex.Message; }
-            try { Gallery = new ObservableCollection<GalleryItem>(await galleryTask); } catch (Exception ex) { Error = ex.Message; }
+            try
+            {
+                var gal = await galleryTask;
+                Gallery = new ObservableCollection<GalleryItem>(gal);
+            }
+            catch (Exception ex) { Error = ex.Message; }
+
+            // Fallback: si la API no trae una imagen válida para la cabecera, usa la primera de la galería
+            if (string.IsNullOrWhiteSpace(HeroImageUrl) && Gallery?.Count > 0)
+            {
+                var fallback = Gallery
+                    .Select(g => SanitizePotentialDataUrl(g.ImageUrl))
+                    .FirstOrDefault(IsSupportedImage);
+
+                if (!string.IsNullOrWhiteSpace(fallback))
+                {
+                    HeroImageUrl = fallback!;
+                    OnPropertyChanged(nameof(HeroImageUrl));
+                }
+            }
         }
         catch (OperationCanceledException) { }
         finally { IsBusy = false; }
@@ -99,7 +124,6 @@ public partial class MainPageModel(
 
     private void BuildOpeningLines(OpeningHours? oh)
     {
-        
         if (oh is null)
         {
             OpeningLine1Label = "Hoy:";
@@ -128,4 +152,34 @@ public partial class MainPageModel(
         DayOfWeek.Sunday => oh.Sunday,
         _ => null
     };
+
+    private static bool IsSupportedImage(string? s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return false;
+        s = s.Trim();
+
+        if (s.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (Uri.TryCreate(s, UriKind.Absolute, out var uri) &&
+            (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+        {
+            return true; // Aceptamos cualquier URL absoluta (idealmente directa a imagen)
+        }
+
+        return false;
+    }
+
+    private static string? SanitizePotentialDataUrl(string? s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return null;
+        s = s.Trim();
+        // Convierte "data:https://..." y "data:http://..." en URL normal
+        if (s.StartsWith("data:http", StringComparison.OrdinalIgnoreCase) ||
+            s.StartsWith("data:https", StringComparison.OrdinalIgnoreCase))
+        {
+            return s[5..];
+        }
+        return s;
+    }
 }

@@ -11,44 +11,57 @@ public sealed class ImageSourceFromStringConverter : IValueConverter
         if (value is not string s || string.IsNullOrWhiteSpace(s))
             return null;
 
+        s = s.Trim();
+
         try
         {
-            
+            // Corrige entradas mal formadas como "data:https://..." o "data:http://..."
+            if (s.StartsWith("data:http", StringComparison.OrdinalIgnoreCase) ||
+                s.StartsWith("data:https", StringComparison.OrdinalIgnoreCase))
+            {
+                s = s[5..]; // quita "data:"
+            }
+
+            // Data URI válida: data:image/<type>;base64,<payload>
             if (s.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
             {
+                if (!Regex.IsMatch(s, @"^data:image\/[a-zA-Z0-9.+-]+;base64,", RegexOptions.IgnoreCase))
+                    return null;
+
                 var comma = s.IndexOf(',');
-                if (comma >= 0)
-                    s = s[(comma + 1)..];
+                if (comma < 0) return null;
 
-               
-                s = s.Trim();
-                s = Regex.Replace(s, @"\s+", string.Empty);
-
-                var bytes = System.Convert.FromBase64String(s);
+                var base64 = s[(comma + 1)..];
+                base64 = Regex.Replace(base64, @"\s+", string.Empty);
+                var bytes = System.Convert.FromBase64String(base64);
                 return ImageSource.FromStream(() => new MemoryStream(bytes));
             }
 
-            // URL absoluta 
+            // URL absoluta http/https (sin caché)
             if (Uri.TryCreate(s, UriKind.Absolute, out var uri) &&
                 (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
             {
-                return ImageSource.FromUri(uri);
+                return new UriImageSource
+                {
+                    Uri = uri,
+                    CachingEnabled = false,
+                    CacheValidity = TimeSpan.Zero
+                };
             }
 
-            
+            // Base64 “pura”
             if (LooksLikeBase64(s))
             {
-                var cleaned = Regex.Replace(s.Trim(), @"\s+", string.Empty);
+                var cleaned = Regex.Replace(s, @"\s+", string.Empty);
                 var bytes = System.Convert.FromBase64String(cleaned);
                 return ImageSource.FromStream(() => new MemoryStream(bytes));
             }
 
-            // Fichero local
+            // Archivo local
             return ImageSource.FromFile(s);
         }
         catch
         {
-            // Evita romper el binding y no muestra imágenes aleatorias
             return null;
         }
     }
