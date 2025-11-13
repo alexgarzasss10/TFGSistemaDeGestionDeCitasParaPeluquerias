@@ -68,6 +68,24 @@
     <Color x:Key="CardBackground">#FFFFFF</Color>
     <Color x:Key="CardBorder">#E5E7EB</Color>
 
+    <!-- Color de fondo específico de la página (centralizado) -->
+    <Color x:Key="SettingsPageBackground">#F5F6FA</Color>
+    <SolidColorBrush x:Key="SettingsPageBackgroundBrush" Color="{StaticResource SettingsPageBackground}" />
+
+    <!-- Icon backgrounds (centralizados) -->
+    <Color x:Key="NotificationIconBg">#E6F4FF</Color>
+    <SolidColorBrush x:Key="NotificationIconBgBrush" Color="{StaticResource NotificationIconBg}" />
+
+    <Color x:Key="LocationIconBg">#FEF3C7</Color>
+    <SolidColorBrush x:Key="LocationIconBgBrush" Color="{StaticResource LocationIconBg}" />
+
+    <Color x:Key="SettingsIconBg">#F0FDF4</Color>
+    <SolidColorBrush x:Key="SettingsIconBgBrush" Color="{StaticResource SettingsIconBg}" />
+
+    <!-- Color para botón guardar (coincide con diseño original) -->
+    <Color x:Key="SaveAccent">#10B981</Color>
+    <SolidColorBrush x:Key="SaveAccentBrush" Color="{StaticResource SaveAccent}" />
+
     <Color x:Key="TextPrimary">#111827</Color>
     <Color x:Key="TextSecondary">#6B7280</Color>
 

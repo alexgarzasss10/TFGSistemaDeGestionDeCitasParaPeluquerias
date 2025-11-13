@@ -3,153 +3,158 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.SettingsPage"
              Title="Ajustes"
-             BackgroundColor="#F5F6FA"
-             Padding="20">
+             BackgroundColor="{DynamicResource SettingsPageBackground}"
+             Padding="12">
 
     <ScrollView>
-        <Grid RowDefinitions="Auto" ColumnDefinitions="*,Auto" HorizontalOptions="FillAndExpand">
-            <!-- Center container with max width to mimic desktop layout -->
-            <Grid Column="0" HorizontalOptions="Center" VerticalOptions="Start" >
-                <Grid.WidthRequest>920</Grid.WidthRequest>
+        <Grid HorizontalOptions="FillAndExpand">
+            <!-- CONTENIDO: ahora se estira a todo el ancho disponible -->
+            <VerticalStackLayout Spacing="18" Padding="0,10,0,40" HorizontalOptions="FillAndExpand">
 
-                <VerticalStackLayout Spacing="18" Padding="0,10,0,40">
-
-                    <!-- Header -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Ajustes" FontSize="22" FontAttributes="Bold" TextColor="#1F2937"/>
-                        <Label Text="Configura tus preferencias" FontSize="13" TextColor="#6B7280"/>
-                    </VerticalStackLayout>
-
-                    <!-- Notificaciones -->
-                    <Frame BackgroundColor="White" CornerRadius="8" HasShadow="True" Padding="16">
-                        <VerticalStackLayout Spacing="12">
-                            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                                <Frame WidthRequest="36" HeightRequest="36" CornerRadius="18" BackgroundColor="#E6F4FF" HasShadow="False" Padding="6">
-                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                           Text="{StaticResource IconGlyph.Notification}"
-                                           FontSize="18"
-                                           TextColor="{StaticResource TextPrimary}"
-                                           VerticalTextAlignment="Center"
-                                           HorizontalTextAlignment="Center"/>
-                                </Frame>
-                                <VerticalStackLayout>
-                                    <Label Text="Notificaciones" FontAttributes="Bold" FontSize="16" TextColor="{StaticResource TextPrimary}"/>
-                                    <Label Text="Recibe notificaciones relacionadas con tus reservas y novedades." FontSize="12" TextColor="{StaticResource TextSecondary}"/>
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
-
-                            <Grid ColumnDefinitions="*,Auto" RowSpacing="12">
-                                <StackLayout Grid.Column="0" Spacing="4">
-                                    <Label Text="Recordatorios de cita" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                    <Label Text="Recibe recordatorios antes de tus citas" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
-                                </StackLayout>
-                                <Switch Grid.Column="1" IsToggled="True" HorizontalOptions="End" VerticalOptions="Center" />
-                            </Grid>
-
-                            <Grid ColumnDefinitions="*,Auto" RowSpacing="12">
-                                <StackLayout Grid.Column="0" Spacing="4">
-                                    <Label Text="Promociones y ofertas" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                    <Label Text="Recibe información sobre ofertas especiales" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
-                                </StackLayout>
-                                <Switch Grid.Column="1" IsToggled="False" HorizontalOptions="End" VerticalOptions="Center" />
-                            </Grid>
-
-                            <Grid ColumnDefinitions="*,Auto" RowSpacing="12">
-                                <StackLayout Grid.Column="0" Spacing="4">
-                                    <Label Text="Nuevos servicios" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                    <Label Text="Notificaciones de nuevos servicios disponibles" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
-                                </StackLayout>
-                                <Switch Grid.Column="1" IsToggled="True" HorizontalOptions="End" VerticalOptions="Center" />
-                            </Grid>
-                        </VerticalStackLayout>
-                    </Frame>
-
-                    <!-- Idioma y Región -->
-                    <Frame BackgroundColor="White" CornerRadius="8" HasShadow="True" Padding="16">
-                        <VerticalStackLayout Spacing="12">
-                            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                                <Frame WidthRequest="36" HeightRequest="36" CornerRadius="18" BackgroundColor="#FEF3C7" HasShadow="False" Padding="6">
-                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                           Text="{StaticResource IconGlyph.Location}"
-                                           FontSize="18"
-                                           TextColor="{StaticResource TextPrimary}"
-                                           VerticalTextAlignment="Center"
-                                           HorizontalTextAlignment="Center"/>
-                                </Frame>
-                                <VerticalStackLayout>
-                                    <Label Text="Idioma y Región" FontAttributes="Bold" FontSize="16" TextColor="{StaticResource TextPrimary}"/>
-                                    <Label Text="Selecciona el idioma y la zona horaria" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
-
-                            <!-- Defino filas explícitas para evitar solapamientos -->
-                            <Grid ColumnDefinitions="Auto,*,Auto"
-                                  RowDefinitions="Auto,Auto"
-                                  RowSpacing="10"
-                                  ColumnSpacing="12">
-                                <!-- Fila 0 -->
-                                <Label Grid.Row="0" Grid.Column="0" Text="Idioma" VerticalOptions="Center" TextColor="{StaticResource Gray600}" Margin="0,0,4,0" />
-                                <Picker Grid.Row="0" Grid.Column="1" Title="Selecciona idioma" HorizontalOptions="Fill" VerticalOptions="Center" Margin="0,0,0,0" HeightRequest="44">
-                                    <Picker.ItemsSource>
-                                        <x:Array Type="{x:Type x:String}">
-                                            <x:String>Español</x:String>
-                                            <x:String>Inglés</x:String>
-                                        </x:Array>
-                                    </Picker.ItemsSource>
-                                </Picker>
-
-                                <!-- Fila 1 -->
-                                <Label Grid.Row="1" Grid.Column="0" Text="Zona horaria" VerticalOptions="Center" TextColor="{StaticResource Gray600}" Margin="0,0,4,0" />
-                                <Picker Grid.Row="1" Grid.Column="1" Title="Selecciona zona" HorizontalOptions="Fill" VerticalOptions="Center" Margin="0,0,0,0" HeightRequest="44">
-                                    <Picker.ItemsSource>
-                                        <x:Array Type="{x:Type x:String}">
-                                            <x:String>Europa/Madrid</x:String>
-                                            <x:String>UTC</x:String>
-                                        </x:Array>
-                                    </Picker.ItemsSource>
-                                </Picker>
-                            </Grid>
-                        </VerticalStackLayout>
-                    </Frame>
-
-                    <!-- Apariencia -->
-                    <Frame BackgroundColor="White" CornerRadius="8" HasShadow="True" Padding="16">
-                        <VerticalStackLayout Spacing="12">
-                            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                                <Frame WidthRequest="36" HeightRequest="36" CornerRadius="18" BackgroundColor="#F0FDF4" HasShadow="False" Padding="6">
-                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                           Text="{StaticResource IconGlyph.Settings}"
-                                           FontSize="18"
-                                           TextColor="{StaticResource TextPrimary}"
-                                           VerticalTextAlignment="Center"
-                                           HorizontalTextAlignment="Center"/>
-                                </Frame>
-                                <VerticalStackLayout>
-                                    <Label Text="Apariencia" FontAttributes="Bold" FontSize="16" TextColor="{StaticResource TextPrimary}"/>
-                                    <Label Text="Preferencias de tema" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
-
-                            <Grid ColumnDefinitions="*,Auto" RowSpacing="8">
-                                <StackLayout Grid.Column="0" Spacing="2">
-                                    <Label Text="Modo oscuro" FontSize="14" TextColor="{StaticResource TextPrimary}"/>
-                                    <Label Text="Activa el tema oscuro" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
-                                </StackLayout>
-                                <Switch Grid.Column="1" IsToggled="False" HorizontalOptions="End" VerticalOptions="Center" />
-                            </Grid>
-                        </VerticalStackLayout>
-                    </Frame>
-
-
-                    <!-- Acción: Guardar / Cancelar -->
-                    <HorizontalStackLayout HorizontalOptions="End" Spacing="12" Padding="0,6,0,0">
-                        <Button Text="Cancelar" BackgroundColor="#F3F4F6" TextColor="#374151" CornerRadius="6" WidthRequest="110"/>
-                        <Button Text="Guardar cambios" BackgroundColor="#10B981" TextColor="White" CornerRadius="6" WidthRequest="140"/>
-                    </HorizontalStackLayout>
-
+                <!-- Header -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Ajustes" Style="{StaticResource TitleLargeStyle}" />
+                    <Label Text="Configura tus preferencias" Style="{StaticResource MutedTextStyle}" />
                 </VerticalStackLayout>
-            </Grid>
 
+                <!-- Notificaciones -->
+                <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True" Padding="16" HorizontalOptions="FillAndExpand">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                            <Frame Style="{StaticResource InfoIconFrameStyle}" Background="{DynamicResource NotificationIconBgBrush}">
+                                <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                       Text="{StaticResource IconGlyph.Notification}"
+                                       FontSize="18"
+                                       TextColor="{DynamicResource TextPrimary}"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Frame>
+
+                            <VerticalStackLayout>
+                                <Label Text="Notificaciones" Style="{StaticResource InfoCardTitleStyle}" />
+                                <Label Text="Recibe notificaciones relacionadas con tus reservas y novedades." Style="{StaticResource InfoCardSubTextStyle}" />
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+
+                        <Grid ColumnDefinitions="*,Auto" RowSpacing="12">
+                            <StackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Recordatorios de cita" Style="{StaticResource BodyTextStyle}" />
+                                <Label Text="Recibe recordatorios antes de tus citas" Style="{StaticResource MutedTextStyle}" />
+                            </StackLayout>
+                            <Switch Grid.Column="1" IsToggled="True" HorizontalOptions="End" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto" RowSpacing="12">
+                            <StackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Promociones y ofertas" Style="{StaticResource BodyTextStyle}" />
+                                <Label Text="Recibe información sobre ofertas especiales" Style="{StaticResource MutedTextStyle}" />
+                            </StackLayout>
+                            <Switch Grid.Column="1" IsToggled="False" HorizontalOptions="End" VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto" RowSpacing="12">
+                            <StackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Nuevos servicios" Style="{StaticResource BodyTextStyle}" />
+                                <Label Text="Notificaciones de nuevos servicios disponibles" Style="{StaticResource MutedTextStyle}" />
+                            </StackLayout>
+                            <Switch Grid.Column="1" IsToggled="True" HorizontalOptions="End" VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Idioma y Región -->
+                <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True" Padding="16" HorizontalOptions="FillAndExpand">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                            <Frame Style="{StaticResource InfoIconFrameStyle}" Background="{DynamicResource LocationIconBgBrush}">
+                                <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                       Text="{StaticResource IconGlyph.Location}"
+                                       FontSize="18"
+                                       TextColor="{DynamicResource TextPrimary}"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Frame>
+
+                            <VerticalStackLayout>
+                                <Label Text="Idioma y Región" Style="{StaticResource InfoCardTitleStyle}" />
+                                <Label Text="Selecciona el idioma y la zona horaria" Style="{StaticResource InfoCardSubTextStyle}" />
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+
+                        <Grid ColumnDefinitions="Auto,*"
+                              RowDefinitions="Auto,Auto"
+                              RowSpacing="10"
+                              ColumnSpacing="12">
+                            <Label Grid.Row="0" Grid.Column="0" Text="Idioma" VerticalOptions="Center" TextColor="{DynamicResource Gray600}" Margin="0,0,4,0" />
+                            <Picker Grid.Row="0" Grid.Column="1" Title="Selecciona idioma" HorizontalOptions="FillAndExpand" VerticalOptions="Center" HeightRequest="44">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Español</x:String>
+                                        <x:String>Inglés</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+
+                            <Label Grid.Row="1" Grid.Column="0" Text="Zona horaria" VerticalOptions="Center" TextColor="{DynamicResource Gray600}" Margin="0,0,4,0" />
+                            <Picker Grid.Row="1" Grid.Column="1" Title="Selecciona zona" HorizontalOptions="FillAndExpand" VerticalOptions="Center" HeightRequest="44">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Europa/Madrid</x:String>
+                                        <x:String>UTC</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Apariencia -->
+                <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True" Padding="16" HorizontalOptions="FillAndExpand">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                            <Frame Style="{StaticResource InfoIconFrameStyle}" Background="{DynamicResource SettingsIconBgBrush}">
+                                <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                       Text="{StaticResource IconGlyph.Settings}"
+                                       FontSize="18"
+                                       TextColor="{DynamicResource TextPrimary}"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Frame>
+
+                            <VerticalStackLayout>
+                                <Label Text="Apariencia" Style="{StaticResource InfoCardTitleStyle}" />
+                                <Label Text="Preferencias de tema" Style="{StaticResource InfoCardSubTextStyle}" />
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+
+                        <Grid ColumnDefinitions="*,Auto" RowSpacing="8">
+                            <StackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="Modo oscuro" Style="{StaticResource BodyTextStyle}" />
+                                <Label Text="Activa el tema oscuro" Style="{StaticResource MutedTextStyle}" />
+                            </StackLayout>
+                            <Switch Grid.Column="1" IsToggled="False" HorizontalOptions="End" VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Acción: Guardar / Cancelar (se envuelve si no cabe) -->
+                <FlexLayout Direction="Row"
+                            Wrap="Wrap"
+                            JustifyContent="End"
+                            AlignItems="Center"
+                            AlignContent="End"
+                            Padding="0,6,0,0">
+                    <Button Text="Cancelar"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            WidthRequest="110"
+                            Margin="0,0,12,12"/>
+                    <Button Text="Guardar cambios"
+                            Style="{StaticResource PrimarySuccessButton}"
+                            WidthRequest="140"
+                            Margin="0,0,12,12"/>
+                </FlexLayout>
+
+            </VerticalStackLayout>
         </Grid>
     </ScrollView>
 </ContentPage>

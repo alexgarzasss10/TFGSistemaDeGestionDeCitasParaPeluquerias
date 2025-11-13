@@ -4,280 +4,266 @@
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ProfilePage"
              Title="Mi Perfil"
              BackgroundColor="{StaticResource SurfaceAlt}"
-             Padding="20">
+             Padding="12">
 
     <ScrollView>
-        <Grid HorizontalOptions="FillAndExpand">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
-            <Grid HorizontalOptions="Center" VerticalOptions="Start">
-                <Grid.WidthRequest>920</Grid.WidthRequest>
+            <!-- CONTENIDO: se estira al ancho disponible y usa recursos -->
+            <VerticalStackLayout Spacing="18" Padding="0,6,0,40" HorizontalOptions="FillAndExpand">
 
-                <VerticalStackLayout Spacing="18" Padding="0,6,0,40">
+                <!-- Header -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Mi Perfil" Style="{StaticResource TitleLargeStyle}" />
+                    <Label Text="Gestiona tu información personal y citas" Style="{StaticResource MutedTextStyle}" />
+                </VerticalStackLayout>
 
-                    <!-- Header -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Mi Perfil" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
-                        <Label Text="Gestiona tu información personal y citas" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-                    </VerticalStackLayout>
+                <!-- Próximas Citas (fondo verde suave desde Colors) -->
+                <Frame BackgroundColor="{StaticResource ServiceIconBgLight}"
+                       CornerRadius="10"
+                       Padding="18"
+                       HasShadow="False"
+                       BorderColor="{StaticResource CardBorder}"
+                       HorizontalOptions="FillAndExpand">
+                    <Grid ColumnDefinitions="2*,1*" RowDefinitions="Auto" ColumnSpacing="16">
 
-                    <!-- Próximas Citas estilo maqueta -->
-                    <Frame BackgroundColor="#E9F8F3"
-                           CornerRadius="10"
-                           Padding="18"
-                           HasShadow="False"
-                           BorderColor="{StaticResource CardBorder}">
-                        <Grid ColumnDefinitions="2*,1*" RowDefinitions="Auto" ColumnSpacing="16">
-
-                            <!-- Título -->
-                            <VerticalStackLayout Grid.Column="0" Spacing="12">
-
-                                <!-- Sección título -->
-                                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                                    <Frame WidthRequest="40" HeightRequest="40" CornerRadius="8" BackgroundColor="{StaticResource Accent}" Padding="8" HasShadow="False">
-                                        <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                               Text="{StaticResource IconGlyph.Calendar}"
-                                               TextColor="White"
-                                               HorizontalTextAlignment="Center"
-                                               VerticalTextAlignment="Center"
-                                               FontSize="16"/>
-                                    </Frame>
-                                    <VerticalStackLayout>
-                                        <Label Text="Próximas Citas" FontAttributes="Bold" FontSize="16" TextColor="{StaticResource TextPrimary}" />
-                                        <Label Text="Tus próximas reservas programadas" FontSize="12" TextColor="{StaticResource TextSecondary}" />
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
-
-                               
-                                <Frame BackgroundColor="{StaticResource CardBackground}"
+                        <VerticalStackLayout Grid.Column="0" Spacing="12" HorizontalOptions="FillAndExpand">
+                            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                                <Frame Style="{StaticResource InfoIconFrameStyle}"
+                                       Background="{StaticResource AccentBrush}"
+                                       WidthRequest="40"
+                                       HeightRequest="40"
                                        CornerRadius="8"
-                                       Padding="12"
-                                       BorderColor="{StaticResource CardBorder}"
+                                       Padding="8"
                                        HasShadow="False">
-                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
-
-                                        <!-- Icono + título -->
-                                        <Label Grid.Row="0" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                               Text="{StaticResource IconGlyph.History}" FontSize="18" TextColor="{StaticResource Gray600}" VerticalOptions="Start" />
-
-                                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
-                                            <Label Text="Coloración" FontAttributes="Bold" FontSize="14" TextColor="{StaticResource TextPrimary}" />
-                                            <Label Text="con Ana R." FontSize="12" TextColor="{StaticResource TextSecondary}" />
-                                        </VerticalStackLayout>
-
-                                        <!-- Estado -->
-                                        <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Accent}" Padding="8,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
-                                            <Label Text="Confirmada" FontSize="12" TextColor="White" />
-                                        </Frame>
-
-                                        <!-- Fecha/hora fila -->
-                                        <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="12" VerticalOptions="Center">
-                                            <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Schedule}" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="28 Oct, 2025" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="12:00" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                        </HorizontalStackLayout>
-
-                                        <!-- Botones acción -->
-                                        <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Spacing="12" HorizontalOptions="End">
-                                            <Button Text="Cancelar" BackgroundColor="#F3F4F6" TextColor="{StaticResource TextPrimary}" CornerRadius="6" WidthRequest="100" />
-                                            <Button Text="Ver detalles" BackgroundColor="{StaticResource Accent}" TextColor="White" CornerRadius="6" WidthRequest="120" />
-                                        </HorizontalStackLayout>
-                                    </Grid>
+                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                           Text="{StaticResource IconGlyph.Calendar}"
+                                           TextColor="{StaticResource White}"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center"
+                                           FontSize="16"/>
                                 </Frame>
-                            </VerticalStackLayout>
 
-                           
-                            <Frame Grid.Column="1"
-                                   BackgroundColor="#F3FAF8"
-                                   CornerRadius="8"
-                                   Padding="24"
-                                   HasShadow="False"
-                                   BorderColor="{StaticResource CardBorder}">
-                                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
-                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Calendar}" FontSize="28" TextColor="{StaticResource Gray600}" HorizontalOptions="Center"/>
-                                    <Label Text="No hay más citas programadas" FontSize="13" TextColor="{StaticResource Gray600}" HorizontalOptions="Center"/>
-                                    <Button Text="Reservar nueva cita" BackgroundColor="Transparent" TextColor="{StaticResource Accent}" CornerRadius="6" />
+                                <VerticalStackLayout>
+                                    <Label Text="Próximas Citas" Style="{StaticResource InfoCardTitleStyle}" />
+                                    <Label Text="Tus próximas reservas programadas" Style="{StaticResource InfoCardSubTextStyle}" />
                                 </VerticalStackLayout>
-                            </Frame>
-                        </Grid>
-                    </Frame>
+                            </HorizontalStackLayout>
 
-                    <!-- Grid principal: información a la izquierda, sidebar a la derecha -->
-                    <Grid ColumnDefinitions="2*,1*" ColumnSpacing="12" RowSpacing="12">
+                            <Frame Style="{StaticResource CardFrameStyle}"
+                                   CornerRadius="8"
+                                   Padding="12"
+                                   HasShadow="False"
+                                   HorizontalOptions="FillAndExpand">
+                                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                                    <Label Grid.Row="0" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                           Text="{StaticResource IconGlyph.History}" FontSize="18" TextColor="{StaticResource Gray600}" VerticalOptions="Start" />
 
-                        <!-- Columna izquierda -->
-                        <VerticalStackLayout Grid.Column="0" Spacing="12">
-
-                            <!-- Información Personal -->
-                            <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="8" BorderColor="{StaticResource CardBorder}" Padding="16" HasShadow="False">
-                                <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" ColumnSpacing="16" RowSpacing="8">
-                                    <!-- Avatar columna -->
-                                    <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Spacing="8" HorizontalOptions="Start" Margin="0,0,8,0">
-                                        <Frame WidthRequest="64" HeightRequest="64" CornerRadius="32" Padding="0" HasShadow="False" BorderColor="{StaticResource CardBorder}" BackgroundColor="#F3F4F6" HorizontalOptions="Start">
-                                            <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                                   Text="{StaticResource IconGlyph.Profile}"
-                                                   FontSize="28"
-                                                   TextColor="{StaticResource Gray600}"
-                                                   HorizontalTextAlignment="Center"
-                                                   VerticalTextAlignment="Center"
-                                                   VerticalOptions="Center"
-                                                   HorizontalOptions="Center"/>
-                                        </Frame>
-
-                                        <Label Text="Juan Díaz" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start"/>
-                                        <Label Text="Cliente desde 2023" FontSize="12" TextColor="{StaticResource TextSecondary}" HorizontalOptions="Start"/>
-                                        <Button Text="Cambiar foto" BackgroundColor="#F3F4F6" TextColor="{StaticResource TextPrimary}" CornerRadius="6" HorizontalOptions="Start"/>
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                        <Label Text="Coloración" FontAttributes="Bold" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                                        <Label Text="con Ana R." FontSize="12" TextColor="{StaticResource TextSecondary}" />
                                     </VerticalStackLayout>
 
-                                    <!-- Grid con filas y columnas explícitas -->
-                                    <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="12" RowSpacing="8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
+                                    <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Accent}" Padding="8,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
+                                        <Label Text="Confirmada" FontSize="12" TextColor="{StaticResource White}" />
+                                    </Frame>
 
-                                        <!-- Nombre -->
-                                        <Label Grid.Row="0" Grid.Column="0" Text="Nombre completo" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,0,0,4"/>
-                                        <Entry Grid.Row="1" Grid.Column="0" Text="Juan Díaz" BackgroundColor="#F9FAFB" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
-
-                                        <!-- Email -->
-                                        <Label Grid.Row="0" Grid.Column="1" Text="Email" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,0,0,4"/>
-                                        <Entry Grid.Row="1" Grid.Column="1" Text="juan.diaz@email.com" BackgroundColor="#F9FAFB" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
-
-                                        <!-- Teléfono -->
-                                        <Label Grid.Row="2" Grid.Column="0" Text="Teléfono" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,8,0,4"/>
-                                        <Entry Grid.Row="3" Grid.Column="0" Text="+34 612 345 678" BackgroundColor="#F9FAFB" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
-
-                                        <!-- Fecha de nacimiento -->
-                                        <Label Grid.Row="2" Grid.Column="1" Text="Fecha de nacimiento" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,8,0,4"/>
-                                        <Entry Grid.Row="3" Grid.Column="1" Text="15/05/1990" BackgroundColor="#F9FAFB" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
-                                    </Grid>
-
-                                    <!-- Botones -->
-                                    <HorizontalStackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="End" Spacing="8" Margin="0,6,0,0">
-                                        <Button Text="Cancelar" BackgroundColor="#F3F4F6" TextColor="{StaticResource TextPrimary}" CornerRadius="6" WidthRequest="100" />
-                                        <Button Text="Guardar cambios" BackgroundColor="{StaticResource Accent}" TextColor="White" CornerRadius="6" WidthRequest="140" />
+                                    <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="12" VerticalOptions="Center">
+                                        <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Schedule}" TextColor="{StaticResource Gray600}" />
+                                        <Label Text="28 Oct, 2025" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                        <Label Text="•" TextColor="{StaticResource Gray600}" />
+                                        <Label Text="12:00" FontSize="12" TextColor="{StaticResource Gray600}" />
                                     </HorizontalStackLayout>
+
+                                    <FlexLayout Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                                                Direction="Row" Wrap="Wrap"
+                                                JustifyContent="End" AlignItems="Center" AlignContent="End" Padding="0">
+                                        <Button Text="Cancelar"
+                                                Style="{StaticResource SecondaryButtonStyle}"
+                                                WidthRequest="100"
+                                                Margin="0,0,12,12"/>
+                                        <Button Text="Ver detalles"
+                                                Style="{StaticResource PrimaryButtonSmall}"
+                                                WidthRequest="120"
+                                                Margin="0,0,12,12"/>
+                                    </FlexLayout>
                                 </Grid>
                             </Frame>
-
-                            <!-- Historial de Citas -->
-                            <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="8" BorderColor="{StaticResource CardBorder}" Padding="16" HasShadow="False">
-                                <VerticalStackLayout Spacing="12">
-                                    <Label Text="Historial de Citas" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
-
-                                    <!-- Item 1 -->
-                                    <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="#F3F4F6" HasShadow="False">
-                                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
-                                            <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.History}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
-                                            <Label Grid.Row="0" Grid.Column="1" Text="Corte de pelo" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
-                                            <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="#EEF2FF" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
-                                                <Label Text="Completado" FontSize="12" TextColor="{StaticResource Gray950}" />
-                                            </Frame>
-                                            <Label Grid.Row="1" Grid.Column="1" Text="Carlos M.  •  15/10/2025  •  10:00  •  15,00 €"
-                                                   FontSize="12"
-                                                   TextColor="{StaticResource Gray600}"
-                                                   LineBreakMode="TailTruncation"
-                                                   HorizontalOptions="FillAndExpand" />
-                                        </Grid>
-                                    </Frame>
-
-                                    <!-- Item 2 -->
-                                    <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="#F3F4F6" HasShadow="False">
-                                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
-                                            <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.History}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
-                                            <Label Grid.Row="0" Grid.Column="1" Text="Corte + Barba" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
-                                            <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="#EEF2FF" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
-                                                <Label Text="Completado" FontSize="12" TextColor="{StaticResource Gray950}" />
-                                            </Frame>
-                                            <Label Grid.Row="1" Grid.Column="1" Text="Laura C.  •  20/10/2025  •  15:00  •  25,00 €"
-                                                   FontSize="12"
-                                                   TextColor="{StaticResource Gray600}"
-                                                   LineBreakMode="TailTruncation"
-                                                   HorizontalOptions="FillAndExpand" />
-                                        </Grid>
-                                    </Frame>
-
-                                    <!-- Item 3 -->
-                                    <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="#F3F4F6" HasShadow="False">
-                                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
-                                            <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Upcoming}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
-                                            <Label Grid.Row="0" Grid.Column="1" Text="Coloración" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
-                                            <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Accent}" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
-                                                <Label Text="Próxima" FontSize="12" TextColor="White" />
-                                            </Frame>
-                                            <Label Grid.Row="1" Grid.Column="1" Text="Ana R.  •  28/10/2025  •  12:00  •  40,00 €"
-                                                   FontSize="12"
-                                                   TextColor="{StaticResource Gray600}"
-                                                   LineBreakMode="TailTruncation"
-                                                   HorizontalOptions="FillAndExpand" />
-                                        </Grid>
-                                    </Frame>
-
-                                </VerticalStackLayout>
-                            </Frame>
                         </VerticalStackLayout>
 
-                        <!-- Columna derecha -->
-                        <VerticalStackLayout Grid.Column="1" Spacing="12">
-                            <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="8" BorderColor="{StaticResource CardBorder}" Padding="12" HasShadow="False">
-                                <VerticalStackLayout Spacing="10">
-                                    <Label Text="Estadísticas" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
-                                    <Frame BackgroundColor="#F3F4F6" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False">
-                                        <VerticalStackLayout Spacing="4">
-                                            <Label Text="Total de citas" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="24" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Gray950}" />
-                                        </VerticalStackLayout>
-                                    </Frame>
-                                    <Frame BackgroundColor="#F3F4F6" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False">
-                                        <VerticalStackLayout Spacing="4">
-                                            <Label Text="Próximas citas" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="1" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Gray950}" />
-                                        </VerticalStackLayout>
-                                    </Frame>
-                                    <Frame BackgroundColor="#F3F4F6" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False">
-                                        <VerticalStackLayout Spacing="4">
-                                            <Label Text="Servicio favorito" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="Corte de pelo" FontSize="14" TextColor="{StaticResource Gray950}" />
-                                        </VerticalStackLayout>
-                                    </Frame>
-                                    <Frame BackgroundColor="#F3F4F6" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False">
-                                        <VerticalStackLayout Spacing="4">
-                                            <Label Text="Barbero favorito" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="Carlos M." FontSize="14" TextColor="{StaticResource Gray950}" />
-                                        </VerticalStackLayout>
-                                    </Frame>
-                                </VerticalStackLayout>
-                            </Frame>
-
-                            <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="8" BorderColor="{StaticResource CardBorder}" Padding="12" HasShadow="False">
-                                <VerticalStackLayout Spacing="8">
-                                    <Label Text="Contacto" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
-                                    <HorizontalStackLayout Spacing="8">
-                                        <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Phone}" TextColor="{StaticResource Gray600}" />
-                                        <Label Text="juan.diaz@email.com" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-                                    </HorizontalStackLayout>
-                                    <HorizontalStackLayout Spacing="8">
-                                        <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Phone}" TextColor="{StaticResource Gray600}" />
-                                        <Label Text="+34 612 345 678" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-                                    </HorizontalStackLayout>
-                                </VerticalStackLayout>
-                            </Frame>
-                        </VerticalStackLayout>
-
+                        <Frame Grid.Column="1"
+                               BackgroundColor="{StaticResource ServiceIconBgLight}"
+                               CornerRadius="8"
+                               Padding="24"
+                               HasShadow="False"
+                               BorderColor="{StaticResource CardBorder}"
+                               HorizontalOptions="FillAndExpand"
+                               VerticalOptions="FillAndExpand">
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                                <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Calendar}" FontSize="28" TextColor="{StaticResource Gray600}" HorizontalOptions="Center"/>
+                                <Label Text="No hay más citas programadas" FontSize="13" TextColor="{StaticResource Gray600}" HorizontalOptions="Center"/>
+                                <Button Text="Reservar nueva cita" BackgroundColor="Transparent" TextColor="{StaticResource Accent}" CornerRadius="6" />
+                            </VerticalStackLayout>
+                        </Frame>
                     </Grid>
+                </Frame>
 
-                </VerticalStackLayout>
-            </Grid>
+                <!-- Grid principal (información + sidebar) -->
+                <Grid ColumnDefinitions="2*,1*" ColumnSpacing="12" RowSpacing="12" HorizontalOptions="FillAndExpand">
+
+                    <VerticalStackLayout Grid.Column="0" Spacing="12" HorizontalOptions="FillAndExpand">
+                        <Frame Style="{StaticResource CardFrameStyle}" Padding="16" HasShadow="False" HorizontalOptions="FillAndExpand">
+                            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" ColumnSpacing="16" RowSpacing="8">
+                                <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Spacing="8" HorizontalOptions="Start" Margin="0,0,8,0">
+                                    <Frame WidthRequest="64" HeightRequest="64" CornerRadius="32" Padding="0" HasShadow="False" BorderColor="{StaticResource CardBorder}" BackgroundColor="{StaticResource Surface}" HorizontalOptions="Start">
+                                        <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Profile}" FontSize="28" TextColor="{StaticResource Gray600}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    </Frame>
+
+                                    <Label Text="Juan Díaz" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start"/>
+                                    <Label Text="Cliente desde 2023" FontSize="12" TextColor="{StaticResource TextSecondary}" HorizontalOptions="Start"/>
+                                    <Button Text="Cambiar foto" Style="{StaticResource SecondaryButtonStyle}" HorizontalOptions="Start"/>
+                                </VerticalStackLayout>
+
+                                <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="12" RowSpacing="8" HorizontalOptions="FillAndExpand">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Row="0" Grid.Column="0" Text="Nombre completo" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,0,0,4"/>
+                                    <Entry Grid.Row="1" Grid.Column="0" Text="Juan Díaz" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
+
+                                    <Label Grid.Row="0" Grid.Column="1" Text="Email" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,0,0,4"/>
+                                    <Entry Grid.Row="1" Grid.Column="1" Text="juan.diaz@email.com" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
+
+                                    <Label Grid.Row="2" Grid.Column="0" Text="Teléfono" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,8,0,4"/>
+                                    <Entry Grid.Row="3" Grid.Column="0" Text="+34 612 345 678" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
+
+                                    <Label Grid.Row="2" Grid.Column="1" Text="Fecha de nacimiento" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,8,0,4"/>
+                                    <Entry Grid.Row="3" Grid.Column="1" Text="15/05/1990" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
+                                </Grid>
+
+                                <FlexLayout Grid.Row="1" Grid.Column="1"
+                                            Direction="Row"
+                                            Wrap="Wrap"
+                                            JustifyContent="End"
+                                            AlignItems="Center"
+                                            AlignContent="End"
+                                            Margin="0,6,0,0">
+                                    <Button Text="Cancelar" Style="{StaticResource SecondaryButtonStyle}" WidthRequest="100" Margin="0,0,8,8" />
+                                    <Button Text="Guardar cambios" Style="{StaticResource PrimarySuccessButton}" WidthRequest="140" Margin="0,0,8,8" />
+                                </FlexLayout>
+                            </Grid>
+                        </Frame>
+
+                        <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="8" BorderColor="{StaticResource CardBorder}" Padding="16" HasShadow="False" HorizontalOptions="FillAndExpand">
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="Historial de Citas" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
+
+                                <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="{StaticResource Surface}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
+                                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.History}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
+                                        <Label Grid.Row="0" Grid.Column="1" Text="Corte de pelo" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
+                                        <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Secondary}" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
+                                            <Label Text="Completado" FontSize="12" TextColor="{StaticResource Gray950}" />
+                                        </Frame>
+                                        <Label Grid.Row="1" Grid.Column="1" Text="Carlos M.  •  15/10/2025  •  10:00  •  15,00 €"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Gray600}"
+                                               LineBreakMode="TailTruncation"
+                                               HorizontalOptions="FillAndExpand" />
+                                    </Grid>
+                                </Frame>
+
+                                <!-- Repite otros items -->
+                                <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="{StaticResource Surface}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
+                                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.History}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
+                                        <Label Grid.Row="0" Grid.Column="1" Text="Corte + Barba" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
+                                        <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Secondary}" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
+                                            <Label Text="Completado" FontSize="12" TextColor="{StaticResource Gray950}" />
+                                        </Frame>
+                                        <Label Grid.Row="1" Grid.Column="1" Text="Laura C.  •  20/10/2025  •  15:00  •  25,00 €"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Gray600}"
+                                               LineBreakMode="TailTruncation"
+                                               HorizontalOptions="FillAndExpand" />
+                                    </Grid>
+                                </Frame>
+
+                                <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="{StaticResource Surface}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
+                                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Upcoming}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
+                                        <Label Grid.Row="0" Grid.Column="1" Text="Coloración" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
+                                        <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Accent}" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
+                                            <Label Text="Próxima" FontSize="12" TextColor="{StaticResource White}" />
+                                        </Frame>
+                                        <Label Grid.Row="1" Grid.Column="1" Text="Ana R.  •  28/10/2025  •  12:00  •  40,00 €"
+                                               FontSize="12"
+                                               TextColor="{StaticResource Gray600}"
+                                               LineBreakMode="TailTruncation"
+                                               HorizontalOptions="FillAndExpand" />
+                                    </Grid>
+                                </Frame>
+
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="12" HorizontalOptions="FillAndExpand">
+                        <Frame Style="{StaticResource CardFrameStyle}" Padding="12" HasShadow="False" HorizontalOptions="FillAndExpand">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="Estadísticas" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
+                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="Total de citas" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                        <Label Text="24" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Gray950}" />
+                                    </VerticalStackLayout>
+                                </Frame>
+                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="Próximas citas" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                        <Label Text="1" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Gray950}" />
+                                    </VerticalStackLayout>
+                                </Frame>
+                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="Servicio favorito" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                        <Label Text="Corte de pelo" FontSize="14" TextColor="{StaticResource Gray950}" />
+                                    </VerticalStackLayout>
+                                </Frame>
+                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                    <VerticalStackLayout Spacing="4">
+                                        <Label Text="Barbero favorito" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                        <Label Text="Carlos M." FontSize="14" TextColor="{StaticResource Gray950}" />
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                        <Frame Style="{StaticResource CardFrameStyle}" Padding="12" HasShadow="False" HorizontalOptions="FillAndExpand">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="Contacto" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Phone}" TextColor="{StaticResource Gray600}" />
+                                    <Label Text="juan.diaz@email.com" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Phone}" TextColor="{StaticResource Gray600}" />
+                                    <Label Text="+34 612 345 678" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                </Grid>
+            </VerticalStackLayout>
         </Grid>
     </ScrollView>
 </ContentPage>
