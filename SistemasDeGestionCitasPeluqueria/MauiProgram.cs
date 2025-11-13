@@ -44,6 +44,9 @@ public static class MauiProgram
             builder.Services.AddSingleton<IReviewService, FakeReviewService>();
         }
 
+        builder.Services.AddSingleton<LoginPage>();
+        builder.Services.AddSingleton<LoginPageModel>();
+
         // VM y páginas
         builder.Services.AddSingleton<MainPageModel>();
         builder.Services.AddSingleton<MainPage>();

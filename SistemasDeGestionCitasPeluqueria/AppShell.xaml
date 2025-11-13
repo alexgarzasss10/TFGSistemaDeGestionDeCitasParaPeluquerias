@@ -26,11 +26,11 @@
                 <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Reseñas">
                   <Setter Property="Text" Value="{StaticResource IconGlyph.Reviews}" />
                 </DataTrigger>
-                <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Ajustes">
-                  <Setter Property="Text" Value="{StaticResource IconGlyph.Settings}" />
-                </DataTrigger>
                 <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Perfil">
                   <Setter Property="Text" Value="{StaticResource IconGlyph.Profile}" />
+                </DataTrigger>
+                <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Ajustes">
+                  <Setter Property="Text" Value="{StaticResource IconGlyph.Settings}" />
                 </DataTrigger>
               </Label.Triggers>
             </Label>

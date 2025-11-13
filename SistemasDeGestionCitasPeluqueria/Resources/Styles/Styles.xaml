@@ -311,4 +311,149 @@
         <Setter Property="CornerRadius" Value="12" />
     </Style>
 
+    <!-- ESTILO GLOBAL PARA SWITCH EN AJUSTES -->
+    <Style x:Key="SettingsSwitchStyle" TargetType="Switch">
+        <!-- Track encendido tenue -->
+        <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+        <!-- Pulgar mantiene el accent completo -->
+        <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+        <Setter Property="Scale" Value="1.0" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="SwitchStates">
+                        <VisualState x:Name="On">
+                            <VisualState.Setters>
+                                <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+                                <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Off">
+                            <VisualState.Setters>
+                                <!-- Track apagado gris claro -->
+                                <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+                                <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Estilo global Switch (aplica a todos los Switch) -->
+    <Style TargetType="Switch">
+        <!-- Pulgar con accent; track encendido tenue -->
+        <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+        <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+        <Setter Property="Scale" Value="1.0" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="SwitchStates">
+                        <VisualState x:Name="On">
+                            <VisualState.Setters>
+                                <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+                                <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Off">
+                            <VisualState.Setters>
+                                <!-- Pulgar sigue siendo accent (puedes cambiar a Gray400 si prefieres) -->
+                                <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="ThumbColor" Value="{DynamicResource Gray300}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Contenedor con borde gris claro para Pickers -->
+    <Style x:Key="OutlinedPickerBorderStyle" TargetType="Border">
+        <!-- Gris claro (usa el brush ya definido) -->
+        <Setter Property="Stroke" Value="{DynamicResource Gray300Brush}" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Texto del Picker claramente visible dentro del recuadro -->
+    <Style x:Key="PickerBaseStyle" TargetType="Picker">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="TitleColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Margin" Value="4,0,0,0" />
+    </Style>
+
+    <!-- Chevron para el Picker -->
+    <Style x:Key="PickerChevronStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="Margin" Value="8,0,10,0" />
+        <Setter Property="Text" Value="▼" />
+    </Style>
+
+    <!-- LOGIN: tarjeta principal -->
+    <Style x:Key="LoginCardBorderStyle" TargetType="Border">
+        <Setter Property="Padding" Value="36,28" />
+        <Setter Property="Background" Value="{StaticResource LoginCardBackgroundBrush}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="14" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow" Value="{StaticResource LoginCardShadow}" />
+        <Setter Property="WidthRequest" Value="420" />
+    </Style>
+
+    <!-- Contenedor de cada campo (simula caja con borde gris claro) -->
+    <Style x:Key="LoginInputBorderStyle" TargetType="Border">
+        <Setter Property="Stroke" Value="{DynamicResource Gray300Brush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Background" Value="{StaticResource LoginInputBackgroundBrush}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Entry limpio dentro del contenedor -->
+    <Style x:Key="LoginEntryStyle" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="HeightRequest" Value="34" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <!-- Botón principal ancho completo dentro de la tarjeta -->
+    <Style x:Key="LoginPrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="0,16,0,0" />
+    </Style>
+
 </ResourceDictionary>
