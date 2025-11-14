@@ -29,8 +29,9 @@ public static class MauiProgram
         // Registro de clientes HTTP hacia FastAPI (sin servicios fake)
         builder.Services.AddBackendClients(ServiceRegistration.GetDevBaseAddress());
 
-        builder.Services.AddSingleton<LoginPage>();
-        builder.Services.AddSingleton<LoginPageModel>();
+        // Login: TRANSIENT para no reutilizar valores tras logout
+        builder.Services.AddTransient<LoginPageModel>();
+        builder.Services.AddTransient<LoginPage>();
 
         // VM y páginas
         builder.Services.AddSingleton<MainPageModel>();
@@ -48,6 +49,10 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<ReviewsPageModel>();
         builder.Services.AddSingleton<ReviewsPage>();
+
+        // Profile page + VM (puede ser singleton o transient; no guarda credenciales)
+        builder.Services.AddSingleton<ProfilePageModel>();
+        builder.Services.AddSingleton<ProfilePage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

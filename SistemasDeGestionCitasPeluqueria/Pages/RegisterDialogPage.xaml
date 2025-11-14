@@ -9,7 +9,6 @@
         <!-- Overlay oscuro -->
         <BoxView BackgroundColor="{DynamicResource Black}" Opacity="0.45" />
 
-        <!-- ScrollView ocupa toda la pantalla; si la tarjeta es más alta que la ventana se podrá hacer scroll -->
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="16">
 
@@ -69,8 +68,20 @@
                                 <Entry x:Name="PasswordEntry"
                                        Style="{StaticResource LoginEntryStyle}"
                                        IsPassword="True"
-                                       Placeholder="********" />
+                                       Placeholder="********"
+                                       TextChanged="OnPasswordChanged" />
                             </Border>
+
+                            <!-- Requisitos de contraseña -->
+                            <VerticalStackLayout x:Name="PasswordHints"
+                                                 Spacing="2"
+                                                 IsVisible="False">
+                                <Label x:Name="ReqLenLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
+                                <Label x:Name="ReqUpperLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
+                                <Label x:Name="ReqLowerLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
+                                <Label x:Name="ReqDigitLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
+                                <Label x:Name="ReqSymbolLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
 
                         <!-- Confirmar contraseña -->
@@ -82,8 +93,15 @@
                                 <Entry x:Name="ConfirmPasswordEntry"
                                        Style="{StaticResource LoginEntryStyle}"
                                        IsPassword="True"
-                                       Placeholder="********" />
+                                       Placeholder="********"
+                                       TextChanged="OnPasswordChanged" />
                             </Border>
+
+                            <!-- Pista de confirmación -->
+                            <Label x:Name="ConfirmHintLbl"
+                                   FontSize="11"
+                                   IsVisible="False"
+                                   TextColor="{DynamicResource TextSecondary}" />
                         </VerticalStackLayout>
 
                         <!-- Etiqueta de error -->
