@@ -11,15 +11,13 @@ namespace SistemasDeGestionCitasPeluqueria.Pages
         public LoginPage(LoginPageModel vm)
         {
             InitializeComponent();
-            _vm = vm;
-            BindingContext = _vm;
+            BindingContext = _vm = vm;
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            // Cargar la imagen al aparecer
-            await _vm.LoadAsync();
+            try { await _vm.LoadAsync(); } catch { }
         }
 
         private void OnLoginClicked(object sender, EventArgs e)

@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel;
 using SistemasDeGestionCitasPeluqueria.Services;
 
 namespace SistemasDeGestionCitasPeluqueria.PageModels
@@ -12,14 +13,31 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
     {
         private readonly IBarbershopService _barbershopService;
         private readonly IGalleryService _galleryService;
+        private readonly IAuthService _authService;
 
-        public LoginPageModel(IBarbershopService barbershopService, IGalleryService galleryService)
+        public LoginPageModel(IBarbershopService barbershopService, IGalleryService galleryService, IAuthService authService)
         {
             _barbershopService = barbershopService;
             _galleryService = galleryService;
+            _authService = authService;
         }
 
         [ObservableProperty] private string heroImageUrl = string.Empty;
+
+        [ObservableProperty] private string username = string.Empty;
+        [ObservableProperty] private string password = string.Empty;
+
+        [ObservableProperty] private bool isBusy;
+        [ObservableProperty] private string? error;
+
+        // Habilita/deshabilita el botón automáticamente
+        public bool CanLogin => !string.IsNullOrWhiteSpace(Username)
+                                && !string.IsNullOrWhiteSpace(Password)
+                                && !IsBusy;
+
+        partial void OnUsernameChanged(string value) => LoginCommand.NotifyCanExecuteChanged();
+        partial void OnPasswordChanged(string value) => LoginCommand.NotifyCanExecuteChanged();
+        partial void OnIsBusyChanged(bool value) => LoginCommand.NotifyCanExecuteChanged();
 
         public async Task LoadAsync(CancellationToken ct = default)
         {
@@ -39,6 +57,39 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             }
 
             HeroImageUrl = candidate ?? string.Empty;
+        }
+
+        [RelayCommand(CanExecute = nameof(CanLogin))]
+        public async Task LoginAsync(CancellationToken ct)
+        {
+            if (IsBusy) return;
+            Error = null;
+
+            try
+            {
+                IsBusy = true;
+
+                var ok = await _authService.LoginAsync(Username.Trim(), Password, ct);
+                if (!ok)
+                {
+                    Error = "Credenciales inválidas.";
+                    return;
+                }
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current!.MainPage = new AppShell();
+                });
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private static bool IsSupportedImage(string? s)

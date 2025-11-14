@@ -50,7 +50,8 @@
                         <Border Style="{StaticResource LoginInputBorderStyle}">
                             <Entry x:Name="UserEntry"
                                    Style="{StaticResource LoginEntryStyle}"
-                                   Placeholder="juan.diaz" />
+                                   Placeholder="juan.diaz"
+                                   Text="{Binding Username}" />
                         </Border>
                     </VerticalStackLayout>
 
@@ -64,7 +65,8 @@
                             <Entry x:Name="PasswordEntry"
                                    Style="{StaticResource LoginEntryStyle}"
                                    IsPassword="True"
-                                   Placeholder="********" />
+                                   Placeholder="********"
+                                   Text="{Binding Password}" />
                         </Border>
                     </VerticalStackLayout>
 
@@ -72,16 +74,23 @@
                     <Button x:Name="LoginButton"
                             Text="Entrar a la aplicación"
                             Style="{StaticResource LoginPrimaryButtonNoAccent}"
-                            Clicked="OnLoginClicked" />
+                            Command="{Binding LoginCommand}" />
 
-                    <!-- Registro: ahora es botón que abre el modal -->
+                    <!-- Estado y errores -->
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       IsVisible="{Binding IsBusy}" />
+                    <Label Text="{Binding Error}"
+                           TextColor="Red"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center" />
+
+                    <!-- Registro: sin acción por ahora -->
                     <Button x:Name="RegisterButton"
                             Text="¿No tienes cuenta? Regístrate"
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource Accent}"
                             FontAttributes="Bold"
-                            HorizontalOptions="Center"
-                            Clicked="OnRegisterClicked" />
+                            HorizontalOptions="Center" />
                 </VerticalStackLayout>
             </Border>
         </VerticalStackLayout>

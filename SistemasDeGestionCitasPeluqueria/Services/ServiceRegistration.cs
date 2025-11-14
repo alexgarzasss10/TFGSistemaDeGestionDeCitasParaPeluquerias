@@ -8,46 +8,59 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddBackendClients(this IServiceCollection services, Uri baseAddress, bool replaceFakes = true, TimeSpan? httpTimeout = null)
     {
+        // Servicios de Auth + handler
+        var timeout = httpTimeout ?? TimeSpan.FromSeconds(15);
+        services.AddSingleton<ITokenStore, SecureTokenStore>();
+        services.AddTransient<AuthenticatedHttpMessageHandler>();
+        services.AddHttpClient<IAuthService, HttpAuthService>(c =>
+        {
+            c.BaseAddress = baseAddress;
+            c.Timeout = timeout;
+        });
+
         if (replaceFakes)
         {
-            var timeout = httpTimeout ?? TimeSpan.FromSeconds(15);
-
             services.AddHttpClient<IBarberService, HttpBarberService>(c =>
             {
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
-            });
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
             services.AddHttpClient<IInventoryService, HttpInventoryService>(c =>
             {
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
-            });
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
             services.AddHttpClient<IServiceOfferingService, HttpServiceOfferingService>(c =>
             {
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
-            });
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
             services.AddHttpClient<IReviewService, HttpReviewService>(c =>
             {
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
-            });
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
             services.AddHttpClient<IProductCategoryService, HttpProductCategoryService>(c =>
             {
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
-            });
-           
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
             services.AddHttpClient<IBarbershopService, HttpBarbershopService>(c =>
             {
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
-            });
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
             services.AddHttpClient<IGalleryService, HttpGalleryService>(c =>
             {
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
-            });
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
         }
         return services;
     }
@@ -58,20 +71,8 @@ public static class ServiceRegistration
         if (!string.IsNullOrWhiteSpace(env) && Uri.TryCreate(env, UriKind.Absolute, out var u))
             return u;
 
-        //MI API ANTERIOR
-
-        //#if ANDROID
-        //        return new Uri("http://10.0.2.2:5180/");
-        //#elif IOS || MACCATALYST
-        //        return new Uri("http://localhost:5180/");
-        //#else
-        //        return new Uri("http://localhost:5180/");
-        //#endif
-
-        //API NUEVA FASTAPI CRUZ
-
 #if ANDROID
-    return new Uri("http://10.0.2.2:8000/");
+        return new Uri("http://10.0.2.2:8000/");
 #elif IOS || MACCATALYST
         return new Uri("http://localhost:8000/");
 #else
