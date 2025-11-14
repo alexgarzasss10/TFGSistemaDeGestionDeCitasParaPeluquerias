@@ -27,3 +27,11 @@ public sealed class RefreshRequestDto
 {
     [JsonPropertyName("refresh_token")] public string RefreshToken { get; set; } = string.Empty;
 }
+
+public sealed class RegisterRequestDto
+{
+    public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string? Email { get; set; }
+    public string? Name { get; set; }
+}

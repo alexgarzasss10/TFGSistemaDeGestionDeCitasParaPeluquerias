@@ -22,6 +22,21 @@ public sealed class HttpAuthService(HttpClient http, ITokenStore tokenStore) : I
         return true;
     }
 
+    public async Task<bool> RegisterAsync(string username, string password, string? email = null, string? name = null, CancellationToken ct = default)
+    {
+        var req = new RegisterRequestDto { Username = username, Password = password, Email = email, Name = name };
+        var resp = await _http.PostAsJsonAsync("auth/register", req, JsonDefaults.Web, ct);
+        if (!resp.IsSuccessStatusCode) return false;
+
+        var tokens = await resp.Content.ReadFromJsonAsync<TokenResponse>(JsonDefaults.Web, ct);
+        if (tokens is null || string.IsNullOrWhiteSpace(tokens.AccessToken) || string.IsNullOrWhiteSpace(tokens.RefreshToken))
+            return false;
+
+        var expiry = DateTimeOffset.UtcNow.AddSeconds(Math.Max(0, tokens.ExpiresIn - 30));
+        await _tokenStore.SaveAsync(tokens.AccessToken, tokens.RefreshToken, expiry);
+        return true;
+    }
+
     public async Task<string?> GetAccessTokenAsync(CancellationToken ct = default)
     {
         var (access, _, expiry) = await _tokenStore.ReadAsync();

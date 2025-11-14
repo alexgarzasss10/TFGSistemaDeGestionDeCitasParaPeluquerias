@@ -35,9 +35,21 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
                                 && !string.IsNullOrWhiteSpace(Password)
                                 && !IsBusy;
 
-        partial void OnUsernameChanged(string value) => LoginCommand.NotifyCanExecuteChanged();
-        partial void OnPasswordChanged(string value) => LoginCommand.NotifyCanExecuteChanged();
-        partial void OnIsBusyChanged(bool value) => LoginCommand.NotifyCanExecuteChanged();
+        partial void OnUsernameChanged(string value)
+        {
+            LoginCommand.NotifyCanExecuteChanged();
+            RegisterCommand.NotifyCanExecuteChanged();
+        }
+        partial void OnPasswordChanged(string value)
+        {
+            LoginCommand.NotifyCanExecuteChanged();
+            RegisterCommand.NotifyCanExecuteChanged();
+        }
+        partial void OnIsBusyChanged(bool value)
+        {
+            LoginCommand.NotifyCanExecuteChanged();
+            RegisterCommand.NotifyCanExecuteChanged();
+        }
 
         public async Task LoadAsync(CancellationToken ct = default)
         {
@@ -73,6 +85,38 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
                 if (!ok)
                 {
                     Error = "Credenciales inválidas.";
+                    return;
+                }
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    Application.Current!.MainPage = new AppShell();
+                });
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        [RelayCommand(CanExecute = nameof(CanLogin))]
+        public async Task RegisterAsync(CancellationToken ct)
+        {
+            if (IsBusy) return;
+            Error = null;
+            try
+            {
+                IsBusy = true;
+
+                var ok = await _authService.RegisterAsync(Username.Trim(), Password, ct: ct);
+                if (!ok)
+                {
+                    Error = "No se pudo registrar el usuario.";
                     return;
                 }
 
