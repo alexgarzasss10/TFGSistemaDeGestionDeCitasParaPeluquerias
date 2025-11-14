@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using SistemasDeGestionCitasPeluqueria.PageModels;
 using SistemasDeGestionCitasPeluqueria.Pages;
 using SistemasDeGestionCitasPeluqueria.Services;
-using SistemasDeGestionCitasPeluqueria.Services.Fake;
 using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Licensing;
 
@@ -27,22 +26,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        
-        var useFakes = false;
-
-        if (!useFakes)
-        {
-            // Clientes HTTP hacia FastAPI 
-            builder.Services.AddBackendClients(ServiceRegistration.GetDevBaseAddress(), replaceFakes: true);
-        }
-        else
-        {
-            // Servicios fake
-            builder.Services.AddSingleton<IServiceOfferingService, FakeServiceOfferingService>();
-            builder.Services.AddSingleton<IBarberService, FakeBarberService>();
-            builder.Services.AddSingleton<IInventoryService, FakeInventoryService>();
-            builder.Services.AddSingleton<IReviewService, FakeReviewService>();
-        }
+        // Registro de clientes HTTP hacia FastAPI (sin servicios fake)
+        builder.Services.AddBackendClients(ServiceRegistration.GetDevBaseAddress());
 
         builder.Services.AddSingleton<LoginPage>();
         builder.Services.AddSingleton<LoginPageModel>();
