@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
+             xmlns:pageModels="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.RegisterDialogPage"
+             x:DataType="pageModels:RegisterDialogPageModel"
              Title="Registro"
              BackgroundColor="Transparent">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BoolToGlyphTextConverter x:Key="BoolToGlyphTextConverter" />
+            <conv:BoolToColorConverter x:Key="BoolToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid Padding="24">
         <!-- Overlay oscuro -->
@@ -12,7 +22,6 @@
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="16">
 
-                <!-- Tarjeta centrada -->
                 <Border Style="{StaticResource LoginCardBorderStyle}">
                     <VerticalStackLayout Spacing="12">
 
@@ -22,102 +31,76 @@
                                TextColor="{DynamicResource TextPrimary}"
                                HorizontalOptions="Center" />
 
-                        <!-- Nombre completo -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="Nombre completo"
-                                   FontSize="12"
-                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Label Text="Nombre completo" FontSize="12" TextColor="{DynamicResource TextPrimary}" />
                             <Border Style="{StaticResource LoginInputBorderStyle}">
-                                <Entry x:Name="FullNameEntry"
-                                       Style="{StaticResource LoginEntryStyle}"
-                                       Placeholder="Juan Pérez" />
+                                <Entry Style="{StaticResource LoginEntryStyle}" Placeholder="Juan Pérez" Text="{Binding FullName}" />
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- Email (opcional) -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="Email (opcional)"
-                                   FontSize="12"
-                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Label Text="Email (opcional)" FontSize="12" TextColor="{DynamicResource TextPrimary}" />
                             <Border Style="{StaticResource LoginInputBorderStyle}">
-                                <Entry x:Name="EmailEntry"
-                                       Style="{StaticResource LoginEntryStyle}"
-                                       Placeholder="juan@ejemplo.com"
-                                       Keyboard="Email" />
+                                <Entry Style="{StaticResource LoginEntryStyle}" Placeholder="juan@ejemplo.com" Keyboard="Email" Text="{Binding Email}" />
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- Usuario -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="Usuario"
-                                   FontSize="12"
-                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Label Text="Usuario" FontSize="12" TextColor="{DynamicResource TextPrimary}" />
                             <Border Style="{StaticResource LoginInputBorderStyle}">
-                                <Entry x:Name="UserEntry"
-                                       Style="{StaticResource LoginEntryStyle}"
-                                       Placeholder="juan.diaz" />
+                                <Entry Style="{StaticResource LoginEntryStyle}" Placeholder="juan.diaz" Text="{Binding Username}" />
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- Contraseña -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="Contraseña"
-                                   FontSize="12"
-                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Label Text="Contraseña" FontSize="12" TextColor="{DynamicResource TextPrimary}" />
                             <Border Style="{StaticResource LoginInputBorderStyle}">
-                                <Entry x:Name="PasswordEntry"
-                                       Style="{StaticResource LoginEntryStyle}"
-                                       IsPassword="True"
-                                       Placeholder="********"
-                                       TextChanged="OnPasswordChanged" />
+                                <Entry Style="{StaticResource LoginEntryStyle}" IsPassword="True" Placeholder="********" Text="{Binding Password}" />
                             </Border>
 
-                            <!-- Requisitos de contraseña -->
-                            <VerticalStackLayout x:Name="PasswordHints"
-                                                 Spacing="2"
-                                                 IsVisible="False">
-                                <Label x:Name="ReqLenLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
-                                <Label x:Name="ReqUpperLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
-                                <Label x:Name="ReqLowerLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
-                                <Label x:Name="ReqDigitLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
-                                <Label x:Name="ReqSymbolLbl" FontSize="11" TextColor="{DynamicResource TextSecondary}" />
+                            <VerticalStackLayout Spacing="2" IsVisible="{Binding IsPasswordHintsVisible}">
+                                <Label FontSize="11"
+                                       Text="{Binding IsLenOk, Converter={StaticResource BoolToGlyphTextConverter}, ConverterParameter='Al menos 8 caracteres'}"
+                                       TextColor="{Binding IsLenOk, Converter={StaticResource BoolToColorConverter}}" />
+                                <Label FontSize="11"
+                                       Text="{Binding IsUpperOk, Converter={StaticResource BoolToGlyphTextConverter}, ConverterParameter='Una mayúscula (A-Z)'}"
+                                       TextColor="{Binding IsUpperOk, Converter={StaticResource BoolToColorConverter}}" />
+                                <Label FontSize="11"
+                                       Text="{Binding IsLowerOk, Converter={StaticResource BoolToGlyphTextConverter}, ConverterParameter='Una minúscula (a-z)'}"
+                                       TextColor="{Binding IsLowerOk, Converter={StaticResource BoolToColorConverter}}" />
+                                <Label FontSize="11"
+                                       Text="{Binding IsDigitOk, Converter={StaticResource BoolToGlyphTextConverter}, ConverterParameter='Un número (0-9)'}"
+                                       TextColor="{Binding IsDigitOk, Converter={StaticResource BoolToColorConverter}}" />
+                                <Label FontSize="11"
+                                       Text="{Binding IsSymbolOk, Converter={StaticResource BoolToGlyphTextConverter}, ConverterParameter='Un símbolo (!@#$…)'}"
+                                       TextColor="{Binding IsSymbolOk, Converter={StaticResource BoolToColorConverter}}" />
                             </VerticalStackLayout>
                         </VerticalStackLayout>
 
-                        <!-- Confirmar contraseña -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="Confirmar contraseña"
-                                   FontSize="12"
-                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Label Text="Confirmar contraseña" FontSize="12" TextColor="{DynamicResource TextPrimary}" />
                             <Border Style="{StaticResource LoginInputBorderStyle}">
-                                <Entry x:Name="ConfirmPasswordEntry"
-                                       Style="{StaticResource LoginEntryStyle}"
-                                       IsPassword="True"
-                                       Placeholder="********"
-                                       TextChanged="OnPasswordChanged" />
+                                <Entry Style="{StaticResource LoginEntryStyle}" IsPassword="True" Placeholder="********" Text="{Binding ConfirmPassword}" />
                             </Border>
 
-                            <!-- Pista de confirmación -->
-                            <Label x:Name="ConfirmHintLbl"
+                            <Label Text="{Binding ConfirmMessage}"
                                    FontSize="11"
-                                   IsVisible="False"
-                                   TextColor="{DynamicResource TextSecondary}" />
+                                   IsVisible="{Binding IsConfirmVisible}"
+                                   TextColor="{Binding IsConfirmMatch, Converter={StaticResource BoolToColorConverter}}" />
                         </VerticalStackLayout>
 
-                        <!-- Etiqueta de error -->
-                        <Label x:Name="ErrorLabel"
+                        <Label Text="{Binding Error}"
                                TextColor="{DynamicResource ErrorAlertText}"
                                FontSize="12"
-                               IsVisible="False" />
+                               IsVisible="{Binding HasError}" />
 
-                        <!-- Botones -->
                         <VerticalStackLayout Spacing="10">
                             <Button Text="Registrarse"
                                     Style="{StaticResource LoginPrimaryButtonStyle}"
-                                    Clicked="OnRegisterClicked" />
+                                    Command="{Binding RegisterCommand}" />
                             <Button Text="Cancelar"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    Clicked="OnCancelClicked" />
+                                    Command="{Binding CancelCommand}" />
                         </VerticalStackLayout>
 
                     </VerticalStackLayout>

@@ -47,118 +47,124 @@
                 <Label Text="{Binding DurationMinutes, StringFormat='Duración: {0} min'}"
                        Style="{StaticResource InlineTitleMutedStyle}" />
             </HorizontalStackLayout>
+
+            <!-- Indicador de carga y error -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{DynamicResource Accent}" HorizontalOptions="Center" />
+            <Label Text="{Binding Error}" TextColor="{DynamicResource ErrorAlertText}" IsVisible="{Binding HasError}" HorizontalOptions="Center" />
         </VerticalStackLayout>
 
-        <!-- Cambiamos las filas: superior * (limitada) e inferior Auto para que siempre se vea "Selecciona hora" -->
-        <Grid Grid.Row="1" ColumnDefinitions="2*,*" ColumnSpacing="16" RowDefinitions="*,Auto" RowSpacing="16">
+        <!-- Contenido principal ahora scrollable: el header (row 0) y footer (row 2) permanecen fijos -->
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Always">
+            <Grid ColumnDefinitions="2*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto" RowSpacing="16">
 
-            <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource CardSection}">
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Selecciona fecha" Style="{StaticResource SectionTitleStyle}" />
-                    <calendar:SfCalendar x:Name="Calendar"
-                                        View="Month"
+                <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource CardSection}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Selecciona fecha" Style="{StaticResource SectionTitleStyle}" />
+                        <calendar:SfCalendar x:Name="Calendar"
+                                            View="Month"
+                                            SelectionMode="Single"
+                                            SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                                            HeightRequest="280" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- CAMBIO: usar Grid Auto,* para limitar el alto del CollectionView y permitir scroll -->
+                <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource CardSection}">
+                    <Grid RowDefinitions="Auto,*">
+                        <Label Text="Selecciona barbero" Style="{StaticResource SectionTitleStyle}" />
+                        <CollectionView Grid.Row="1"
+                                        ItemsSource="{Binding Barbers}"
                                         SelectionMode="Single"
-                                        SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
-                                        HeightRequest="280" />
-                </VerticalStackLayout>
-            </Frame>
+                                        SelectedItem="{Binding SelectedBarber, Mode=TwoWay}"
+                                        ItemsLayout="VerticalList"
+                                        VerticalOptions="Fill"
+                                        VerticalScrollBarVisibility="Always">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Barber">
+                                    <Border Style="{StaticResource SelectableListItemBorder}">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Value="True">
+                                                <DataTrigger.Binding>
+                                                    <MultiBinding Converter="{StaticResource AreEqual}">
+                                                        <Binding Path="." />
+                                                        <Binding Path="BindingContext.SelectedBarber" Source="{x:Reference BookingRoot}" />
+                                                    </MultiBinding>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource BarberItemSelectedBackgroundBrush}" />
+                                                <Setter Property="Stroke" Value="{DynamicResource BarberItemSelectedStrokeBrush}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
 
-            <!-- CAMBIO: usar Grid Auto,* para limitar el alto del CollectionView y permitir scroll -->
-            <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource CardSection}">
-                <Grid RowDefinitions="Auto,*">
-                    <Label Text="Selecciona barbero" Style="{StaticResource SectionTitleStyle}" />
-                    <CollectionView Grid.Row="1"
-                                    ItemsSource="{Binding Barbers}"
-                                    SelectionMode="Single"
-                                    SelectedItem="{Binding SelectedBarber, Mode=TwoWay}"
-                                    ItemsLayout="VerticalList"
-                                    VerticalOptions="Fill"
-                                    VerticalScrollBarVisibility="Always">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:Barber">
-                                <Border Style="{StaticResource SelectableListItemBorder}">
-                                    <Border.Triggers>
-                                        <DataTrigger TargetType="Border" Value="True">
-                                            <DataTrigger.Binding>
-                                                <MultiBinding Converter="{StaticResource AreEqual}">
-                                                    <Binding Path="." />
-                                                    <Binding Path="BindingContext.SelectedBarber" Source="{x:Reference BookingRoot}" />
-                                                </MultiBinding>
-                                            </DataTrigger.Binding>
-                                            <Setter Property="Background" Value="{DynamicResource BarberItemSelectedBackgroundBrush}" />
-                                            <Setter Property="Stroke" Value="{DynamicResource BarberItemSelectedStrokeBrush}" />
-                                        </DataTrigger>
-                                    </Border.Triggers>
+                                        <Grid ColumnDefinitions="Auto,*" Padding="8">
+                                            <Image Source="{Binding PhotoUrl}" HeightRequest="40" WidthRequest="40" Aspect="AspectFill">
+                                                <Image.Clip>
+                                                    <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20" />
+                                                </Image.Clip>
+                                            </Image>
 
-                                    <Grid ColumnDefinitions="Auto,*" Padding="8">
-                                        <Image Source="{Binding PhotoUrl}" HeightRequest="40" WidthRequest="40" Aspect="AspectFill">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20" />
-                                            </Image.Clip>
-                                        </Image>
+                                            <VerticalStackLayout Grid.Column="1" Spacing="2" Margin="8,0,0,0">
+                                                <Label Text="{Binding Name}" Style="{StaticResource BodyTextStyle}" />
+                                                <Label Text="{Binding Specialty}" Style="{StaticResource MutedTextStyle}" />
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
+                </Frame>
 
-                                        <VerticalStackLayout Grid.Column="1" Spacing="2" Margin="8,0,0,0">
-                                            <Label Text="{Binding Name}" Style="{StaticResource BodyTextStyle}" />
-                                            <Label Text="{Binding Specialty}" Style="{StaticResource MutedTextStyle}" />
-                                        </VerticalStackLayout>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Grid>
-            </Frame>
+                <Frame Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource CardSection}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Selecciona hora" Style="{StaticResource SectionTitleStyle}" />
+                        <Label Text="Elige un barbero y una fecha para ver los horarios disponibles."
+                               Style="{StaticResource MutedTextStyle}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding AvailableSlots.Count}" Value="0">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
 
-            <Frame Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource CardSection}">
-                <VerticalStackLayout Spacing="12">
-                    <Label Text="Selecciona hora" Style="{StaticResource SectionTitleStyle}" />
-                    <Label Text="Elige un barbero y una fecha para ver los horarios disponibles."
-                           Style="{StaticResource MutedTextStyle}">
-                        <Label.Triggers>
-                            <DataTrigger TargetType="Label" Binding="{Binding AvailableSlots.Count}" Value="0">
-                                <Setter Property="IsVisible" Value="True" />
-                            </DataTrigger>
-                        </Label.Triggers>
-                    </Label>
+                        <CollectionView ItemsSource="{Binding AvailableSlots}"
+                                        SelectionMode="Single"
+                                        SelectedItem="{Binding SelectedSlot, Mode=TwoWay}"
+                                        ItemsLayout="HorizontalList">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource TimeSlotPillStyle}">
+                                        <Label x:Name="TimeText"
+                                               Text="{Binding ., StringFormat='{}{0:hh\\:mm}'}"
+                                               Style="{StaticResource BodyTextStyle}"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Value="True">
+                                                <DataTrigger.Binding>
+                                                    <MultiBinding Converter="{StaticResource AreEqual}">
+                                                        <Binding Path="." />
+                                                        <Binding Path="BindingContext.SelectedSlot" Source="{x:Reference BookingRoot}" />
+                                                    </MultiBinding>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                                                <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
+                                                <Setter TargetName="TimeText" Property="Label.TextColor" Value="{StaticResource White}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
 
-                    <CollectionView ItemsSource="{Binding AvailableSlots}"
-                                    SelectionMode="Single"
-                                    SelectedItem="{Binding SelectedSlot, Mode=TwoWay}"
-                                    ItemsLayout="HorizontalList">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{StaticResource TimeSlotPillStyle}">
-                                    <Label x:Name="TimeText"
-                                           Text="{Binding ., StringFormat='{}{0:hh\\:mm}'}"
-                                           Style="{StaticResource BodyTextStyle}"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                    <Border.Triggers>
-                                        <DataTrigger TargetType="Border" Value="True">
-                                            <DataTrigger.Binding>
-                                                <MultiBinding Converter="{StaticResource AreEqual}">
-                                                    <Binding Path="." />
-                                                    <Binding Path="BindingContext.SelectedSlot" Source="{x:Reference BookingRoot}" />
-                                                </MultiBinding>
-                                            </DataTrigger.Binding>
-                                            <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
-                                            <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
-                                            <Setter TargetName="TimeText" Property="Label.TextColor" Value="{StaticResource White}" />
-                                        </DataTrigger>
-                                    </Border.Triggers>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-
-                        <CollectionView.Triggers>
-                            <DataTrigger TargetType="CollectionView" Binding="{Binding AvailableSlots.Count}" Value="0">
-                                <Setter Property="IsVisible" Value="False" />
-                            </DataTrigger>
-                        </CollectionView.Triggers>
-                    </CollectionView>
-                </VerticalStackLayout>
-            </Frame>
-        </Grid>
+                            <CollectionView.Triggers>
+                                <DataTrigger TargetType="CollectionView" Binding="{Binding AvailableSlots.Count}" Value="0">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </CollectionView.Triggers>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+        </ScrollView>
 
         <Button Grid.Row="2"
                 Text="Confirmar Reserva"
