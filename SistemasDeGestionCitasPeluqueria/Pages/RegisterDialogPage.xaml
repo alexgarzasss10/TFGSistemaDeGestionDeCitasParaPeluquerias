@@ -7,7 +7,7 @@
 
     <Grid Padding="24">
         <!-- Overlay oscuro -->
-        <BoxView BackgroundColor="{StaticResource Black}" Opacity="0.45" />
+        <BoxView BackgroundColor="{DynamicResource Black}" Opacity="0.45" />
 
         <!-- ScrollView ocupa toda la pantalla; si la tarjeta es más alta que la ventana se podrá hacer scroll -->
         <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
@@ -35,9 +35,9 @@
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- Email -->
+                        <!-- Email (opcional) -->
                         <VerticalStackLayout Spacing="6">
-                            <Label Text="Email"
+                            <Label Text="Email (opcional)"
                                    FontSize="12"
                                    TextColor="{DynamicResource TextPrimary}" />
                             <Border Style="{StaticResource LoginInputBorderStyle}">
@@ -85,6 +85,12 @@
                                        Placeholder="********" />
                             </Border>
                         </VerticalStackLayout>
+
+                        <!-- Etiqueta de error -->
+                        <Label x:Name="ErrorLabel"
+                               TextColor="{DynamicResource ErrorAlertText}"
+                               FontSize="12"
+                               IsVisible="False" />
 
                         <!-- Botones -->
                         <VerticalStackLayout Spacing="10">

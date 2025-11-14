@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.ApplicationModel;
 using SistemasDeGestionCitasPeluqueria.Services;
+using SistemasDeGestionCitasPeluqueria.Pages;
 
 namespace SistemasDeGestionCitasPeluqueria.PageModels
 {
@@ -23,33 +24,18 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
         }
 
         [ObservableProperty] private string heroImageUrl = string.Empty;
-
         [ObservableProperty] private string username = string.Empty;
         [ObservableProperty] private string password = string.Empty;
-
         [ObservableProperty] private bool isBusy;
         [ObservableProperty] private string? error;
 
-        // Habilita/deshabilita el botón automáticamente
         public bool CanLogin => !string.IsNullOrWhiteSpace(Username)
                                 && !string.IsNullOrWhiteSpace(Password)
                                 && !IsBusy;
 
-        partial void OnUsernameChanged(string value)
-        {
-            LoginCommand.NotifyCanExecuteChanged();
-            RegisterCommand.NotifyCanExecuteChanged();
-        }
-        partial void OnPasswordChanged(string value)
-        {
-            LoginCommand.NotifyCanExecuteChanged();
-            RegisterCommand.NotifyCanExecuteChanged();
-        }
-        partial void OnIsBusyChanged(bool value)
-        {
-            LoginCommand.NotifyCanExecuteChanged();
-            RegisterCommand.NotifyCanExecuteChanged();
-        }
+        partial void OnUsernameChanged(string value) => LoginCommand.NotifyCanExecuteChanged();
+        partial void OnPasswordChanged(string value) => LoginCommand.NotifyCanExecuteChanged();
+        partial void OnIsBusyChanged(bool value) => LoginCommand.NotifyCanExecuteChanged();
 
         public async Task LoadAsync(CancellationToken ct = default)
         {
@@ -104,25 +90,33 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(CanLogin))]
+        // Ahora abre el diálogo y registra sin hacer login automático
+        [RelayCommand]
         public async Task RegisterAsync(CancellationToken ct)
         {
             if (IsBusy) return;
             Error = null;
+
             try
             {
+                var dto = await RegisterDialogPage.ShowAsync();
+                if (dto is null) return; // cancelado
+
                 IsBusy = true;
 
-                var ok = await _authService.RegisterAsync(Username.Trim(), Password, ct: ct);
+                var ok = await _authService.RegisterAsync(dto.Username.Trim(), dto.Password, dto.Email, dto.Name, signIn: false, ct: ct);
                 if (!ok)
                 {
                     Error = "No se pudo registrar el usuario.";
                     return;
                 }
 
-                MainThread.BeginInvokeOnMainThread(() =>
+                Username = dto.Username.Trim();
+                Password = dto.Password;
+
+                await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    Application.Current!.MainPage = new AppShell();
+                    await Application.Current!.MainPage!.DisplayAlert("Registro", "Usuario registrado correctamente. Introduce tus credenciales y pulsa Iniciar sesión.", "Aceptar");
                 });
             }
             catch (OperationCanceledException) { }

@@ -1,66 +1,77 @@
-using System.Linq;
+using System;
+using System.Net.Mail;
+using SistemasDeGestionCitasPeluqueria.Services;
 
 namespace SistemasDeGestionCitasPeluqueria.Pages;
 
 public partial class RegisterDialogPage : ContentPage
 {
-    private readonly TaskCompletionSource<RegistrationData?> _tcs = new();
+    private readonly TaskCompletionSource<RegisterRequestDto?> _tcs = new();
 
     public RegisterDialogPage()
     {
         InitializeComponent();
     }
 
-    // DTO simple para devolver datos de registro (simulado)
-    public record RegistrationData(string? FullName, string? Email, string? Username, string? Password);
-
-    public static Task<RegistrationData?> ShowAsync()
+    public static Task<RegisterRequestDto?> ShowAsync()
     {
         var page = new RegisterDialogPage();
-
-        // Intentamos empujar el modal por diferentes rutas de navegación; si no hay, abrimos una nueva ventana
-        var nav = Shell.Current?.Navigation;
-        if (nav is null)
-        {
-            var window = Application.Current?.Windows.FirstOrDefault();
-            if (window?.Page?.Navigation != null)
-                nav = window.Page.Navigation;
-            else if (Application.Current?.MainPage?.Navigation != null)
-                nav = Application.Current.MainPage.Navigation;
-        }
-
-        if (nav != null)
-            nav.PushModalAsync(page);
+        if (Shell.Current?.Navigation is not null)
+            Shell.Current.Navigation.PushModalAsync(page);
         else
-            Application.Current?.OpenWindow(new Window(page));
+            Application.Current?.MainPage?.Navigation?.PushModalAsync(page);
 
         return page._tcs.Task;
     }
 
     async void OnRegisterClicked(object sender, EventArgs e)
     {
-        // Validación básica (sólo UI)
-        if (string.IsNullOrWhiteSpace(UserEntry.Text) ||
-            string.IsNullOrWhiteSpace(EmailEntry.Text) ||
-            string.IsNullOrWhiteSpace(PasswordEntry.Text))
+        ErrorLabel.IsVisible = false;
+
+        var username = UserEntry.Text?.Trim() ?? string.Empty;
+        var password = PasswordEntry.Text ?? string.Empty;
+        var confirm = ConfirmPasswordEntry.Text ?? string.Empty;
+        var emailText = EmailEntry.Text?.Trim();
+        var fullName = string.IsNullOrWhiteSpace(FullNameEntry.Text) ? null : FullNameEntry.Text.Trim();
+
+        if (username.Length < 3)
         {
-            await DisplayAlert("Registro", "Rellena usuario, email y contraseña.", "Aceptar");
+            SetError("El usuario debe tener al menos 3 caracteres.");
             return;
         }
 
-        if (PasswordEntry.Text != ConfirmPasswordEntry.Text)
+        if (password.Length < 8)
         {
-            await DisplayAlert("Registro", "Las contraseñas no coinciden.", "Aceptar");
+            SetError("La contraseña debe tener al menos 8 caracteres.");
             return;
         }
 
-        var data = new RegistrationData(
-            FullNameEntry.Text?.Trim(),
-            EmailEntry.Text?.Trim(),
-            UserEntry.Text?.Trim(),
-            PasswordEntry.Text);
+        if (password != confirm)
+        {
+            SetError("Las contraseñas no coinciden.");
+            return;
+        }
 
-        _tcs.TrySetResult(data);
+        string? email = null;
+        if (!string.IsNullOrWhiteSpace(emailText))
+        {
+            if (!IsValidEmail(emailText))
+            {
+                SetError("Introduce un email válido o déjalo vacío.");
+                return;
+            }
+            email = emailText;
+        }
+
+        var dto = new RegisterRequestDto
+        {
+            Username = username,
+            Password = password,
+            Email = email,
+            Name = fullName
+        };
+
+        _tcs.TrySetResult(dto);
         await Navigation.PopModalAsync();
     }
 
@@ -69,4 +80,12 @@ public partial class RegisterDialogPage : ContentPage
         _tcs.TrySetResult(null);
         await Navigation.PopModalAsync();
     }
+
+    void SetError(string message)
+    {
+        ErrorLabel.Text = message;
+        ErrorLabel.IsVisible = true;
+    }
+
+    static bool IsValidEmail(string value) => MailAddress.TryCreate(value, out _);
 }

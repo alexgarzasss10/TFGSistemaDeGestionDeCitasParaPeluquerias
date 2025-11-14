@@ -15,7 +15,7 @@
                AutomationProperties.IsInAccessibleTree="False" />
 
         <!-- Overlay oscuro ligero para mejorar contraste -->
-        <BoxView Opacity="0.35" BackgroundColor="{StaticResource Black}" />
+        <BoxView Opacity="0.35" BackgroundColor="{DynamicResource Black}" />
 
         <!-- Contenedor centrado -->
         <VerticalStackLayout HorizontalOptions="Center"
@@ -28,11 +28,11 @@
                 <Label Text="Barbería Premium"
                        FontAttributes="Bold"
                        FontSize="20"
-                       TextColor="{StaticResource White}"
+                       TextColor="{DynamicResource White}"
                        HorizontalTextAlignment="Center" />
                 <Label Text="Tu estilo, nuestra pasión"
                        FontSize="14"
-                       TextColor="{StaticResource White}"
+                       TextColor="{DynamicResource White}"
                        Opacity="0.9"
                        HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
@@ -80,7 +80,7 @@
                     <ActivityIndicator IsRunning="{Binding IsBusy}"
                                        IsVisible="{Binding IsBusy}" />
                     <Label Text="{Binding Error}"
-                           TextColor="Red"
+                           TextColor="{DynamicResource ErrorAlertText}"
                            FontAttributes="Bold"
                            HorizontalTextAlignment="Center" />
 
@@ -88,7 +88,7 @@
                     <Button x:Name="RegisterButton"
                             Text="¿No tienes cuenta? Regístrate"
                             BackgroundColor="Transparent"
-                            TextColor="{StaticResource Accent}"
+                            TextColor="{DynamicResource Accent}"
                             FontAttributes="Bold"
                             HorizontalOptions="Center"
                             Command="{Binding RegisterCommand}" />
@@ -104,8 +104,8 @@
                 HeightRequest="36"
                 Margin="0,0,12,12"
                 FontAttributes="Bold"
-                BackgroundColor="{StaticResource Primary}"
-                TextColor="{StaticResource White}"
+                BackgroundColor="{DynamicResource Primary}"
+                TextColor="{DynamicResource White}"
                 CornerRadius="18" />
     </Grid>
 </ContentPage>

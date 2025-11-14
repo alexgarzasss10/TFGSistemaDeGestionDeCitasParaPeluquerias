@@ -1,4 +1,10 @@
+using System;
+using System.Diagnostics;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SistemasDeGestionCitasPeluqueria.Services;
 
@@ -22,11 +28,57 @@ public sealed class HttpAuthService(HttpClient http, ITokenStore tokenStore) : I
         return true;
     }
 
-    public async Task<bool> RegisterAsync(string username, string password, string? email = null, string? name = null, CancellationToken ct = default)
+    public async Task<bool> RegisterAsync(string username, string password, string? email = null, string? name = null, bool signIn = true, CancellationToken ct = default)
     {
         var req = new RegisterRequestDto { Username = username, Password = password, Email = email, Name = name };
         var resp = await _http.PostAsJsonAsync("auth/register", req, JsonDefaults.Web, ct);
-        if (!resp.IsSuccessStatusCode) return false;
+        if (!resp.IsSuccessStatusCode)
+        {
+            // Leer cuerpo y extraer mensaje de validación (Pydantic / FastAPI)
+            string body = string.Empty;
+            try { body = await resp.Content.ReadAsStringAsync(ct); }
+            catch { /* ignorar lectura */ }
+
+            Debug.WriteLine($"Register failed: {(int)resp.StatusCode} {resp.ReasonPhrase} - {body}");
+
+            string message = body;
+            try
+            {
+                using var doc = JsonDocument.Parse(body);
+                var root = doc.RootElement;
+                if (root.ValueKind == JsonValueKind.Object)
+                {
+                    if (root.TryGetProperty("detail", out var detail))
+                    {
+                        if (detail.ValueKind == JsonValueKind.Array)
+                        {
+                            var sb = new StringBuilder();
+                            foreach (var item in detail.EnumerateArray())
+                            {
+                                if (item.ValueKind == JsonValueKind.Object && item.TryGetProperty("msg", out var m))
+                                    sb.AppendLine(m.GetString());
+                                else
+                                    sb.AppendLine(item.ToString());
+                            }
+                            message = sb.ToString().Trim();
+                        }
+                        else
+                        {
+                            message = detail.ToString();
+                        }
+                    }
+                    else if (root.TryGetProperty("message", out var msgProp))
+                    {
+                        message = msgProp.ToString();
+                    }
+                }
+            }
+            catch { /* no JSON válido -> usar body tal cual */ }
+
+            throw new InvalidOperationException($"Registro fallido: {message}");
+        }
+
+        if (!signIn) return true;
 
         var tokens = await resp.Content.ReadFromJsonAsync<TokenResponse>(JsonDefaults.Web, ct);
         if (tokens is null || string.IsNullOrWhiteSpace(tokens.AccessToken) || string.IsNullOrWhiteSpace(tokens.RefreshToken))

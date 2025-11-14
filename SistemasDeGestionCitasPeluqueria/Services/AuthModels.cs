@@ -32,6 +32,11 @@ public sealed class RegisterRequestDto
 {
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+
+    // No serializa si es null (así el backend no intenta validar un valor inexistente)
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Email { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Name { get; set; }
 }
