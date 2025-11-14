@@ -34,5 +34,15 @@ namespace SistemasDeGestionCitasPeluqueria.Pages
                 Application.Current?.OpenWindow(new Window(new AppShell()));
             }
         }
+
+        private async void OnRegisterClicked(object sender, EventArgs e)
+        {
+            var reg = await RegisterDialogPage.ShowAsync();
+            if (reg is not null)
+            {
+                // Resultado simulado (aquí integrarías tu lógica de registro)
+                await DisplayAlert("Registro (simulado)", $"Usuario: {reg.Username}\nEmail: {reg.Email}", "Aceptar");
+            }
+        }
     }
 }

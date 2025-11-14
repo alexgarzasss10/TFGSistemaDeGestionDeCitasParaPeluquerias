@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SistemasDeGestionCitasPeluqueria.Pages.RegisterDialogPage"
+             Title="Registro"
+             BackgroundColor="Transparent">
+
+    <Grid Padding="24">
+        <!-- Overlay oscuro -->
+        <BoxView BackgroundColor="{StaticResource Black}" Opacity="0.45" />
+
+        <!-- ScrollView ocupa toda la pantalla; si la tarjeta es más alta que la ventana se podrá hacer scroll -->
+        <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="16">
+
+                <!-- Tarjeta centrada -->
+                <Border Style="{StaticResource LoginCardBorderStyle}">
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label Text="Crear cuenta"
+                               FontAttributes="Bold"
+                               FontSize="18"
+                               TextColor="{DynamicResource TextPrimary}"
+                               HorizontalOptions="Center" />
+
+                        <!-- Nombre completo -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Nombre completo"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Border Style="{StaticResource LoginInputBorderStyle}">
+                                <Entry x:Name="FullNameEntry"
+                                       Style="{StaticResource LoginEntryStyle}"
+                                       Placeholder="Juan Pérez" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Email -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Email"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Border Style="{StaticResource LoginInputBorderStyle}">
+                                <Entry x:Name="EmailEntry"
+                                       Style="{StaticResource LoginEntryStyle}"
+                                       Placeholder="juan@ejemplo.com"
+                                       Keyboard="Email" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Usuario -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Usuario"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Border Style="{StaticResource LoginInputBorderStyle}">
+                                <Entry x:Name="UserEntry"
+                                       Style="{StaticResource LoginEntryStyle}"
+                                       Placeholder="juan.diaz" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Contraseña -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Contraseña"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Border Style="{StaticResource LoginInputBorderStyle}">
+                                <Entry x:Name="PasswordEntry"
+                                       Style="{StaticResource LoginEntryStyle}"
+                                       IsPassword="True"
+                                       Placeholder="********" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Confirmar contraseña -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Confirmar contraseña"
+                                   FontSize="12"
+                                   TextColor="{DynamicResource TextPrimary}" />
+                            <Border Style="{StaticResource LoginInputBorderStyle}">
+                                <Entry x:Name="ConfirmPasswordEntry"
+                                       Style="{StaticResource LoginEntryStyle}"
+                                       IsPassword="True"
+                                       Placeholder="********" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Botones -->
+                        <VerticalStackLayout Spacing="10">
+                            <Button Text="Registrarse"
+                                    Style="{StaticResource LoginPrimaryButtonStyle}"
+                                    Clicked="OnRegisterClicked" />
+                            <Button Text="Cancelar"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Clicked="OnCancelClicked" />
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

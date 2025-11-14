@@ -456,4 +456,10 @@
         <Setter Property="Margin" Value="0,16,0,0" />
     </Style>
 
+    <!-- NUEVO: variante sin accent verde (usa Primary morado) -->
+    <Style x:Key="LoginPrimaryButtonNoAccent" TargetType="Button" BasedOn="{StaticResource LoginPrimaryButtonStyle}">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+    </Style>
+
 </ResourceDictionary>

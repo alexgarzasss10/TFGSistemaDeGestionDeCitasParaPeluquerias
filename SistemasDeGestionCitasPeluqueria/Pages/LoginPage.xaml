@@ -8,20 +8,6 @@
              x:DataType="pageModels:LoginPageModel"
              Title="Iniciar sesión">
 
-    <ContentPage.Resources>
-        <conv:ImageSourceFromStringConverter x:Key="ImageSourceFromStringConverter" />
-
-        <!-- Botón morado sin verde -->
-        <Style x:Key="LoginPrimaryButtonNoAccent" TargetType="Button">
-            <Setter Property="HeightRequest" Value="48" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Margin" Value="0,16,0,0" />
-            <Setter Property="BackgroundColor" Value="#512BD4" />
-            <Setter Property="TextColor" Value="White" />
-        </Style>
-    </ContentPage.Resources>
-
     <Grid>
         <!-- Fondo -->
         <Image Source="{Binding HeroImageUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
@@ -29,24 +15,24 @@
                AutomationProperties.IsInAccessibleTree="False" />
 
         <!-- Overlay oscuro ligero para mejorar contraste -->
-        <BoxView Opacity="0.35" BackgroundColor="Black" />
+        <BoxView Opacity="0.35" BackgroundColor="{StaticResource Black}" />
 
         <!-- Contenedor centrado -->
         <VerticalStackLayout HorizontalOptions="Center"
                              VerticalOptions="Center"
                              Spacing="28">
 
-            <!-- Encabezados (icono eliminado) -->
+            <!-- Encabezados -->
             <VerticalStackLayout Spacing="4"
                                  HorizontalOptions="Center">
                 <Label Text="Barbería Premium"
                        FontAttributes="Bold"
                        FontSize="20"
-                       TextColor="White"
+                       TextColor="{StaticResource White}"
                        HorizontalTextAlignment="Center" />
                 <Label Text="Tu estilo, nuestra pasión"
                        FontSize="14"
-                       TextColor="White"
+                       TextColor="{StaticResource White}"
                        Opacity="0.9"
                        HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
@@ -88,12 +74,14 @@
                             Style="{StaticResource LoginPrimaryButtonNoAccent}"
                             Clicked="OnLoginClicked" />
 
-                    <!-- Registro -->
-                    <Label Text="¿No tienes cuenta? Regístrate"
-                           FontSize="12"
-                           TextColor="{DynamicResource TextSecondary}"
-                           HorizontalOptions="Center"
-                           Margin="0,4,0,0" />
+                    <!-- Registro: ahora es botón que abre el modal -->
+                    <Button x:Name="RegisterButton"
+                            Text="¿No tienes cuenta? Regístrate"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource Accent}"
+                            FontAttributes="Bold"
+                            HorizontalOptions="Center"
+                            Clicked="OnRegisterClicked" />
                 </VerticalStackLayout>
             </Border>
         </VerticalStackLayout>
@@ -106,8 +94,8 @@
                 HeightRequest="36"
                 Margin="0,0,12,12"
                 FontAttributes="Bold"
-                BackgroundColor="#512BD4"
-                TextColor="White"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="{StaticResource White}"
                 CornerRadius="18" />
     </Grid>
 </ContentPage>
