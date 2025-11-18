@@ -191,8 +191,32 @@ public partial class BookingPageModel(IBarberService barberService, IAvailabilit
             IsBusy = true;
             Error = null;
 
-            // Si no hay nombre en el cliente, enviamos cadena vacía.
-            // El backend comprobará y usará el nombre del usuario autenticado.
+            // Pre-check de disponibilidad (opcional, para mejor UX)
+            try
+            {
+                var dateStr = SelectedDate.ToString("yyyy-MM-dd");
+                var avail = await _availabilityService.GetAsync(
+                    SelectedBarber.Id,
+                    dateStr,
+                    slotMinutes: 30,
+                    serviceId: ServiceId > 0 ? ServiceId : null,
+                    _cts?.Token ?? CancellationToken.None
+                );
+
+                var slotStr = SelectedSlot.Value.ToString(@"hh\:mm");
+                if (!avail.Available.Contains(slotStr))
+                {
+                    Error = "El horario ya no está disponible.";
+                    await Shell.Current.DisplayAlert("Horario no disponible", "El horario seleccionado ya fue reservado. Se actualizarán los huecos disponibles.", "OK");
+                    await UpdateSlotsAsync(_cts?.Token ?? CancellationToken.None);
+                    return;
+                }
+            }
+            catch
+            {
+                // Si el pre-check falla por red/errores, seguimos y dejamos que el backend valide.
+            }
+
             var name = string.IsNullOrWhiteSpace(CustomerName) ? string.Empty : CustomerName.Trim();
 
             var req = new CreateBookingRequest
@@ -218,16 +242,24 @@ public partial class BookingPageModel(IBarberService barberService, IAvailabilit
 
             // Refrescar huecos tras reservar
             await UpdateSlotsAsync(_cts?.Token ?? CancellationToken.None);
-
-            // Limpieza de selección si quieres permitir otra reserva
             SelectedSlot = null;
         }
         catch (OperationCanceledException) { }
         catch (HttpRequestException httpEx)
         {
-            // Intenta mostrar el estado (por ejemplo 409 conflicto)
-            Error = httpEx.Message;
-            await Shell.Current.DisplayAlert("Error al reservar", httpEx.Message, "OK");
+            // Detectar 409 Conflict (StatusCode disponible en .NET moderno)
+            if (httpEx.StatusCode.HasValue && httpEx.StatusCode.Value == System.Net.HttpStatusCode.Conflict)
+            {
+                Error = "El horario ya fue reservado por otro cliente.";
+                await Shell.Current.DisplayAlert("Error al reservar", "El horario seleccionado ya fue reservado. Se actualizarán los huecos disponibles.", "OK");
+                await UpdateSlotsAsync(_cts?.Token ?? CancellationToken.None);
+                SelectedSlot = null;
+            }
+            else
+            {
+                Error = httpEx.Message;
+                await Shell.Current.DisplayAlert("Error al reservar", httpEx.Message, "OK");
+            }
         }
         catch (Exception ex)
         {
