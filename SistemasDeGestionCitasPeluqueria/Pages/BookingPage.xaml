@@ -68,7 +68,7 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- CAMBIO: usar Grid Auto,* para limitar el alto del CollectionView y permitir scroll -->
+                <!-- Lista de barberos -->
                 <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource CardSection}">
                     <Grid RowDefinitions="Auto,*">
                         <Label Text="Selecciona barbero" Style="{StaticResource SectionTitleStyle}" />
@@ -114,11 +114,15 @@
                     </Grid>
                 </Frame>
 
+                <!-- Selección de hora + datos del cliente -->
                 <Frame Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource CardSection}">
                     <VerticalStackLayout Spacing="12">
                         <Label Text="Selecciona hora" Style="{StaticResource SectionTitleStyle}" />
+
+                        <!-- Mensaje mostrado solo si no hay huecos -->
                         <Label Text="Elige un barbero y una fecha para ver los horarios disponibles."
-                               Style="{StaticResource MutedTextStyle}">
+                               Style="{StaticResource MutedTextStyle}"
+                               IsVisible="False">
                             <Label.Triggers>
                                 <DataTrigger TargetType="Label" Binding="{Binding AvailableSlots.Count}" Value="0">
                                     <Setter Property="IsVisible" Value="True" />
@@ -129,7 +133,9 @@
                         <CollectionView ItemsSource="{Binding AvailableSlots}"
                                         SelectionMode="Single"
                                         SelectedItem="{Binding SelectedSlot, Mode=TwoWay}"
-                                        ItemsLayout="HorizontalList">
+                                        ItemsLayout="HorizontalList"
+                                        HorizontalOptions="Fill"
+                                        HeightRequest="56">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Border Style="{StaticResource TimeSlotPillStyle}">

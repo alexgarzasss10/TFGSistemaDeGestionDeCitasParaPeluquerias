@@ -61,6 +61,19 @@ public static class ServiceRegistration
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
             }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
+            // NUEVOS: disponibilidad y reservas
+            services.AddHttpClient<IAvailabilityService, HttpAvailabilityService>(c =>
+            {
+                c.BaseAddress = baseAddress;
+                c.Timeout = timeout;
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
+            services.AddHttpClient<IBookingService, HttpBookingService>(c =>
+            {
+                c.BaseAddress = baseAddress;
+                c.Timeout = timeout;
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
         }
         return services;
     }
