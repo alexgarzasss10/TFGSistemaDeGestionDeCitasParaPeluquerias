@@ -74,6 +74,12 @@ public static class ServiceRegistration
                 c.BaseAddress = baseAddress;
                 c.Timeout = timeout;
             }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
+
+            services.AddHttpClient<IUserService, HttpUserService>(c =>
+            {
+                c.BaseAddress = baseAddress;
+                c.Timeout = timeout;
+            }).AddHttpMessageHandler<AuthenticatedHttpMessageHandler>();
         }
         return services;
     }
