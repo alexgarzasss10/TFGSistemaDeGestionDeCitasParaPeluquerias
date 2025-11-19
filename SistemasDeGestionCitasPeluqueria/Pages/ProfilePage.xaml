@@ -117,13 +117,41 @@
                         <Frame Style="{StaticResource CardFrameStyle}" Padding="16" HasShadow="False" HorizontalOptions="FillAndExpand">
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" ColumnSpacing="16" RowSpacing="8">
                                 <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Spacing="8" HorizontalOptions="Start" Margin="0,0,8,0">
-                                    <Frame WidthRequest="64" HeightRequest="64" CornerRadius="32" Padding="0" HasShadow="False" BorderColor="{StaticResource CardBorder}" BackgroundColor="{StaticResource Surface}" HorizontalOptions="Start">
-                                        <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Profile}" FontSize="28" TextColor="{StaticResource Gray600}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    <!-- Avatar: muestra la imagen si hay PhotoUrl; si no, el icono -->
+                                    <Frame WidthRequest="64"
+                                           HeightRequest="64"
+                                           CornerRadius="32"
+                                           Padding="0"
+                                           HasShadow="False"
+                                           BorderColor="{StaticResource CardBorder}"
+                                           BackgroundColor="{StaticResource Surface}"
+                                           HorizontalOptions="Start"
+                                           IsClippedToBounds="True">
+                                        <Grid>
+                                            <!-- Fallback: icono -->
+                                            <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                   Text="{StaticResource IconGlyph.Profile}"
+                                                   FontSize="28"
+                                                   TextColor="{StaticResource Gray600}"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center"/>
+                                            <!-- Imagen real (si PhotoUrl es válida se verá sobre el icono) -->
+                                            <Image
+                                                Aspect="AspectFill"
+                                                HorizontalOptions="FillAndExpand"
+                                                VerticalOptions="FillAndExpand"
+                                                Source="{Binding PhotoUrl, Converter={StaticResource ImageSourceFromStringConverter}}"/>
+                                        </Grid>
                                     </Frame>
 
                                     <Label Text="{Binding DisplayName}" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start"/>
                                     <Label Text="{Binding ClientSinceText}" FontSize="12" TextColor="{StaticResource TextSecondary}" HorizontalOptions="Start"/>
-                                    <Button Text="Cambiar foto" Style="{StaticResource SecondaryButtonStyle}" HorizontalOptions="Start"/>
+                                    <Button Text="Cambiar foto"
+                                            Style="{StaticResource SecondaryButtonStyle}"
+                                            HorizontalOptions="Start"
+                                            Command="{Binding ChangePhotoCommand}" />
                                 </VerticalStackLayout>
 
                                 <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="12" RowSpacing="8" HorizontalOptions="FillAndExpand">

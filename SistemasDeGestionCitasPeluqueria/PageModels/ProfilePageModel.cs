@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Storage;
 using SistemasDeGestionCitasPeluqueria.Models;
 using SistemasDeGestionCitasPeluqueria.Pages;
 using SistemasDeGestionCitasPeluqueria.Services;
@@ -33,6 +35,9 @@ public partial class ProfilePageModel : ObservableObject
     [ObservableProperty] private string? phone;
     [ObservableProperty] private string clientSinceText = string.Empty;
 
+    // Nueva: URL de la foto (http/https o data:image/...;base64)
+    [ObservableProperty] private string? photoUrl;
+
     // Fecha de nacimiento (usada por DatePicker)
     [ObservableProperty] private DateTime birthDate = DateTime.Today.AddYears(-30);
 
@@ -61,9 +66,8 @@ public partial class ProfilePageModel : ObservableObject
                 Email = me.Email;
                 Phone = me.Phone;
                 ClientSinceText = me.CreatedAt.Year > 0 ? $"Cliente desde {me.CreatedAt.Year}" : string.Empty;
-
-                // Asignar la fecha de nacimiento recibida (o usar un valor por defecto)
                 BirthDate = me.BirthDate ?? DateTime.Today.AddYears(-30);
+                PhotoUrl = me.PhotoUrl; // nueva
             }
         }
         catch (OperationCanceledException) { }
@@ -108,6 +112,80 @@ public partial class ProfilePageModel : ObservableObject
         }
     }
 
+    // Nuevo: seleccionar y subir foto
+    [RelayCommand]
+    public async Task ChangePhotoAsync(CancellationToken ct = default)
+    {
+        if (IsBusy) return;
+
+        try
+        {
+            IsBusy = true;
+            Error = null;
+
+            string? fileName;
+            Stream? stream;
+
+            if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
+            {
+                var file = await MediaPicker.Default.PickPhotoAsync();
+                if (file is null) return;
+
+                fileName = file.FileName;
+                stream = await file.OpenReadAsync();
+            }
+            else
+            {
+                var file = await FilePicker.Default.PickAsync(new PickOptions
+                {
+                    PickerTitle = "Selecciona una foto",
+                    FileTypes = FilePickerFileType.Images
+                });
+                if (file is null) return;
+
+                fileName = file.FileName;
+                stream = await file.OpenReadAsync();
+            }
+
+            using (stream)
+            {
+                var url = await _userService.UploadPhotoAsync(stream, fileName!, ct);
+                if (!string.IsNullOrWhiteSpace(url))
+                {
+                    PhotoUrl = url;
+                    await Application.Current!.MainPage!.DisplayAlert("Perfil", "Foto actualizada.", "Aceptar");
+                }
+            }
+        }
+        catch (FeatureNotSupportedException)
+        {
+            await Application.Current!.MainPage!.DisplayAlert("No soportado", "La selección de fotos no está soportada en este dispositivo.", "Aceptar");
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+            await Application.Current!.MainPage!.DisplayAlert("Error", ex.Message, "Aceptar");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    // Limpia los datos sensibles de la vista de perfil inmediatamente
+    private void ClearSensitiveData()
+    {
+        Username = string.Empty;
+        Name = null;
+        Email = null;
+        Phone = null;
+        ClientSinceText = string.Empty;
+        PhotoUrl = null;
+        BirthDate = DateTime.Today.AddYears(-30);
+        Error = null;
+    }
+
     [RelayCommand]
     public async Task LogoutAsync()
     {
@@ -118,13 +196,28 @@ public partial class ProfilePageModel : ObservableObject
             IsBusy = true;
             Error = null;
 
-            await _authService.LogoutAsync();
+            // 1) Limpiar UI inmediatamente para evitar mostrar datos antiguos
+            ClearSensitiveData();
 
+            // 2) Navegar al Login de forma inmediata en el hilo UI
             var loginPage = _services.GetRequiredService<LoginPage>();
-            Application.Current!.MainPage = loginPage;
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Application.Current!.MainPage = loginPage;
+            });
+
+            // 3) Borrar tokens/estado en almacenamiento y avisar al AuthService
+            // (AuthService probablemente ya lo haga; repetir es seguro)
+            if (_services.GetService<ITokenStore>() is ITokenStore tokenStore)
+            {
+                await tokenStore.ClearAsync();
+            }
+
+            await _authService.LogoutAsync();
         }
         catch (Exception ex)
         {
+            // si algo falla, dejamos el error para mostrarlo (no restauramos datos)
             Error = ex.Message;
         }
         finally

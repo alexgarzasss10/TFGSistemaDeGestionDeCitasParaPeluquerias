@@ -6,4 +6,5 @@ public sealed class UpdateUserProfileRequest
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public DateTime? BirthDate { get; set; }
+    public string? PhotoUrl { get; set; }
 }
