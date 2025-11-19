@@ -6,6 +6,7 @@
              xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ProfilePage"
              x:DataType="pageModels:ProfilePageModel"
+             x:Name="ProfilePageRoot"
              Title="Mi Perfil"
              BackgroundColor="{StaticResource SurfaceAlt}"
              Padding="12">
@@ -121,21 +122,39 @@
                                         <FlexLayout Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
                                                     Direction="Row" Wrap="Wrap"
                                                     JustifyContent="End" AlignItems="Center" AlignContent="End" Padding="0">
+
+                                            <!-- Botón Cancelar: enlazamos comando del VM usando x:Reference al ContentPage -->
                                             <Button Text="Cancelar"
                                                     Style="{StaticResource SecondaryButtonStyle}"
                                                     WidthRequest="100"
-                                                    Margin="0,0,12,12"/>
+                                                    Margin="0,0,12,12"
+                                                    Command="{Binding Source={x:Reference ProfilePageRoot}, Path=BindingContext.CancelBookingCommand}"
+                                                    CommandParameter="{Binding .}">
+                                                <Button.Triggers>
+                                                    <!-- Deshabilitar si la cita ya está cancelada -->
+                                                    <DataTrigger TargetType="Button" Binding="{Binding IsCancelled}" Value="True">
+                                                        <Setter Property="IsEnabled" Value="False" />
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                    </DataTrigger>
+                                                    <!-- Deshabilitar mientras el VM está ocupado -->
+                                                    <DataTrigger TargetType="Button" Binding="{Binding Source={x:Reference ProfilePageRoot}, Path=BindingContext.IsBusy}" Value="True">
+                                                        <Setter Property="IsEnabled" Value="False" />
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                    </DataTrigger>
+                                                </Button.Triggers>
+                                            </Button>
+
                                             <Button Text="Ver detalles"
                                                     Style="{StaticResource PrimaryButtonSmall}"
                                                     WidthRequest="120"
-                                                    Margin="0,0,12,12"/>
+                                                    Margin="0,0,12,12" />
                                         </FlexLayout>
                                     </Grid>
                                 </Frame>
                             </Grid>
                         </VerticalStackLayout>
 
-                        <!-- COLUMNA DERECHA: estado vacío solo cuando NO hay próximas -->
+                        <!-- COLUMNA DERECHA -->
                         <Frame Grid.Column="1"
                                BackgroundColor="{StaticResource ServiceIconBgLight}"
                                CornerRadius="8"

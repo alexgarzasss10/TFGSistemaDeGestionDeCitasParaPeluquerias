@@ -15,7 +15,6 @@ public partial class ProfilePageModel
     [ObservableProperty] private BookingDto? nextBooking;
     [ObservableProperty] private bool hasUpcoming;
 
-    // Estadísticas calculadas
     [ObservableProperty] private int totalBookings;
     [ObservableProperty] private int upcomingBookingsCount;
     [ObservableProperty] private int completedBookingsCount;
@@ -38,15 +37,10 @@ public partial class ProfilePageModel
     }
 
     partial void OnBookingsChanged(ObservableCollection<BookingDto> value)
-    {
-        // Cuando cambia el histórico recalculamos estadísticas
-        RecalcStats();
-    }
+        => RecalcStats();
 
     partial void OnNextBookingChanged(BookingDto? value)
-    {
-        HasUpcoming = value is not null;
-    }
+        => HasUpcoming = value is not null;
 
     private void UpcomingCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
@@ -63,7 +57,8 @@ public partial class ProfilePageModel
     {
         try
         {
-            var list = await _bookingService.GetMyUpcomingAsync(10, new[] { "confirmed", "confirmada", "pendiente", "pendiente" }, ct);
+            var list = await _bookingService.GetMyUpcomingAsync(10,
+                new[] { "confirmed", "confirmada", "pendiente" }, ct);
             UpcomingBookings = new ObservableCollection<BookingDto>(list);
         }
         catch (OperationCanceledException) { }
@@ -75,12 +70,9 @@ public partial class ProfilePageModel
 
     private void RecalcStats()
     {
-        // Total
         TotalBookings = Bookings?.Count ?? 0;
-        // Próximas
         UpcomingBookingsCount = UpcomingBookings?.Count ?? 0;
 
-        // Contar completadas / canceladas con variantes posibles (es/en)
         var completedSet = new[] { "completed", "completada" };
         var cancelledSet = new[] { "cancelled", "cancelada" };
 

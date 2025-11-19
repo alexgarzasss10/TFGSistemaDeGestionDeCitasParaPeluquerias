@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -31,24 +32,17 @@ public partial class ProfilePageModel : ObservableObject
     [ObservableProperty] private bool isBusy;
     [ObservableProperty] private string? error;
 
-    // Datos de perfil
     [ObservableProperty] private string username = string.Empty;
     [ObservableProperty] private string? name;
     [ObservableProperty] private string? email;
     [ObservableProperty] private string? phone;
     [ObservableProperty] private string clientSinceText = string.Empty;
-
-    // Nueva: URL de la foto (http/https o data:image/...;base64)
     [ObservableProperty] private string? photoUrl;
-
-    // Fecha de nacimiento (usada por DatePicker)
     [ObservableProperty] private DateTime birthDate = DateTime.Today.AddYears(-30);
 
-    // Rango válido para fecha de nacimiento
     public DateTime MinBirthDate { get; } = DateTime.Today.AddYears(-120);
     public DateTime MaxBirthDate { get; } = DateTime.Today;
 
-    // Historial de citas del usuario
     [ObservableProperty] private ObservableCollection<BookingDto> bookings = new();
 
     public string DisplayName => !string.IsNullOrWhiteSpace(Name) ? Name! : Username;
@@ -75,10 +69,8 @@ public partial class ProfilePageModel : ObservableObject
                 BirthDate = me.BirthDate ?? DateTime.Today.AddYears(-30);
                 PhotoUrl = me.PhotoUrl;
 
-                // Cargar historial de citas del usuario
                 await LoadBookingsInternalAsync(ct);
-
-                // NUEVO: cargar próximas citas
+                // Llama al método definido en el archivo parcial Upcoming
                 await LoadUpcomingInternalAsync(ct);
             }
         }
@@ -112,13 +104,10 @@ public partial class ProfilePageModel : ObservableObject
                 Name = string.IsNullOrWhiteSpace(Name) ? null : Name!.Trim(),
                 Email = string.IsNullOrWhiteSpace(Email) ? null : Email!.Trim(),
                 Phone = string.IsNullOrWhiteSpace(Phone) ? null : Phone!.Trim(),
-                // Ahora sí enviamos la fecha de nacimiento (solo la parte de fecha)
                 BirthDate = BirthDate == default ? null : BirthDate.Date
             };
 
             await _userService.UpdateMeAsync(req, ct);
-
-            // Refrescar datos desde el backend
             await LoadAsync(ct);
 
             await Application.Current!.MainPage!.DisplayAlert("Perfil", "Los cambios se guardaron correctamente.", "Aceptar");
@@ -135,7 +124,6 @@ public partial class ProfilePageModel : ObservableObject
         }
     }
 
-    // Nuevo: seleccionar y subir foto
     [RelayCommand]
     public async Task ChangePhotoAsync(CancellationToken ct = default)
     {
@@ -196,7 +184,6 @@ public partial class ProfilePageModel : ObservableObject
         }
     }
 
-    // Limpia los datos sensibles de la vista de perfil inmediatamente
     private void ClearSensitiveData()
     {
         Username = string.Empty;
@@ -207,6 +194,8 @@ public partial class ProfilePageModel : ObservableObject
         PhotoUrl = null;
         BirthDate = DateTime.Today.AddYears(-30);
         Error = null;
+        Bookings.Clear();
+        UpcomingBookings?.Clear(); // propiedad está en el parcial
     }
 
     [RelayCommand]
@@ -219,18 +208,14 @@ public partial class ProfilePageModel : ObservableObject
             IsBusy = true;
             Error = null;
 
-            // 1) Limpiar UI inmediatamente para evitar mostrar datos antiguos
             ClearSensitiveData();
 
-            // 2) Navegar al Login de forma inmediata en el hilo UI
             var loginPage = _services.GetRequiredService<LoginPage>();
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Application.Current!.MainPage = loginPage;
             });
 
-            // 3) Borrar tokens/estado en almacenamiento y avisar al AuthService
-            // (AuthService probablemente ya lo haga; repetir es seguro)
             if (_services.GetService<ITokenStore>() is ITokenStore tokenStore)
             {
                 await tokenStore.ClearAsync();
@@ -240,12 +225,64 @@ public partial class ProfilePageModel : ObservableObject
         }
         catch (Exception ex)
         {
-            // si algo falla, dejamos el error para mostrarlo (no restauramos datos)
             Error = ex.Message;
         }
         finally
         {
             IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    public async Task CancelBookingAsync(BookingDto? booking)
+    {
+        if (booking is null) return;
+        if (IsBusy) return;
+
+        try
+        {
+            var confirm = await Application.Current!.MainPage!.DisplayAlert(
+                "Cancelar cita",
+                $"¿Deseas cancelar la cita #{booking.Id} del {FormatoFecha(booking.Start)}?",
+                "Sí", "No");
+            if (!confirm) return;
+
+            IsBusy = true;
+            Error = null;
+
+            var cancelled = await _bookingService.CancelAsync(booking.Id);
+
+            // Actualizar próximas (propiedades en parcial)
+            var up = UpcomingBookings?.FirstOrDefault(b => b.Id == booking.Id);
+            if (up is not null)
+            {
+                up.Status = cancelled.Status;
+                if (up.IsCancelled)
+                    UpcomingBookings.Remove(up);
+            }
+
+            var hist = Bookings.FirstOrDefault(b => b.Id == booking.Id);
+            if (hist is not null)
+                hist.Status = cancelled.Status;
+
+            await Application.Current!.MainPage!.DisplayAlert("Cita", "La cita se canceló correctamente.", "Aceptar");
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+            await Application.Current!.MainPage!.DisplayAlert("Error", ex.Message, "Aceptar");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private static string FormatoFecha(string iso)
+    {
+        if (DateTime.TryParse(iso, out var dt))
+            return $"{dt:dd/MM/yyyy HH:mm}";
+        return iso;
     }
 }

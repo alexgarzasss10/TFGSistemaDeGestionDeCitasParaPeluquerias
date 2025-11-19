@@ -13,11 +13,12 @@ public sealed class BookingDto
     public string End { get; set; } = "";
     public string Status { get; set; } = ""; // "confirmed"
 
-    // Nuevas propiedades enriquecidas por el backend
     public string? BarberName { get; set; }
     public string? ServiceName { get; set; }
 
-    // Helpers para UI y fallback si backend no devuelve el nombre
     public string DisplayService => !string.IsNullOrWhiteSpace(ServiceName) ? ServiceName : $"Servicio #{ServiceId}";
     public string DisplayBarber => !string.IsNullOrWhiteSpace(BarberName) ? BarberName : $"Barbero #{BarberId}";
+
+    public bool IsCancelled => Status.Equals("cancelled", StringComparison.OrdinalIgnoreCase)
+                               || Status.Equals("canceled", StringComparison.OrdinalIgnoreCase);
 }

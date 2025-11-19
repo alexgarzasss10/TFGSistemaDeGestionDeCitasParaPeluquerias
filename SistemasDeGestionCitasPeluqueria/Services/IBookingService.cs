@@ -13,4 +13,5 @@ public interface IBookingService
     Task<IReadOnlyList<BookingDto>> GetMyUpcomingAsync(int limit = 10, IEnumerable<string>? states = null, CancellationToken ct = default);
     Task<BookingDto?> GetByIdAsync(int id, CancellationToken ct = default);
     Task DeleteAsync(int id, CancellationToken ct = default);
+    Task<BookingDto> CancelAsync(int id, CancellationToken ct = default);
 }

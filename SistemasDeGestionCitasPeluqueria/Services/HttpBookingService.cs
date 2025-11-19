@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
@@ -70,5 +71,23 @@ public sealed class HttpBookingService(HttpClient http) : IBookingService
     {
         var response = await _http.DeleteAsync($"bookings/{id}", ct);
         response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<BookingDto> CancelAsync(int id, CancellationToken ct = default)
+    {
+        // POST vacío para cancelar
+        var response = await _http.PostAsync($"bookings/{id}/cancel", content: null, ct);
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+            throw new InvalidOperationException("No estás autorizado para cancelar esta reserva.");
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            var msg = await response.Content.ReadAsStringAsync(ct);
+            throw new InvalidOperationException(string.IsNullOrWhiteSpace(msg) ? "No se pudo cancelar la reserva." : msg);
+        }
+        response.EnsureSuccessStatusCode();
+        var dto = await response.Content.ReadFromJsonAsync<BookingDto>(cancellationToken: ct);
+        if (dto is null)
+            throw new InvalidOperationException("El backend no devolvió la reserva cancelada.");
+        return dto;
     }
 }
