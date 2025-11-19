@@ -40,6 +40,12 @@ public sealed class HttpBookingService(HttpClient http) : IBookingService
         return list ?? new List<BookingDto>();
     }
 
+    public async Task<IReadOnlyList<BookingDto>> GetMineAsync(CancellationToken ct = default)
+    {
+        var list = await _http.GetFromJsonAsync<List<BookingDto>>("bookings/me", JsonDefaults.Web, ct);
+        return list ?? new List<BookingDto>();
+    }
+
     public async Task<BookingDto?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         return await _http.GetFromJsonAsync<BookingDto>($"bookings/{id}", JsonDefaults.Web, ct);

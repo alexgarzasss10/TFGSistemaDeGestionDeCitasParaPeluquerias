@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,12 +18,14 @@ public partial class ProfilePageModel : ObservableObject
     private readonly IAuthService _authService;
     private readonly IServiceProvider _services;
     private readonly IUserService _userService;
+    private readonly IBookingService _bookingService;
 
-    public ProfilePageModel(IAuthService authService, IServiceProvider services, IUserService userService)
+    public ProfilePageModel(IAuthService authService, IServiceProvider services, IUserService userService, IBookingService bookingService)
     {
         _authService = authService;
         _services = services;
         _userService = userService;
+        _bookingService = bookingService;
     }
 
     [ObservableProperty] private bool isBusy;
@@ -44,6 +47,9 @@ public partial class ProfilePageModel : ObservableObject
     // Rango válido para fecha de nacimiento
     public DateTime MinBirthDate { get; } = DateTime.Today.AddYears(-120);
     public DateTime MaxBirthDate { get; } = DateTime.Today;
+
+    // Historial de citas del usuario
+    [ObservableProperty] private ObservableCollection<BookingDto> bookings = new();
 
     public string DisplayName => !string.IsNullOrWhiteSpace(Name) ? Name! : Username;
     partial void OnNameChanged(string? value) => OnPropertyChanged(nameof(DisplayName));
@@ -67,12 +73,26 @@ public partial class ProfilePageModel : ObservableObject
                 Phone = me.Phone;
                 ClientSinceText = me.CreatedAt.Year > 0 ? $"Cliente desde {me.CreatedAt.Year}" : string.Empty;
                 BirthDate = me.BirthDate ?? DateTime.Today.AddYears(-30);
-                PhotoUrl = me.PhotoUrl; // nueva
+                PhotoUrl = me.PhotoUrl;
+
+                // Cargar historial de citas del usuario
+                await LoadBookingsInternalAsync(ct);
             }
         }
         catch (OperationCanceledException) { }
         catch (Exception ex) { Error = ex.Message; }
         finally { IsBusy = false; }
+    }
+
+    private async Task LoadBookingsInternalAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            var list = await _bookingService.GetMineAsync(ct);
+            Bookings = new ObservableCollection<BookingDto>(list);
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex) { Error = ex.Message; }
     }
 
     [RelayCommand]

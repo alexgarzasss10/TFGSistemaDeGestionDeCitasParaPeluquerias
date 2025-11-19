@@ -2,11 +2,19 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
+             xmlns:models="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
+             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ProfilePage"
              x:DataType="pageModels:ProfilePageModel"
              Title="Mi Perfil"
              BackgroundColor="{StaticResource SurfaceAlt}"
              Padding="12">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BookingIsoToDisplayConverter x:Key="BookingIsoToDisplayConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ScrollView>
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
@@ -18,16 +26,16 @@
                     <Label Text="Gestiona tu información personal y citas" Style="{StaticResource MutedTextStyle}" />
                 </VerticalStackLayout>
 
-                <!-- Próximas Citas (dejará de ser hardcode cuando tengamos /bookings/my) -->
+                <!-- Próximas Citas (mantener por ahora, opcional a reemplazar) -->
                 <Frame BackgroundColor="{StaticResource ServiceIconBgLight}"
                        CornerRadius="10"
                        Padding="18"
                        HasShadow="False"
                        BorderColor="{StaticResource CardBorder}"
                        HorizontalOptions="FillAndExpand">
+                    <!-- (contenido mantenido sin cambios para la zona de próximas citas) -->
                     <Grid ColumnDefinitions="2*,1*" RowDefinitions="Auto" ColumnSpacing="16">
-                        <!-- ... se mantiene el contenido de ejemplo ... -->
-                        <!-- Puedes sustituir más adelante por bindings a propiedades NextBooking* -->
+                        <!-- ... contenido existente (igual que antes) ... -->
                         <VerticalStackLayout Grid.Column="0" Spacing="12" HorizontalOptions="FillAndExpand">
                             <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                                 <Frame Style="{StaticResource InfoIconFrameStyle}"
@@ -56,7 +64,7 @@
                                    Padding="12"
                                    HasShadow="False"
                                    HorizontalOptions="FillAndExpand">
-                                <!-- Ejemplo estático por ahora -->
+                                <!-- Ejemplo estático por ahora (puedes sustituir luego) -->
                                 <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
                                     <Label Grid.Row="0" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}"
                                            Text="{StaticResource IconGlyph.History}" FontSize="18" TextColor="{StaticResource Gray600}" VerticalOptions="Start" />
@@ -203,56 +211,41 @@
                             </Grid>
                         </Frame>
 
-                        <!-- Historial: mantiene demo; sustituiremos cuando tengamos /bookings/my -->
+                        <!-- Historial dinámico: ahora enlazado a Bookings -->
                         <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="8" BorderColor="{StaticResource CardBorder}" Padding="16" HasShadow="False" HorizontalOptions="FillAndExpand">
-                            <!-- ... contenido demo existente ... -->
                             <VerticalStackLayout Spacing="12">
                                 <Label Text="Historial de Citas" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
-                                <!-- ítems de ejemplo -->
-                                <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="{StaticResource Surface}" HasShadow="False" HorizontalOptions="FillAndExpand">
-                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
-                                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.History}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
-                                        <Label Grid.Row="0" Grid.Column="1" Text="Corte de pelo" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
-                                        <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Secondary}" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
-                                            <Label Text="Completado" FontSize="12" TextColor="{StaticResource Gray950}" />
-                                        </Frame>
-                                        <Label Grid.Row="1" Grid.Column="1" Text="Carlos M.  •  15/10/2025  •  10:00  •  15,00 €"
-                                               FontSize="12"
-                                               TextColor="{StaticResource Gray600}"
-                                               LineBreakMode="TailTruncation"
-                                               HorizontalOptions="FillAndExpand" />
-                                    </Grid>
-                                </Frame>
 
-                                <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="{StaticResource Surface}" HasShadow="False" HorizontalOptions="FillAndExpand">
-                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
-                                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.History}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
-                                        <Label Grid.Row="0" Grid.Column="1" Text="Corte + Barba" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
-                                        <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Secondary}" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
-                                            <Label Text="Completado" FontSize="12" TextColor="{StaticResource Gray950}" />
-                                        </Frame>
-                                        <Label Grid.Row="1" Grid.Column="1" Text="Laura C.  •  20/10/2025  •  15:00  •  25,00 €"
-                                               FontSize="12"
-                                               TextColor="{StaticResource Gray600}"
-                                               LineBreakMode="TailTruncation"
-                                               HorizontalOptions="FillAndExpand" />
-                                    </Grid>
-                                </Frame>
+                                <CollectionView ItemsSource="{Binding Bookings}" SelectionMode="None" EmptyView="No tienes citas registradas.">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:BookingDto">
+                                            <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="{StaticResource Surface}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
+                                                    <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.History}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
 
-                                <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="{StaticResource Surface}" HasShadow="False" HorizontalOptions="FillAndExpand">
-                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
-                                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Upcoming}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
-                                        <Label Grid.Row="0" Grid.Column="1" Text="Coloración" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
-                                        <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Accent}" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
-                                            <Label Text="Próxima" FontSize="12" TextColor="{StaticResource White}" />
-                                        </Frame>
-                                        <Label Grid.Row="1" Grid.Column="1" Text="Ana R.  •  28/10/2025  •  12:00  •  40,00 €"
-                                               FontSize="12"
-                                               TextColor="{StaticResource Gray600}"
-                                               LineBreakMode="TailTruncation"
-                                               HorizontalOptions="FillAndExpand" />
-                                    </Grid>
-                                </Frame>
+                                                    <!-- Mostrar nombre del servicio (fall back incluido en ViewModel/DTO) -->
+                                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding DisplayService}" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
+
+                                                    <!-- Estado -->
+                                                    <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource Secondary}" Padding="6,4" CornerRadius="6" HasShadow="False" VerticalOptions="Start" HorizontalOptions="End">
+                                                        <Label Text="{Binding Status}" FontSize="12" TextColor="{StaticResource Gray950}" />
+                                                    </Frame>
+
+                                                    <!-- Línea secundaria: cliente • barbero • fecha • hora -->
+                                                    <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="8" VerticalOptions="Center">
+                                                        <Label Text="{Binding CustomerName}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                        <Label Text="•" TextColor="{StaticResource Gray600}" />
+                                                        <Label Text="{Binding DisplayBarber}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                        <Label Text="•" TextColor="{StaticResource Gray600}" />
+                                                        <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                        <Label Text="•" TextColor="{StaticResource Gray600}" />
+                                                        <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                    </HorizontalStackLayout>
+                                                </Grid>
+                                            </Frame>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
                             </VerticalStackLayout>
                         </Frame>
                     </VerticalStackLayout>
@@ -299,7 +292,6 @@
                                     <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Phone}" TextColor="{StaticResource Gray600}" />
                                     <Label Text="{Binding Phone}" FontSize="13" TextColor="{StaticResource TextSecondary}" />
                                 </HorizontalStackLayout>
-                                
                             </VerticalStackLayout>
                         </Frame>
 
