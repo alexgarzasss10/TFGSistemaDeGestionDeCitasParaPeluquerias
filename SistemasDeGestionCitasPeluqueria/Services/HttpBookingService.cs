@@ -46,6 +46,21 @@ public sealed class HttpBookingService(HttpClient http) : IBookingService
         return list ?? new List<BookingDto>();
     }
 
+    public async Task<IReadOnlyList<BookingDto>> GetMyUpcomingAsync(int limit = 10, IEnumerable<string>? states = null, CancellationToken ct = default)
+    {
+        var url = $"bookings/me/upcoming?limit={limit}";
+        if (states is not null)
+        {
+            foreach (var s in states)
+            {
+                if (!string.IsNullOrWhiteSpace(s))
+                    url += $"&states={Uri.EscapeDataString(s)}";
+            }
+        }
+        var list = await _http.GetFromJsonAsync<List<BookingDto>>(url, JsonDefaults.Web, ct);
+        return list ?? new List<BookingDto>();
+    }
+
     public async Task<BookingDto?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         return await _http.GetFromJsonAsync<BookingDto>($"bookings/{id}", JsonDefaults.Web, ct);

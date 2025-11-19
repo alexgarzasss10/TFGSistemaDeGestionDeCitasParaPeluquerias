@@ -77,6 +77,9 @@ public partial class ProfilePageModel : ObservableObject
 
                 // Cargar historial de citas del usuario
                 await LoadBookingsInternalAsync(ct);
+
+                // NUEVO: cargar próximas citas
+                await LoadUpcomingInternalAsync(ct);
             }
         }
         catch (OperationCanceledException) { }
