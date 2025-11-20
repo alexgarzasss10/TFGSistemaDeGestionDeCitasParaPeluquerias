@@ -14,8 +14,9 @@
         <ResourceDictionary>
             <conv:RatingToStarsConverter x:Key="StarsConverter" />
             <conv:TimeAgoConverter x:Key="TimeAgoConverter" />
-            <!-- FALTABA ESTE RECURSO -->
             <conv:RatingToProgressConverter x:Key="ProgressConv" />
+            <!-- Nuevo: para inicial del nombre -->
+            <conv:NameInitialConverter x:Key="NameInitialConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -89,21 +90,30 @@
                                 <!-- Avatar simple -->
                                 <Frame Grid.RowSpan="2" HeightRequest="40" WidthRequest="40" CornerRadius="20"
                                        BackgroundColor="{DynamicResource SidebarIconBg}" HasShadow="False" Padding="0" VerticalOptions="Start">
-                                    <Label Text="U" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    <Label Text="{Binding UserName, Converter={StaticResource NameInitialConverter}}"
+                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontAttributes="Bold" />
                                 </Frame>
 
-                                <Label Grid.Column="1" Text="Usuario"
-                                       TextColor="{DynamicResource TextPrimary}" FontAttributes="Bold" />
-                                <Label Grid.Column="2" Text="{Binding Date, Converter={StaticResource TimeAgoConverter}}"
-                                       Style="{StaticResource MutedTextStyle}" HorizontalTextAlignment="End" />
+                                <!-- Aquí se muestra el nombre completo. Fallback si viene nulo -->
+                                <Label Grid.Column="1"
+                                       Text="{Binding UserName, FallbackValue=Usuario, TargetNullValue=Usuario}"
+                                       TextColor="{DynamicResource TextPrimary}"
+                                       FontAttributes="Bold" />
+
+                                <Label Grid.Column="2"
+                                       Text="{Binding Date, Converter={StaticResource TimeAgoConverter}}"
+                                       Style="{StaticResource MutedTextStyle}"
+                                       HorizontalTextAlignment="End" />
 
                                 <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                        Text="{Binding Rating, Converter={StaticResource StarsConverter}}"
                                        TextColor="{DynamicResource Accent}" />
 
                                 <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-                                       Text="{Binding Comment}" Style="{StaticResource BodyTextStyle}"
-                                       Margin="0,6,0,0"/>
+                                       Text="{Binding Comment}"
+                                       Style="{StaticResource BodyTextStyle}"
+                                       Margin="0,6,0,0" />
                             </Grid>
                         </Frame>
                     </DataTemplate>
