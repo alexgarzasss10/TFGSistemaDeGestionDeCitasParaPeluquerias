@@ -26,6 +26,7 @@
     <Color x:Key="Gray600">#404040</Color>
     <Color x:Key="Gray900">#111827</Color>
     <Color x:Key="Gray950">#0B1220</Color>
+    <Color x:Key="Warning">#F59E0B</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>

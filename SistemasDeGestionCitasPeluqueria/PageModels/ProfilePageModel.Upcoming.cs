@@ -73,10 +73,8 @@ public partial class ProfilePageModel
         TotalBookings = Bookings?.Count ?? 0;
         UpcomingBookingsCount = UpcomingBookings?.Count ?? 0;
 
-        var completedSet = new[] { "completed", "completada" };
-        var cancelledSet = new[] { "cancelled", "cancelada" };
-
-        CompletedBookingsCount = Bookings?.Count(b => completedSet.Contains(NormalizeStatus(b.Status))) ?? 0;
-        CancelledBookingsCount = Bookings?.Count(b => cancelledSet.Contains(NormalizeStatus(b.Status))) ?? 0;
+        // Ahora contamos completadas detectadas en cliente y canceladas por la propiedad
+        CompletedBookingsCount = Bookings?.Count(b => b.IsCompleted) ?? 0;
+        CancelledBookingsCount = Bookings?.Count(b => b.IsCancelled) ?? 0;
     }
 }
