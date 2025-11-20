@@ -67,6 +67,13 @@
         <Setter Property="FontSize" Value="12" />
     </Style>
 
+    <!-- Estilo global para Editor: evita hardcoded colors -->
+    <Style TargetType="Editor">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
     <!-- NUEVO: Títulos y subtítulos para tarjetas de información -->
     <Style x:Key="InfoCardTitleStyle" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />

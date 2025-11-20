@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ReviewDialogPage"
-             BackgroundColor="#80000000"
+             BackgroundColor="{DynamicResource ModalOverlay}"
              Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="*">
@@ -50,7 +50,10 @@
                     <Label Text="Comentario" Style="{StaticResource MutedTextStyle}" />
                     <Editor x:Name="CommentEditor"
                             AutoSize="TextChanges"
-                            Placeholder="Cuéntanos tu experiencia..." />
+                            Placeholder="Cuéntanos tu experiencia..."
+                            TextColor="{DynamicResource TextPrimary}"
+                            PlaceholderColor="{DynamicResource TextSecondary}"
+                            BackgroundColor="Transparent" />
                 </VerticalStackLayout>
 
                 <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
