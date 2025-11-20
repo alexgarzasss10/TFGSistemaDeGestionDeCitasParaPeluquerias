@@ -1,5 +1,6 @@
 using SistemasDeGestionCitasPeluqueria.PageModels;
 using System.Threading;
+using System.Net.Http;
 
 namespace SistemasDeGestionCitasPeluqueria.Pages;
 
@@ -33,7 +34,15 @@ public partial class ReviewsPage : ContentPage
 
     private async void OnAddReviewClicked(object sender, EventArgs e)
     {
-        var review = await ReviewDialogPage.ShowAsync();
+        // Obtén el nombre del usuario actual (si hay sesión activa)
+        string? userName = null;
+        try
+        {
+            userName = await _vm.GetCurrentUserNameAsync(_cts?.Token ?? CancellationToken.None);
+        }
+        catch { userName = null; }
+
+        var review = await ReviewDialogPage.ShowAsync(userName: userName);
         if (review is not null)
         {
             try
@@ -41,6 +50,14 @@ public partial class ReviewsPage : ContentPage
                 await _vm.AddAsync(review, _cts?.Token ?? CancellationToken.None);
             }
             catch (OperationCanceledException) { }
+            catch (HttpRequestException ex)
+            {
+                await DisplayAlert("Error al crear reseña", ex.Message, "Aceptar");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error inesperado", ex.Message, "Aceptar");
+            }
         }
     }
 

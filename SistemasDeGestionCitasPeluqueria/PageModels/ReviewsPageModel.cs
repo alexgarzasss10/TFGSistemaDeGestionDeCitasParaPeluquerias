@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,9 +12,10 @@ using SistemasDeGestionCitasPeluqueria.Services;
 
 namespace SistemasDeGestionCitasPeluqueria.PageModels
 {
-    public partial class ReviewsPageModel(IReviewService reviewService) : ObservableObject
+    public partial class ReviewsPageModel(IReviewService reviewService, IUserService userService) : ObservableObject
     {
         private readonly IReviewService _reviewService = reviewService;
+        private readonly IUserService _userService = userService;
 
         [ObservableProperty] private ObservableCollection<ServiceReview> reviews = [];
         [ObservableProperty] private bool isBusy;
@@ -49,6 +51,25 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             await _reviewService.AddAsync(review, ct);
             Reviews.Insert(0, review);
             RecalcStats();
+        }
+
+        /// <summary>
+        /// Devuelve el nombre del usuario actual (Name si existe, sino Username).
+        /// </summary>
+        public async Task<string?> GetCurrentUserNameAsync(CancellationToken ct = default)
+        {
+            try
+            {
+                var me = await _userService.GetMeAsync(ct);
+                if (me is null) return null;
+                if (!string.IsNullOrWhiteSpace(me.Name)) return me.Name;
+                if (!string.IsNullOrWhiteSpace(me.Username)) return me.Username;
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private void RecalcStats()

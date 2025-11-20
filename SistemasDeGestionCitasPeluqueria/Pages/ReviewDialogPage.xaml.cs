@@ -7,14 +7,25 @@ public partial class ReviewDialogPage : ContentPage
     private readonly TaskCompletionSource<ServiceReview?> _tcs = new();
     private int _rating = 0;
 
+    // Valores opcionales que pasarás al mostrar el diálogo
+    private int? _barberId;
+    private int? _serviceId;
+    private string? _userName;
+
     public ReviewDialogPage()
     {
         InitializeComponent();
     }
 
-    public static Task<ServiceReview?> ShowAsync()
+    // Ahora acepta opcionalmente barberId, serviceId y userName
+    public static Task<ServiceReview?> ShowAsync(int? barberId = null, int? serviceId = null, string? userName = null)
     {
-        var page = new ReviewDialogPage();
+        var page = new ReviewDialogPage
+        {
+            _barberId = barberId,
+            _serviceId = serviceId,
+            _userName = userName
+        };
         Shell.Current.Navigation.PushModalAsync(page);
         return page._tcs.Task;
     }
@@ -37,12 +48,16 @@ public partial class ReviewDialogPage : ContentPage
             return;
         }
 
+        // Enviar valores opcionales (pueden ser null)
         var review = new ServiceReview
         {
             Rating = _rating,
             Comment = string.IsNullOrWhiteSpace(CommentEditor.Text) ? null : CommentEditor.Text.Trim(),
-            UserId = 0,
-            AppointmentId = 0
+            UserId = null,
+            AppointmentId = null,
+            BarberId = _barberId,   // puede ser null
+            ServiceId = _serviceId, // puede ser null
+            UserName = string.IsNullOrWhiteSpace(_userName) ? null : _userName
         };
 
         _tcs.TrySetResult(review);

@@ -14,7 +14,7 @@ namespace SistemasDeGestionCitasPeluqueria.Services
 
         public async Task<IReadOnlyList<ServiceReview>> GetAllAsync(CancellationToken ct = default)
         {
-            var list = await _http.GetFromJsonAsync<List<ServiceReview>>("reviews", cancellationToken: ct)
+            var list = await _http.GetFromJsonAsync<List<ServiceReview>>("reviews", JsonDefaults.Web, ct)
                        ?? new List<ServiceReview>();
             // Más recientes primero
             return list.OrderByDescending(r => r.Date).ToList();
@@ -22,19 +22,37 @@ namespace SistemasDeGestionCitasPeluqueria.Services
 
         public async Task AddAsync(ServiceReview review, CancellationToken ct = default)
         {
-            var response = await _http.PostAsJsonAsync("reviews", review, ct);
-            response.EnsureSuccessStatusCode();
+            // Construye payload alineado con el esquema legacy del backend
+            var payload = new
+            {
+                barberId = review.BarberId ?? 0,
+                serviceId = review.ServiceId ?? 0,
+                rating = review.Rating,
+                comment = review.Comment ?? string.Empty,
+                userName = review.UserName ?? "Usuario"
+            };
 
-            // Intenta leer el creado 
-            var created = await response.Content.ReadFromJsonAsync<ServiceReview>(cancellationToken: ct);
+            var response = await _http.PostAsJsonAsync("reviews", payload, JsonDefaults.Web, ct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync(ct);
+                // Lanza excepción con el cuerpo para que la UI pueda mostrarlo
+                throw new HttpRequestException($"POST /reviews -> {(int)response.StatusCode} {response.ReasonPhrase}. Body: {body}");
+            }
+
+            // Si devuelve el objeto creado, actualiza el review local
+            var created = await response.Content.ReadFromJsonAsync<ServiceReview>(JsonDefaults.Web, ct);
             if (created is not null)
             {
                 review.Id = created.Id;
                 review.Date = created.Date;
+                review.BarberId = created.BarberId;
+                review.ServiceId = created.ServiceId;
+                review.UserName = created.UserName;
             }
             else
             {
-                // Fallback si el backend no devuelve payload
                 review.Date = DateTimeOffset.UtcNow;
             }
         }
