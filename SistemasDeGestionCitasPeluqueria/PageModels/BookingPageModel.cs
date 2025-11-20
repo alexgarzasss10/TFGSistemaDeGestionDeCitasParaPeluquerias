@@ -18,6 +18,11 @@ public partial class BookingPageModel(IBarberService barberService, IAvailabilit
     private readonly IBookingService _bookingService = bookingService;
 
     private CancellationTokenSource? _cts;
+    private bool _suppressDateChanged;
+
+    // Límites para el calendario (ajusta MaxBookingDate según necesites)
+    public DateTime MinBookingDate { get; } = DateTime.Today;
+    public DateTime MaxBookingDate { get; } = DateTime.Today.AddMonths(2);
 
     [ObservableProperty] private int serviceId;
     [ObservableProperty] private string serviceName = string.Empty;
@@ -49,6 +54,25 @@ public partial class BookingPageModel(IBarberService barberService, IAvailabilit
 
     partial void OnSelectedDateChanged(DateTime value)
     {
+        if (_suppressDateChanged) return;
+
+        // Normalizar fuera de rango (evita seleccionar días pasados)
+        if (value.Date < MinBookingDate)
+        {
+            _suppressDateChanged = true;
+            SelectedDate = MinBookingDate;
+            _suppressDateChanged = false;
+            return;
+        }
+
+        if (value.Date > MaxBookingDate.Date)
+        {
+            _suppressDateChanged = true;
+            SelectedDate = MaxBookingDate;
+            _suppressDateChanged = false;
+            return;
+        }
+
         _ = UpdateSlotsAsync(_cts?.Token ?? CancellationToken.None);
     }
 
@@ -113,6 +137,12 @@ public partial class BookingPageModel(IBarberService barberService, IAvailabilit
 
         try
         {
+            // Asegurar SelectedDate dentro de rango al aparecer
+            if (SelectedDate.Date < MinBookingDate)
+                SelectedDate = MinBookingDate;
+            else if (SelectedDate.Date > MaxBookingDate.Date)
+                SelectedDate = MaxBookingDate;
+
             await LoadAsync(_cts.Token);
         }
         catch (OperationCanceledException) { }
@@ -185,6 +215,15 @@ public partial class BookingPageModel(IBarberService barberService, IAvailabilit
     public async Task ConfirmAsync()
     {
         if (SelectedBarber is null || SelectedSlot is null) return;
+
+        // Defensa adicional: no permitir reservar en fecha pasada
+        if (SelectedDate.Date < MinBookingDate)
+        {
+            Error = "No se puede reservar en una fecha pasada.";
+            await Shell.Current.DisplayAlert("Fecha inválida", "Selecciona una fecha a partir de hoy.", "OK");
+            SelectedDate = MinBookingDate;
+            return;
+        }
 
         try
         {

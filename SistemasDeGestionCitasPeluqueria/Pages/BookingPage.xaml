@@ -64,6 +64,9 @@
                                             View="Month"
                                             SelectionMode="Single"
                                             SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                                            MinimumDate="{Binding MinBookingDate}"
+                                            MaximumDate="{Binding MaxBookingDate}"
+                                            EnablePastDates="False"
                                             HeightRequest="280" />
                     </VerticalStackLayout>
                 </Frame>
