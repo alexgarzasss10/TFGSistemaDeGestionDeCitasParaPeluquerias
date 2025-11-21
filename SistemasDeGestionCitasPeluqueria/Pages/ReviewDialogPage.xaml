@@ -6,7 +6,6 @@
              Shell.NavBarIsVisible="False">
 
     <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="*">
-        <!-- Contenedor centrado -->
         <Frame Grid.Row="1"
                Style="{StaticResource CardFrameStyle}"
                HasShadow="True"
@@ -19,7 +18,7 @@
                     <Button Text="✕"
                             BackgroundColor="Transparent"
                             TextColor="{DynamicResource TextSecondary}"
-                            Clicked="OnCancelClicked"/>
+                            Command="{Binding CancelCommand}"/>
                 </Grid>
 
                 <Label Text="Comparte tu experiencia con nosotros"
@@ -28,29 +27,39 @@
                 <VerticalStackLayout>
                     <Label Text="Valoración" Style="{StaticResource MutedTextStyle}" />
                     <HorizontalStackLayout Spacing="8">
-                        <Label x:Name="Star1" FontSize="28" TextColor="{DynamicResource Accent}" Text="☆">
-                            <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnStar1Tapped"/></Label.GestureRecognizers>
+                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star1Text}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="1"/>
+                            </Label.GestureRecognizers>
                         </Label>
-                        <Label x:Name="Star2" FontSize="28" TextColor="{DynamicResource Accent}" Text="☆">
-                            <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnStar2Tapped"/></Label.GestureRecognizers>
+                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star2Text}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="2"/>
+                            </Label.GestureRecognizers>
                         </Label>
-                        <Label x:Name="Star3" FontSize="28" TextColor="{DynamicResource Accent}" Text="☆">
-                            <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnStar3Tapped"/></Label.GestureRecognizers>
+                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star3Text}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="3"/>
+                            </Label.GestureRecognizers>
                         </Label>
-                        <Label x:Name="Star4" FontSize="28" TextColor="{DynamicResource Accent}" Text="☆">
-                            <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnStar4Tapped"/></Label.GestureRecognizers>
+                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star4Text}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="4"/>
+                            </Label.GestureRecognizers>
                         </Label>
-                        <Label x:Name="Star5" FontSize="28" TextColor="{DynamicResource Accent}" Text="☆">
-                            <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnStar5Tapped"/></Label.GestureRecognizers>
+                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star5Text}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="5"/>
+                            </Label.GestureRecognizers>
                         </Label>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout>
                     <Label Text="Comentario" Style="{StaticResource MutedTextStyle}" />
-                    <Editor x:Name="CommentEditor"
-                            AutoSize="TextChanges"
+                    <Editor AutoSize="TextChanges"
                             Placeholder="Cuéntanos tu experiencia..."
+                            Text="{Binding Comment}"
                             TextColor="{DynamicResource TextPrimary}"
                             PlaceholderColor="{DynamicResource TextSecondary}"
                             BackgroundColor="Transparent" />
@@ -60,12 +69,13 @@
                     <Button Text="Cancelar"
                             Padding="18,10"
                             Style="{StaticResource OutlineButtonStyle}"
-                            Clicked="OnCancelClicked" />
+                            Command="{Binding CancelCommand}" />
                     <Button Grid.Column="1"
                             Text="Publicar reseña"
                             Padding="18,10"
                             Style="{StaticResource PrimaryButtonStyle}"
-                            Clicked="OnPublishClicked" />
+                            Command="{Binding PublishCommand}"
+                            IsEnabled="{Binding CanPublish}" />
                 </Grid>
             </VerticalStackLayout>
         </Frame>
