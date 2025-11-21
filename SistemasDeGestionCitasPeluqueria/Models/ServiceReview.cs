@@ -29,9 +29,13 @@ public class ServiceReview
     public string? UserName { get; set; }
 
     [JsonPropertyName("createdAt")]
-    public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset Date { get; set; }
 
-    // Enriquecidas en el cliente (no vienen del backend legacy)
+    // NUEVO: foto de perfil del usuario que hizo la reseña
+    [JsonPropertyName("userPhotoUrl")]
+    public string? UserPhotoUrl { get; set; }
+
+    // Enriquecidas en cliente
     public string? BarberName { get; set; }
     public string? ServiceName { get; set; }
 

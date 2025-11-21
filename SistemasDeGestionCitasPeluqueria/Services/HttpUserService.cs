@@ -9,7 +9,12 @@ public sealed class HttpUserService(HttpClient http) : IUserService
     private readonly HttpClient _http = http;
 
     public async Task<UserProfile?> GetMeAsync(CancellationToken ct = default)
-        => await _http.GetFromJsonAsync<UserProfile>("users/me", JsonDefaults.Web, ct);
+    {
+        var me = await _http.GetFromJsonAsync<UserProfile>("users/me", JsonDefaults.Web, ct);
+        if (me is not null)
+            me.PhotoUrl = UrlHelper.EnsureAbsolute(me.PhotoUrl, _http.BaseAddress);
+        return me;
+    }
 
     public async Task UpdateMeAsync(UpdateUserProfileRequest request, CancellationToken ct = default)
     {
@@ -40,6 +45,6 @@ public sealed class HttpUserService(HttpClient http) : IUserService
         }
 
         var dto = await resp.Content.ReadFromJsonAsync<PhotoUploadResponse>(JsonDefaults.Web, ct);
-        return dto?.PhotoUrl;
+        return UrlHelper.EnsureAbsolute(dto?.PhotoUrl, _http.BaseAddress);
     }
 }

@@ -61,24 +61,23 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
         {
             if (review is null) return;
 
-            // Completar nombre de usuario si falta
-            if (string.IsNullOrWhiteSpace(review.UserName))
+            // Completar nombre y foto de usuario si faltan
+            if (string.IsNullOrWhiteSpace(review.UserName) || string.IsNullOrWhiteSpace(review.UserPhotoUrl))
             {
                 var me = await _userService.GetMeAsync(ct);
-                var name = me?.Name;
-                if (string.IsNullOrWhiteSpace(name))
-                    name = me?.Username;
-                if (!string.IsNullOrWhiteSpace(name))
-                    review.UserName = name;
+                if (me is not null)
+                {
+                    if (string.IsNullOrWhiteSpace(review.UserName))
+                        review.UserName = !string.IsNullOrWhiteSpace(me.Name) ? me.Name : me.Username;
+                    if (string.IsNullOrWhiteSpace(review.UserPhotoUrl) && !string.IsNullOrWhiteSpace(me.PhotoUrl))
+                        review.UserPhotoUrl = me.PhotoUrl;
+                }
             }
 
-            // Completar nombres de barber/servicio si sólo vienen los Id
             await EnrichSingleAsync(review, ct);
 
             if (review.Id == 0)
-            {
                 await _reviewService.AddAsync(review, ct);
-            }
 
             if (!Reviews.Any(r => r.Id == review.Id && review.Id != 0))
             {

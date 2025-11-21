@@ -16,7 +16,8 @@
             <conv:TimeAgoConverter x:Key="TimeAgoConverter" />
             <conv:RatingToProgressConverter x:Key="ProgressConv" />
             <conv:NameInitialConverter x:Key="NameInitialConverter" />
-            <!-- Se eliminaron color y estilo locales: ahora están en Colors.xaml y Styles.xaml -->
+            <conv:NullToBoolConverter x:Key="NullToBool" />
+            <conv:NullToInverseBoolConverter x:Key="NullToInverseBool" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -83,13 +84,25 @@
                                   RowDefinitions="Auto,Auto,Auto,Auto"
                                   ColumnSpacing="12">
 
+                                <!-- Avatar: muestra imagen si hay URL, si no inicial -->
                                 <Frame Grid.RowSpan="2"
-                                       HeightRequest="40" WidthRequest="40" CornerRadius="20"
-                                       BackgroundColor="{DynamicResource SidebarIconBg}"
-                                       HasShadow="False" Padding="0" VerticalOptions="Start">
-                                    <Label Text="{Binding UserName, Converter={StaticResource NameInitialConverter}}"
-                                           HorizontalOptions="Center" VerticalOptions="Center"
-                                           FontAttributes="Bold" />
+                                         HeightRequest="40" WidthRequest="40" CornerRadius="20"
+                                        BackgroundColor="{DynamicResource SidebarIconBg}"
+                                         HasShadow="False" Padding="0" VerticalOptions="Start">
+                                    <Grid>
+                                        <Image Source="{Binding UserPhotoUrl}"
+                                             Aspect="AspectFill"
+                                             IsVisible="{Binding UserPhotoUrl, Converter={StaticResource NullToBool}}"
+                                                 WidthRequest="40" HeightRequest="40">
+                                            <Image.Clip>
+                                                <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20" />
+                                            </Image.Clip>
+                                        </Image>
+                                        <Label Text="{Binding UserName, Converter={StaticResource NameInitialConverter}}"
+                                                 IsVisible="{Binding UserPhotoUrl, Converter={StaticResource NullToInverseBool}}"
+                                             HorizontalOptions="Center" VerticalOptions="Center"
+                                                 FontAttributes="Bold" />
+                                    </Grid>
                                 </Frame>
 
                                 <Label Grid.Column="1"

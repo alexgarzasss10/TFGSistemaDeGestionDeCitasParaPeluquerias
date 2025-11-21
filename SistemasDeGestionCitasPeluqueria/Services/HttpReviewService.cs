@@ -16,20 +16,26 @@ namespace SistemasDeGestionCitasPeluqueria.Services
         {
             var list = await _http.GetFromJsonAsync<List<ServiceReview>>("reviews", JsonDefaults.Web, ct)
                        ?? new List<ServiceReview>();
+
+            // Normaliza las URLs de foto (por si alguna es relativa)
+            foreach (var r in list)
+                r.UserPhotoUrl = UrlHelper.EnsureAbsolute(r.UserPhotoUrl, _http.BaseAddress);
+
             // Más recientes primero
             return list.OrderByDescending(r => r.Date).ToList();
         }
 
         public async Task AddAsync(ServiceReview review, CancellationToken ct = default)
         {
-            // Construye payload alineado con el esquema legacy del backend
+            // Payload legacy + envío de userPhotoUrl
             var payload = new
             {
                 barberId = review.BarberId ?? 0,
                 serviceId = review.ServiceId ?? 0,
                 rating = review.Rating,
                 comment = review.Comment ?? string.Empty,
-                userName = review.UserName ?? "Usuario"
+                userName = review.UserName ?? "Usuario",
+                userPhotoUrl = review.UserPhotoUrl // NUEVO
             };
 
             var response = await _http.PostAsJsonAsync("reviews", payload, JsonDefaults.Web, ct);
@@ -37,11 +43,9 @@ namespace SistemasDeGestionCitasPeluqueria.Services
             if (!response.IsSuccessStatusCode)
             {
                 var body = await response.Content.ReadAsStringAsync(ct);
-                // Lanza excepción con el cuerpo para que la UI pueda mostrarlo
                 throw new HttpRequestException($"POST /reviews -> {(int)response.StatusCode} {response.ReasonPhrase}. Body: {body}");
             }
 
-            // Si devuelve el objeto creado, actualiza el review local
             var created = await response.Content.ReadFromJsonAsync<ServiceReview>(JsonDefaults.Web, ct);
             if (created is not null)
             {
@@ -50,10 +54,13 @@ namespace SistemasDeGestionCitasPeluqueria.Services
                 review.BarberId = created.BarberId;
                 review.ServiceId = created.ServiceId;
                 review.UserName = created.UserName;
+                // Asegura URL absoluta
+                review.UserPhotoUrl = UrlHelper.EnsureAbsolute(created.UserPhotoUrl, _http.BaseAddress);
             }
             else
             {
                 review.Date = DateTimeOffset.UtcNow;
+                review.UserPhotoUrl = UrlHelper.EnsureAbsolute(review.UserPhotoUrl, _http.BaseAddress);
             }
         }
     }

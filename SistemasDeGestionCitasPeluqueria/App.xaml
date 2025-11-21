@@ -19,8 +19,10 @@
             <conv:AreEqualConverter x:Key="AreEqualConverter" />
             <conv:BookingIsoToDisplayConverter x:Key="BookingIsoToDisplayConverter" />
             <conv:NameInitialConverter x:Key="NameInitialConverter" />
-            <!-- NUEVO -->
             <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <conv:NullToBoolConverter x:Key="NullToBoolConverter" />
+            <conv:NullToInverseBoolConverter x:Key="NullToInverseBoolConverter" />
+            <conv:InitialsConverter x:Key="InitialsConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

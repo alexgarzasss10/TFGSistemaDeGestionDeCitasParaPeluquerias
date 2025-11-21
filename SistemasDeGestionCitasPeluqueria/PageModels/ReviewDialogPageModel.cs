@@ -133,7 +133,8 @@ public partial class ReviewDialogPageModel : ObservableObject
                 BarberName = SelectedBarber?.Name,
                 ServiceName = SelectedService?.Name,
                 UserName = UserName,
-                Date = DateTimeOffset.UtcNow
+                Date = DateTimeOffset.UtcNow,
+                UserPhotoUrl = await TryGetCurrentUserPhotoAsync()
             };
 
             if (_reviewService is not null)
@@ -196,6 +197,18 @@ public partial class ReviewDialogPageModel : ObservableObject
         var page = new Pages.ReviewDialogPage(vm);
         await navigation.PushModalAsync(page);
         return await tcs.Task;
+    }
+
+    private async Task<string?> TryGetCurrentUserPhotoAsync()
+    {
+        try
+        {
+            var sp = Application.Current?.Handler?.MauiContext?.Services;
+            var userService = sp?.GetService<IUserService>();
+            var me = userService is not null ? await userService.GetMeAsync() : null;
+            return me?.PhotoUrl;
+        }
+        catch { return null; }
     }
 }
 
