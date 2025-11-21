@@ -6,30 +6,49 @@ namespace SistemasDeGestionCitasPeluqueria.Models;
 
 public class ServiceReview
 {
-    public int Id { get; set; }              // RESEÑA.id
+    public int Id { get; set; }
 
     [JsonPropertyName("userId")]
-    public int? UserId { get; set; }          // RESEÑA.usuario_id 
+    public int? UserId { get; set; }
 
     [JsonPropertyName("appointmentId")]
-    public int? AppointmentId { get; set; }   // RESEÑA.cita_id 
+    public int? AppointmentId { get; set; }
 
     [JsonPropertyName("barberId")]
-    public int? BarberId { get; set; }       // RESEÑA.barbero_id 
+    public int? BarberId { get; set; }
 
     [JsonPropertyName("serviceId")]
-    public int? ServiceId { get; set; }      // RESEÑA.servicio_id 
+    public int? ServiceId { get; set; }
 
     [Range(1, 5)]
-    public int Rating { get; set; }          // RESEÑA.calificacion (1-5)
+    public int Rating { get; set; }
 
-    public string? Comment { get; set; }     // RESEÑA.comentario
+    public string? Comment { get; set; }
 
-    // Nombre del autor (lo que devuelve el backend como "userName")
     [JsonPropertyName("userName")]
-    public string? UserName { get; set; }    // RESEÑA.usuario_nombre
+    public string? UserName { get; set; }
 
-    // El backend legacy devuelve "createdAt" (ISO). Lo mapeamos a Date.
     [JsonPropertyName("createdAt")]
-    public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow; // RESEÑA.fecha
+    public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
+
+    // Enriquecidas en el cliente (no vienen del backend legacy)
+    public string? BarberName { get; set; }
+    public string? ServiceName { get; set; }
+
+    // NUEVO: propiedades auxiliares para la UI (ignoradas en JSON)
+    [JsonIgnore]
+    public bool HasBarberOrService =>
+        !string.IsNullOrWhiteSpace(BarberName) || !string.IsNullOrWhiteSpace(ServiceName);
+
+    [JsonIgnore]
+    public bool HasBothSelection =>
+        !string.IsNullOrWhiteSpace(BarberName) && !string.IsNullOrWhiteSpace(ServiceName);
+
+    [JsonIgnore]
+    public string? BarberDisplay =>
+        string.IsNullOrWhiteSpace(BarberName) ? null : $"Barbero: {BarberName}";
+
+    [JsonIgnore]
+    public string? ServiceDisplay =>
+        string.IsNullOrWhiteSpace(ServiceName) ? null : $"Servicio: {ServiceName}";
 }

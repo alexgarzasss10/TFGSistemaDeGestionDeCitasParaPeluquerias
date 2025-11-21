@@ -1,4 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SistemasDeGestionCitasPeluqueria.Models;
@@ -6,10 +9,21 @@ using SistemasDeGestionCitasPeluqueria.Services;
 
 namespace SistemasDeGestionCitasPeluqueria.PageModels
 {
-    public partial class ReviewsPageModel(IReviewService reviewService, IUserService userService) : ObservableObject
+    // SE AÑADEN IBarberService e IServiceOfferingService para poder enriquecer los nombres
+    public partial class ReviewsPageModel(
+        IReviewService reviewService,
+        IUserService userService,
+        IBarberService barberService,
+        IServiceOfferingService serviceOfferingService) : ObservableObject
     {
         private readonly IReviewService _reviewService = reviewService;
         private readonly IUserService _userService = userService;
+        private readonly IBarberService _barberService = barberService;
+        private readonly IServiceOfferingService _serviceOfferingService = serviceOfferingService;
+
+        // Cachés simples para evitar pedir catálogos cada vez
+        private IReadOnlyList<Barber>? _barbersCache;
+        private IReadOnlyList<ServiceOffering>? _servicesCache;
 
         [ObservableProperty] private ObservableCollection<ServiceReview> reviews = [];
         [ObservableProperty] private bool isBusy;
@@ -23,7 +37,6 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
         [ObservableProperty] private int count2;
         [ObservableProperty] private int count1;
 
-        // Nueva colección para las barras
         [ObservableProperty] private ObservableCollection<RatingDistributionItem> ratingDistribution = [];
 
         [RelayCommand]
@@ -35,6 +48,7 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
                 IsBusy = true;
                 Error = null;
                 var all = await _reviewService.GetAllAsync(ct);
+                await EnrichNamesAsync(all, ct); // NUEVO
                 Reviews = new ObservableCollection<ServiceReview>(all);
                 RecalcStats();
             }
@@ -43,12 +57,11 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             finally { IsBusy = false; }
         }
 
-        // Evita duplicados y completa el nombre si falta.
         public async Task AddAsync(ServiceReview review, CancellationToken ct = default)
         {
             if (review is null) return;
 
-            // Completar nombre si viene nulo / vacío
+            // Completar nombre de usuario si falta
             if (string.IsNullOrWhiteSpace(review.UserName))
             {
                 var me = await _userService.GetMeAsync(ct);
@@ -58,6 +71,9 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
                 if (!string.IsNullOrWhiteSpace(name))
                     review.UserName = name;
             }
+
+            // Completar nombres de barber/servicio si sólo vienen los Id
+            await EnrichSingleAsync(review, ct);
 
             if (review.Id == 0)
             {
@@ -84,6 +100,45 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             catch
             {
                 return null;
+            }
+        }
+
+        private async Task EnsureCatalogsAsync(CancellationToken ct)
+        {
+            if (_barbersCache is null)
+                _barbersCache = await _barberService.GetAllAsync(ct);
+            if (_servicesCache is null)
+                _servicesCache = await _serviceOfferingService.GetAllAsync(ct);
+        }
+
+        private async Task EnrichNamesAsync(IReadOnlyList<ServiceReview> list, CancellationToken ct)
+        {
+            // Sólo bajar catálogos si hay al menos una reseña que necesita datos
+            var needBarbers = list.Any(r => r.BarberId.HasValue && string.IsNullOrWhiteSpace(r.BarberName));
+            var needServices = list.Any(r => r.ServiceId.HasValue && string.IsNullOrWhiteSpace(r.ServiceName));
+            if (!(needBarbers || needServices)) return;
+
+            await EnsureCatalogsAsync(ct);
+
+            foreach (var r in list)
+            {
+                if (r.BarberId.HasValue && string.IsNullOrWhiteSpace(r.BarberName))
+                    r.BarberName = _barbersCache?.FirstOrDefault(b => b.Id == r.BarberId)?.Name;
+                if (r.ServiceId.HasValue && string.IsNullOrWhiteSpace(r.ServiceName))
+                    r.ServiceName = _servicesCache?.FirstOrDefault(s => s.Id == r.ServiceId)?.Name;
+            }
+        }
+
+        private async Task EnrichSingleAsync(ServiceReview review, CancellationToken ct)
+        {
+            if ((review.BarberId.HasValue && string.IsNullOrWhiteSpace(review.BarberName)) ||
+                (review.ServiceId.HasValue && string.IsNullOrWhiteSpace(review.ServiceName)))
+            {
+                await EnsureCatalogsAsync(ct);
+                if (review.BarberId.HasValue && string.IsNullOrWhiteSpace(review.BarberName))
+                    review.BarberName = _barbersCache?.FirstOrDefault(b => b.Id == review.BarberId)?.Name;
+                if (review.ServiceId.HasValue && string.IsNullOrWhiteSpace(review.ServiceName))
+                    review.ServiceName = _servicesCache?.FirstOrDefault(s => s.Id == review.ServiceId)?.Name;
             }
         }
 
@@ -124,11 +179,10 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             };
     }
 
-    // POCO para la barra
     public sealed class RatingDistributionItem
     {
         public int Rating { get; set; }
         public int Count { get; set; }
-        public double Percentage { get; set; } // 0..1
+        public double Percentage { get; set; }
     }
 }

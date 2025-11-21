@@ -78,9 +78,15 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:ServiceReview">
                         <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True" Margin="0,6">
-                            <Grid ColumnDefinitions="48,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12">
-                                <Frame Grid.RowSpan="2" HeightRequest="40" WidthRequest="40" CornerRadius="20"
-                                       BackgroundColor="{DynamicResource SidebarIconBg}" HasShadow="False" Padding="0" VerticalOptions="Start">
+                            <!-- Cambiamos a 4 filas para incluir la línea de barbero/servicio -->
+                            <Grid ColumnDefinitions="48,*,Auto"
+                                  RowDefinitions="Auto,Auto,Auto,Auto"
+                                  ColumnSpacing="12">
+
+                                <Frame Grid.RowSpan="2"
+                                       HeightRequest="40" WidthRequest="40" CornerRadius="20"
+                                       BackgroundColor="{DynamicResource SidebarIconBg}"
+                                       HasShadow="False" Padding="0" VerticalOptions="Start">
                                     <Label Text="{Binding UserName, Converter={StaticResource NameInitialConverter}}"
                                            HorizontalOptions="Center" VerticalOptions="Center"
                                            FontAttributes="Bold" />
@@ -96,11 +102,29 @@
                                        Style="{StaticResource MutedTextStyle}"
                                        HorizontalTextAlignment="End" />
 
+                                <!-- Estrellas -->
                                 <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                        Text="{Binding Rating, Converter={StaticResource StarsConverter}}"
                                        TextColor="{DynamicResource Accent}" />
 
-                                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                                <!-- NUEVO: línea barbero / servicio (solo si hay al menos uno) -->
+                                <HorizontalStackLayout Grid.Row="2"
+                                                       Grid.Column="0"
+                                                       Grid.ColumnSpan="3"
+                                                       Spacing="6"
+                                                       IsVisible="{Binding HasBarberOrService}">
+                                    <Label Text="{Binding BarberDisplay}"
+                                           Style="{StaticResource MutedTextStyle}"
+                                           IsVisible="{Binding BarberDisplay, Converter={StaticResource NullOrWhiteToBoolConverter}}" />
+                                    <Label Text="•"
+                                           Style="{StaticResource MutedTextStyle}"
+                                           IsVisible="{Binding HasBothSelection}" />
+                                    <Label Text="{Binding ServiceDisplay}"
+                                           Style="{StaticResource MutedTextStyle}"
+                                           IsVisible="{Binding ServiceDisplay, Converter={StaticResource NullOrWhiteToBoolConverter}}" />
+                                </HorizontalStackLayout>
+
+                                <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
                                        Text="{Binding Comment}"
                                        Style="{StaticResource BodyTextStyle}"
                                        Margin="0,6,0,0" />

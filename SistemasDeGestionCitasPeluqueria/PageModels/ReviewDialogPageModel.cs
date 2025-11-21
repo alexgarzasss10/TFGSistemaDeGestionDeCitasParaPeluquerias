@@ -130,6 +130,8 @@ public partial class ReviewDialogPageModel : ObservableObject
                 Comment = string.IsNullOrWhiteSpace(Comment) ? null : Comment!.Trim(),
                 BarberId = SelectedBarber?.Id ?? BarberId,
                 ServiceId = SelectedService?.Id ?? ServiceId,
+                BarberName = SelectedBarber?.Name,
+                ServiceName = SelectedService?.Name,
                 UserName = UserName,
                 Date = DateTimeOffset.UtcNow
             };
