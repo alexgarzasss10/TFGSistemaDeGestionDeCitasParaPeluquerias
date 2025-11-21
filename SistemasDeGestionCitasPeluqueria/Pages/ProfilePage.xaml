@@ -35,10 +35,8 @@
                        BorderColor="{StaticResource CardBorder}"
                        HorizontalOptions="FillAndExpand">
                     <Grid ColumnDefinitions="2*,1*" RowDefinitions="Auto" ColumnSpacing="16">
-
                         <!-- COLUMNA IZQUIERDA -->
                         <VerticalStackLayout Grid.Column="0" Spacing="12" HorizontalOptions="FillAndExpand">
-                            <!-- Hace que este bloque ocupe las 2 columnas cuando sí hay próximas citas -->
                             <VerticalStackLayout.Triggers>
                                 <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding HasUpcoming}" Value="True">
                                     <Setter Property="Grid.ColumnSpan" Value="2" />
@@ -66,119 +64,106 @@
                                 </VerticalStackLayout>
                             </HorizontalStackLayout>
 
-                            <!-- Tarjeta dinámica: centrada y con ancho "máximo" simulado -->
-                            <Grid IsVisible="{Binding HasUpcoming}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Frame Grid.Column="1"
-                                       Style="{StaticResource CardFrameStyle}"
-                                       CornerRadius="8"
-                                       Padding="12"
-                                       HasShadow="False"
-                                       HorizontalOptions="Center"
-                                       WidthRequest="720">
-                                    <Frame.BindingContext>
-                                        <Binding Path="NextBooking" />
-                                    </Frame.BindingContext>
-
-                                    <Grid x:DataType="models:BookingDto"
-                                          ColumnDefinitions="Auto,*,Auto"
-                                          RowDefinitions="Auto,Auto,Auto"
-                                          ColumnSpacing="10"
-                                          RowSpacing="8">
-                                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
-                                               FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                               Text="{StaticResource IconGlyph.History}"
-                                               FontSize="18"
-                                               TextColor="{StaticResource Gray600}"
-                                               VerticalOptions="Start" />
-
-                                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
-                                            <Label Text="{Binding DisplayService}" FontAttributes="Bold" FontSize="14" TextColor="{StaticResource TextPrimary}" />
-                                            <Label Text="{Binding DisplayBarber, StringFormat='con {0}'}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
-                                        </VerticalStackLayout>
-
-                                        <Frame Grid.Row="0" Grid.Column="2"
-                                               BackgroundColor="{StaticResource Accent}"
-                                               Padding="8,4"
-                                               CornerRadius="6"
+                            <!-- Lista horizontal de próximas citas -->
+                            <CollectionView ItemsSource="{Binding UpcomingBookings}"
+                                            IsVisible="{Binding HasUpcoming}"
+                                            SelectionMode="None">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="16" />
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:BookingDto">
+                                        <Frame Style="{StaticResource CardFrameStyle}"
+                                               CornerRadius="8"
+                                               Padding="12"
                                                HasShadow="False"
-                                               VerticalOptions="Start"
-                                               HorizontalOptions="End">
-                                            <Frame.Triggers>
-                                                <!-- Cancelada -->
-                                                <DataTrigger TargetType="Frame" Binding="{Binding IsCancelled}" Value="True">
-                                                    <Setter Property="BackgroundColor" Value="{StaticResource ErrorAlertBg}" />
-                                                </DataTrigger>
-                                                <!-- Completada -->
-                                                <DataTrigger TargetType="Frame" Binding="{Binding IsCompleted}" Value="True">
-                                                    <Setter Property="BackgroundColor" Value="{StaticResource ServiceIconBgLight}" />
-                                                </DataTrigger>
-                                                <!-- Confirmada -->
-                                                <DataTrigger TargetType="Frame" Binding="{Binding IsConfirmed}" Value="True">
-                                                    <Setter Property="BackgroundColor" Value="{StaticResource LocationIconBg}" />
-                                                </DataTrigger>
-                                            </Frame.Triggers>
+                                               WidthRequest="480"
+                                               HorizontalOptions="Start">
+                                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                                  RowDefinitions="Auto,Auto,Auto"
+                                                  ColumnSpacing="10"
+                                                  RowSpacing="8">
+                                                <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                       Text="{StaticResource IconGlyph.History}"
+                                                       FontSize="18"
+                                                       TextColor="{StaticResource Gray600}"
+                                                       VerticalOptions="Start" />
 
-                                            <Label Text="{Binding StatusLabel}" FontSize="12" TextColor="{StaticResource Gray950}">
-                                                <Label.Triggers>
-                                                    <DataTrigger TargetType="Label" Binding="{Binding IsCancelled}" Value="True">
-                                                        <Setter Property="TextColor" Value="{StaticResource ErrorAlertText}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
-                                                        <Setter Property="TextColor" Value="{StaticResource SaveAccent}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger TargetType="Label" Binding="{Binding IsConfirmed}" Value="True">
-                                                        <Setter Property="TextColor" Value="{StaticResource Warning}" />
-                                                    </DataTrigger>
-                                                </Label.Triggers>
-                                            </Label>
+                                                <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                                    <Label Text="{Binding DisplayService}" FontAttributes="Bold" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                                                    <Label Text="{Binding DisplayBarber, StringFormat='con {0}'}" FontSize="12" TextColor="{StaticResource TextSecondary}" />
+                                                </VerticalStackLayout>
+
+                                                <Frame Grid.Row="0" Grid.Column="2"
+                                                       BackgroundColor="{StaticResource Accent}"
+                                                       Padding="8,4"
+                                                       CornerRadius="6"
+                                                       HasShadow="False"
+                                                       VerticalOptions="Start"
+                                                       HorizontalOptions="End">
+                                                    <Frame.Triggers>
+                                                        <DataTrigger TargetType="Frame" Binding="{Binding IsCancelled}" Value="True">
+                                                            <Setter Property="BackgroundColor" Value="{StaticResource ErrorAlertBg}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger TargetType="Frame" Binding="{Binding IsCompleted}" Value="True">
+                                                            <Setter Property="BackgroundColor" Value="{StaticResource ServiceIconBgLight}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger TargetType="Frame" Binding="{Binding IsConfirmed}" Value="True">
+                                                            <Setter Property="BackgroundColor" Value="{StaticResource LocationIconBg}" />
+                                                        </DataTrigger>
+                                                    </Frame.Triggers>
+                                                    <Label Text="{Binding StatusLabel}" FontSize="12" TextColor="{StaticResource Gray950}">
+                                                        <Label.Triggers>
+                                                            <DataTrigger TargetType="Label" Binding="{Binding IsCancelled}" Value="True">
+                                                                <Setter Property="TextColor" Value="{StaticResource ErrorAlertText}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
+                                                                <Setter Property="TextColor" Value="{StaticResource SaveAccent}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Label" Binding="{Binding IsConfirmed}" Value="True">
+                                                                <Setter Property="TextColor" Value="{StaticResource Warning}" />
+                                                            </DataTrigger>
+                                                        </Label.Triggers>
+                                                    </Label>
+                                                </Frame>
+
+                                                <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="12" VerticalOptions="Center">
+                                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Schedule}" TextColor="{StaticResource Gray600}" />
+                                                    <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                    <Label Text="•" TextColor="{StaticResource Gray600}" />
+                                                    <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                </HorizontalStackLayout>
+
+                                                <FlexLayout Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                                                            Direction="Row" Wrap="Wrap"
+                                                            JustifyContent="End" AlignItems="Center" AlignContent="End" Padding="0">
+                                                    <Button Text="Cancelar cita"
+                                                            Style="{StaticResource PrimaryDangerButton}"
+                                                            WidthRequest="140"
+                                                            Margin="0,0,12,12"
+                                                            Command="{Binding Source={x:Reference ProfilePageRoot}, Path=BindingContext.CancelBookingCommand}"
+                                                            CommandParameter="{Binding .}">
+                                                        <Button.Triggers>
+                                                            <DataTrigger TargetType="Button" Binding="{Binding IsCancelled}" Value="True">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                                <Setter Property="Opacity" Value="0.5" />
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Button" Binding="{Binding Source={x:Reference ProfilePageRoot}, Path=BindingContext.IsBusy}" Value="True">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                                <Setter Property="Opacity" Value="0.5" />
+                                                            </DataTrigger>
+                                                        </Button.Triggers>
+                                                    </Button>
+                                                </FlexLayout>
+                                            </Grid>
                                         </Frame>
-
-                                        <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="12" VerticalOptions="Center">
-                                            <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Schedule}" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                            <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                        </HorizontalStackLayout>
-
-                                        <FlexLayout Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
-                                                    Direction="Row" Wrap="Wrap"
-                                                    JustifyContent="End" AlignItems="Center" AlignContent="End" Padding="0">
-
-                                            <!-- Botón Cancelar en rojo -->
-                                            <Button Text="Cancelar cita"
-                                                    Style="{StaticResource PrimaryDangerButton}"
-                                                    WidthRequest="140"
-                                                    Margin="0,0,12,12"
-                                                    Command="{Binding Source={x:Reference ProfilePageRoot}, Path=BindingContext.CancelBookingCommand}"
-                                                    CommandParameter="{Binding .}">
-                                                <Button.Triggers>
-                                                    <!-- Deshabilitar si la cita ya está cancelada -->
-                                                    <DataTrigger TargetType="Button" Binding="{Binding IsCancelled}" Value="True">
-                                                        <Setter Property="IsEnabled" Value="False" />
-                                                        <Setter Property="Opacity" Value="0.5" />
-                                                    </DataTrigger>
-                                                    <!-- Deshabilitar mientras el VM está ocupado -->
-                                                    <DataTrigger TargetType="Button" Binding="{Binding Source={x:Reference ProfilePageRoot}, Path=BindingContext.IsBusy}" Value="True">
-                                                        <Setter Property="IsEnabled" Value="False" />
-                                                        <Setter Property="Opacity" Value="0.5" />
-                                                    </DataTrigger>
-                                                </Button.Triggers>
-                                            </Button>
-
-                                            <!-- Eliminado el botón "Ver detalles" -->
-                                        </FlexLayout>
-                                    </Grid>
-                                </Frame>
-                            </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
                         </VerticalStackLayout>
 
-                        <!-- COLUMNA DERECHA -->
+                        <!-- COLUMNA DERECHA (solo visible si NO hay próximas citas) -->
                         <Frame Grid.Column="1"
                                BackgroundColor="{StaticResource ServiceIconBgLight}"
                                CornerRadius="8"
@@ -205,9 +190,11 @@
                     <VerticalStackLayout Grid.Column="0" Spacing="12" HorizontalOptions="FillAndExpand">
                         <!-- Header del perfil -->
                         <Frame Style="{StaticResource CardFrameStyle}" Padding="16" HasShadow="False" HorizontalOptions="FillAndExpand">
+                            <!-- (sin cambios) -->
+                            <!-- ... contenido del perfil ... -->
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" ColumnSpacing="16" RowSpacing="8">
+                                <!-- Avatar y datos -->
                                 <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Spacing="8" HorizontalOptions="Start" Margin="0,0,8,0">
-                                    <!-- Avatar: muestra la imagen si hay PhotoUrl; si no, el icono -->
                                     <Frame WidthRequest="64"
                                            HeightRequest="64"
                                            CornerRadius="32"
@@ -218,7 +205,6 @@
                                            HorizontalOptions="Start"
                                            IsClippedToBounds="True">
                                         <Grid>
-                                            <!-- Fallback: icono -->
                                             <Label FontFamily="{StaticResource SymbolThemeFontFamily}"
                                                    Text="{StaticResource IconGlyph.Profile}"
                                                    FontSize="28"
@@ -227,7 +213,6 @@
                                                    VerticalTextAlignment="Center"
                                                    VerticalOptions="Center"
                                                    HorizontalOptions="Center"/>
-                                            <!-- Imagen real (si PhotoUrl es válida se verá sobre el icono) -->
                                             <Image
                                                 Aspect="AspectFill"
                                                 HorizontalOptions="FillAndExpand"
@@ -257,16 +242,15 @@
                                     </Grid.RowDefinitions>
 
                                     <Label Grid.Row="0" Grid.Column="0" Text="Nombre completo" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,0,0,4"/>
-                                    <Entry Grid.Row="1" Grid.Column="0" Text="{Binding Name}" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
+                                    <Entry Grid.Row="1" Grid.Column="0" Text="{Binding Name}" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HeightRequest="42" />
 
                                     <Label Grid.Row="0" Grid.Column="1" Text="Email" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,0,0,4"/>
-                                    <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Email}" Keyboard="Email" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
+                                    <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Email}" Keyboard="Email" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HeightRequest="42" />
 
                                     <Label Grid.Row="2" Grid.Column="0" Text="Teléfono" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,8,0,4"/>
-                                    <Entry Grid.Row="3" Grid.Column="0" Text="{Binding Phone}" Keyboard="Telephone" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HorizontalOptions="FillAndExpand" HeightRequest="42" />
+                                    <Entry Grid.Row="3" Grid.Column="0" Text="{Binding Phone}" Keyboard="Telephone" BackgroundColor="{StaticResource SurfaceAlt}" TextColor="{StaticResource Gray950}" PlaceholderColor="{StaticResource Gray600}" HeightRequest="42" />
 
                                     <Label Grid.Row="2" Grid.Column="1" Text="Fecha de nacimiento" FontSize="12" TextColor="{StaticResource Gray600}" Margin="0,8,0,4"/>
-                                    <!-- DatePicker nativo -->
                                     <DatePicker Grid.Row="3" Grid.Column="1"
                                                 Date="{Binding BirthDate, Mode=TwoWay}"
                                                 Format="dd/MM/yyyy"
@@ -274,7 +258,6 @@
                                                 MaximumDate="{Binding MaxBirthDate}"
                                                 BackgroundColor="{StaticResource SurfaceAlt}"
                                                 TextColor="{StaticResource Gray950}"
-                                                HorizontalOptions="FillAndExpand"
                                                 HeightRequest="42" />
                                 </Grid>
 
@@ -293,102 +276,121 @@
                             </Grid>
                         </Frame>
 
-                        <!-- Historial dinámico: ahora enlazado a Bookings -->
-                        <Frame BackgroundColor="{StaticResource CardBackground}" CornerRadius="8" BorderColor="{StaticResource CardBorder}" Padding="16" HasShadow="False" HorizontalOptions="FillAndExpand">
-                            <!-- Historial de citas (igual que antes) -->
+                        <!-- Historial con scroll vertical interno -->
+                        <Frame BackgroundColor="{StaticResource CardBackground}"
+                               CornerRadius="8"
+                               BorderColor="{StaticResource CardBorder}"
+                               Padding="16"
+                               HasShadow="False"
+                               HorizontalOptions="FillAndExpand">
                             <VerticalStackLayout Spacing="12">
                                 <Label Text="Historial de Citas" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
-                                <CollectionView ItemsSource="{Binding Bookings}" SelectionMode="None" EmptyView="No tienes citas registradas.">
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate x:DataType="models:BookingDto">
-                                            <Frame CornerRadius="6" BorderColor="{StaticResource CardBorder}" Padding="12" BackgroundColor="{StaticResource Surface}" HasShadow="False" HorizontalOptions="FillAndExpand">
-                                                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
-                                                    <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.History}" FontSize="16" TextColor="{StaticResource Gray600}" VerticalOptions="Center" />
 
-                                                    <!-- Mostrar nombre del servicio (fall back incluido en ViewModel/DTO) -->
-                                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding DisplayService}" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" HorizontalOptions="Start" />
+                                <!-- Altura fija para ~4 ítems; scroll interno para el resto -->
+                                <ScrollView HeightRequest="280"
+                                            VerticalScrollBarVisibility="Always">
+                                    <CollectionView ItemsSource="{Binding Bookings}"
+                                                    SelectionMode="None"
+                                                    EmptyView="No tienes citas registradas.">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="models:BookingDto">
+                                                <Frame CornerRadius="6"
+                                                       BorderColor="{StaticResource CardBorder}"
+                                                       Padding="12"
+                                                       BackgroundColor="{StaticResource Surface}"
+                                                       HasShadow="False"
+                                                       HorizontalOptions="FillAndExpand"
+                                                       Margin="0,0,0,8">
+                                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12">
+                                                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+                                                               FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                               Text="{StaticResource IconGlyph.History}"
+                                                               FontSize="16"
+                                                               TextColor="{StaticResource Gray600}"
+                                                               VerticalOptions="Center" />
 
-                                                    <!-- Estado -->
-                                                    <Frame Grid.Row="0" Grid.Column="2"
-                                                           BackgroundColor="{StaticResource Secondary}"
-                                                           Padding="6,4"
-                                                           CornerRadius="6"
-                                                           HasShadow="False"
-                                                           VerticalOptions="Start"
-                                                           HorizontalOptions="End">
-                                                        <Frame.Triggers>
-                                                            <!-- Cancelada: fondo rojo suave -->
-                                                            <DataTrigger TargetType="Frame" Binding="{Binding IsCancelled}" Value="True">
-                                                                <Setter Property="BackgroundColor" Value="{StaticResource ErrorAlertBg}" />
-                                                            </DataTrigger>
-                                                            <!-- Completada: fondo verde suave (igual que próxima cita) -->
-                                                            <DataTrigger TargetType="Frame" Binding="{Binding IsCompleted}" Value="True">
-                                                                <Setter Property="BackgroundColor" Value="{StaticResource ServiceIconBgLight}" />
-                                                            </DataTrigger>
-                                                            <!-- Confirmada: fondo amarillo suave -->
-                                                            <DataTrigger TargetType="Frame" Binding="{Binding IsConfirmed}" Value="True">
-                                                                <Setter Property="BackgroundColor" Value="{StaticResource LocationIconBg}" />
-                                                            </DataTrigger>
-                                                        </Frame.Triggers>
+                                                        <Label Grid.Row="0" Grid.Column="1"
+                                                               Text="{Binding DisplayService}"
+                                                               FontAttributes="Bold"
+                                                               TextColor="{StaticResource TextPrimary}"
+                                                               HorizontalOptions="Start" />
 
-                                                        <!-- Usa StatusLabel (es) y colorea el texto -->
-                                                        <Label Text="{Binding StatusLabel}" FontSize="12" TextColor="{StaticResource Gray950}">
-                                                            <Label.Triggers>
-                                                                <DataTrigger TargetType="Label" Binding="{Binding IsCancelled}" Value="True">
-                                                                    <Setter Property="TextColor" Value="{StaticResource ErrorAlertText}" />
+                                                        <Frame Grid.Row="0" Grid.Column="2"
+                                                               BackgroundColor="{StaticResource Secondary}"
+                                                               Padding="6,4"
+                                                               CornerRadius="6"
+                                                               HasShadow="False"
+                                                               VerticalOptions="Start"
+                                                               HorizontalOptions="End">
+                                                            <Frame.Triggers>
+                                                                <DataTrigger TargetType="Frame" Binding="{Binding IsCancelled}" Value="True">
+                                                                    <Setter Property="BackgroundColor" Value="{StaticResource ErrorAlertBg}" />
                                                                 </DataTrigger>
-                                                                <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
-                                                                    <Setter Property="TextColor" Value="{StaticResource SaveAccent}" />
+                                                                <DataTrigger TargetType="Frame" Binding="{Binding IsCompleted}" Value="True">
+                                                                    <Setter Property="BackgroundColor" Value="{StaticResource ServiceIconBgLight}" />
                                                                 </DataTrigger>
-                                                                <DataTrigger TargetType="Label" Binding="{Binding IsConfirmed}" Value="True">
-                                                                    <Setter Property="TextColor" Value="{StaticResource Warning}" />
+                                                                <DataTrigger TargetType="Frame" Binding="{Binding IsConfirmed}" Value="True">
+                                                                    <Setter Property="BackgroundColor" Value="{StaticResource LocationIconBg}" />
                                                                 </DataTrigger>
-                                                            </Label.Triggers>
-                                                        </Label>
-                                                    </Frame>
+                                                            </Frame.Triggers>
+                                                            <Label Text="{Binding StatusLabel}" FontSize="12" TextColor="{StaticResource Gray950}">
+                                                                <Label.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsCancelled}" Value="True">
+                                                                        <Setter Property="TextColor" Value="{StaticResource ErrorAlertText}" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
+                                                                        <Setter Property="TextColor" Value="{StaticResource SaveAccent}" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsConfirmed}" Value="True">
+                                                                        <Setter Property="TextColor" Value="{StaticResource Warning}" />
+                                                                    </DataTrigger>
+                                                                </Label.Triggers>
+                                                            </Label>
+                                                        </Frame>
 
-                                                    <!-- Línea secundaria: cliente • barbero • fecha • hora -->
-                                                    <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="8" VerticalOptions="Center">
-                                                        <Label Text="{Binding CustomerName}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                        <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                                        <Label Text="{Binding DisplayBarber}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                        <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                                        <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                        <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                                        <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                    </HorizontalStackLayout>
-                                                </Grid>
-                                            </Frame>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
+                                                        <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="8" VerticalOptions="Center">
+                                                            <Label Text="{Binding CustomerName}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                            <Label Text="•" TextColor="{StaticResource Gray600}" />
+                                                            <Label Text="{Binding DisplayBarber}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                            <Label Text="•" TextColor="{StaticResource Gray600}" />
+                                                            <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                            <Label Text="•" TextColor="{StaticResource Gray600}" />
+                                                            <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" FontSize="12" TextColor="{StaticResource Gray600}" />
+                                                        </HorizontalStackLayout>
+                                                    </Grid>
+                                                </Frame>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </ScrollView>
                             </VerticalStackLayout>
                         </Frame>
                     </VerticalStackLayout>
 
+                    <!-- Sidebar -->
                     <VerticalStackLayout Grid.Column="1" Spacing="12" HorizontalOptions="FillAndExpand">
                         <Frame Style="{StaticResource CardFrameStyle}" Padding="12" HasShadow="False" HorizontalOptions="FillAndExpand">
                             <VerticalStackLayout Spacing="10">
                                 <Label Text="Estadísticas" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
-                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False">
                                     <VerticalStackLayout Spacing="4">
                                         <Label Text="Total de citas" FontSize="12" TextColor="{StaticResource Gray600}" />
                                         <Label Text="{Binding TotalBookings}" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Gray950}" />
                                     </VerticalStackLayout>
                                 </Frame>
-                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False">
                                     <VerticalStackLayout Spacing="4">
                                         <Label Text="Próximas citas" FontSize="12" TextColor="{StaticResource Gray600}" />
                                         <Label Text="{Binding UpcomingBookingsCount}" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Gray950}" />
                                     </VerticalStackLayout>
                                 </Frame>
-                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False">
                                     <VerticalStackLayout Spacing="4">
                                         <Label Text="Citas completadas" FontSize="12" TextColor="{StaticResource Gray600}" />
                                         <Label Text="{Binding CompletedBookingsCount}" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Gray950}" />
                                     </VerticalStackLayout>
                                 </Frame>
-                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False" HorizontalOptions="FillAndExpand">
+                                <Frame BackgroundColor="{StaticResource Surface}" CornerRadius="6" Padding="12" BorderColor="{StaticResource CardBorder}" HasShadow="False">
                                     <VerticalStackLayout Spacing="4">
                                         <Label Text="Citas canceladas" FontSize="12" TextColor="{StaticResource Gray600}" />
                                         <Label Text="{Binding CancelledBookingsCount}" FontAttributes="Bold" FontSize="18" TextColor="{StaticResource Gray950}" />
@@ -411,7 +413,6 @@
                             </VerticalStackLayout>
                         </Frame>
 
-                        <!-- Botón Cerrar sesión -->
                         <Button x:Name="LogoutButton"
                                 Text="Cerrar sesión"
                                 Style="{StaticResource OutlineButtonStyle}"
