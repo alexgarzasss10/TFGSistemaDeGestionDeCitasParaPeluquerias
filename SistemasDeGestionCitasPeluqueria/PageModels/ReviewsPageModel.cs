@@ -46,16 +46,34 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             finally { IsBusy = false; }
         }
 
+        // Evita duplicados y completa el nombre si falta.
         public async Task AddAsync(ServiceReview review, CancellationToken ct = default)
         {
-            await _reviewService.AddAsync(review, ct);
-            Reviews.Insert(0, review);
-            RecalcStats();
+            if (review is null) return;
+
+            // Completar nombre si viene nulo / vacío
+            if (string.IsNullOrWhiteSpace(review.UserName))
+            {
+                var me = await _userService.GetMeAsync(ct);
+                var name = me?.Name;
+                if (string.IsNullOrWhiteSpace(name))
+                    name = me?.Username;
+                if (!string.IsNullOrWhiteSpace(name))
+                    review.UserName = name;
+            }
+
+            if (review.Id == 0)
+            {
+                await _reviewService.AddAsync(review, ct);
+            }
+
+            if (!Reviews.Any(r => r.Id == review.Id && review.Id != 0))
+            {
+                Reviews.Insert(0, review);
+                RecalcStats();
+            }
         }
 
-        /// <summary>
-        /// Devuelve el nombre del usuario actual (Name si existe, sino Username).
-        /// </summary>
         public async Task<string?> GetCurrentUserNameAsync(CancellationToken ct = default)
         {
             try

@@ -1,138 +1,161 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel;
 using SistemasDeGestionCitasPeluqueria.Models;
+using SistemasDeGestionCitasPeluqueria.Services;
 
 namespace SistemasDeGestionCitasPeluqueria.PageModels;
 
-public class ReviewDialogPageModel : INotifyPropertyChanged
+public partial class ReviewDialogPageModel : ObservableObject
 {
     private readonly TaskCompletionSource<ServiceReview?> _tcs;
     private readonly INavigation _navigation;
-
-    private int _rating;
-    private string? _comment;
+    private readonly IReviewService? _reviewService;
+    private readonly CancellationTokenSource _cts = new();
+    private bool _publishing;
 
     public int? BarberId { get; }
     public int? ServiceId { get; }
     public string? UserName { get; }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public ObservableCollection<StarItem> Stars { get; } =
+        new(Enumerable.Range(1, 5).Select(i => new StarItem(i)));
 
-    public ReviewDialogPageModel(INavigation navigation,
-                                 TaskCompletionSource<ServiceReview?> tcs,
-                                 int? barberId = null,
-                                 int? serviceId = null,
-                                 string? userName = null)
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanPublish))]
+    private int rating;
+
+    [ObservableProperty]
+    private string? comment;
+
+    public bool CanPublish => Rating > 0 && !_publishing;
+
+    public IRelayCommand SetRatingCommand { get; }
+    public IAsyncRelayCommand PublishAsyncCommand { get; }
+    public IAsyncRelayCommand CancelAsyncCommand { get; }
+
+    public ReviewDialogPageModel(
+        INavigation navigation,
+        TaskCompletionSource<ServiceReview?> tcs,
+        int? barberId = null,
+        int? serviceId = null,
+        string? userName = null,
+        IReviewService? reviewService = null)
     {
         _navigation = navigation;
         _tcs = tcs;
+        _reviewService = reviewService;
         BarberId = barberId;
         ServiceId = serviceId;
         UserName = string.IsNullOrWhiteSpace(userName) ? null : userName;
 
-        // Cambio: usar Command<object> y convertir el parámetro.
-        SetRatingCommand = new Command<object>(SetRatingFromParameter);
-        PublishCommand = new Command(async () => await PublishAsync(), () => CanPublish);
-        CancelCommand = new Command(async () => await CancelAsync());
+        SetRatingCommand = new RelayCommand<int>(value => Rating = value);
+        PublishAsyncCommand = new AsyncRelayCommand(PublishAsync, () => CanPublish);
+        CancelAsyncCommand = new AsyncRelayCommand(CancelAsync);
     }
 
-    private void SetRatingFromParameter(object? param)
+    partial void OnRatingChanged(int value)
     {
-        if (param is int i)
-            Rating = i;
-        else if (param is string s && int.TryParse(s, out var v))
-            Rating = v;
+        foreach (var star in Stars)
+            star.IsFilled = value >= star.Value;
+        PublishAsyncCommand.NotifyCanExecuteChanged();
     }
-
-    protected void OnPropertyChanged([CallerMemberName] string? name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        if (name == nameof(Rating))
-        {
-            OnPropertyChanged(nameof(Star1Text));
-            OnPropertyChanged(nameof(Star2Text));
-            OnPropertyChanged(nameof(Star3Text));
-            OnPropertyChanged(nameof(Star4Text));
-            OnPropertyChanged(nameof(Star5Text));
-            OnPropertyChanged(nameof(CanPublish));
-            (PublishCommand as Command)?.ChangeCanExecute();
-        }
-    }
-
-    public int Rating
-    {
-        get => _rating;
-        set
-        {
-            if (_rating == value) return;
-            _rating = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string? Comment
-    {
-        get => _comment;
-        set
-        {
-            if (_comment == value) return;
-            _comment = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string Star1Text => Rating >= 1 ? "★" : "☆";
-    public string Star2Text => Rating >= 2 ? "★" : "☆";
-    public string Star3Text => Rating >= 3 ? "★" : "☆";
-    public string Star4Text => Rating >= 4 ? "★" : "☆";
-    public string Star5Text => Rating >= 5 ? "★" : "☆";
-
-    public bool CanPublish => Rating > 0;
-
-    public ICommand SetRatingCommand { get; }
-    public ICommand PublishCommand { get; }
-    public ICommand CancelCommand { get; }
 
     private async Task PublishAsync()
     {
-        if (!CanPublish)
+        if (!CanPublish) return;
+
+        _publishing = true;
+        PublishAsyncCommand.NotifyCanExecuteChanged();
+
+        try
         {
-            await Application.Current.MainPage.DisplayAlert("Reseña", "Selecciona una valoración (1-5).", "Aceptar");
-            return;
+            var review = new ServiceReview
+            {
+                Rating = Rating,
+                Comment = string.IsNullOrWhiteSpace(Comment) ? null : Comment!.Trim(),
+                BarberId = BarberId,
+                ServiceId = ServiceId,
+                UserName = UserName,
+                Date = DateTimeOffset.UtcNow
+            };
+
+            if (_reviewService is not null)
+                await _reviewService.AddAsync(review, _cts.Token);
+
+            _tcs.TrySetResult(review);
+
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await _navigation.PopModalAsync();
+            });
         }
-
-        var review = new ServiceReview
+        catch (Exception ex)
         {
-            Rating = Rating,
-            Comment = string.IsNullOrWhiteSpace(Comment) ? null : Comment.Trim(),
-            UserId = null,
-            AppointmentId = null,
-            BarberId = BarberId,
-            ServiceId = ServiceId,
-            UserName = UserName,
-            Date = DateTimeOffset.UtcNow
-        };
-
-        _tcs.TrySetResult(review);
-        await _navigation.PopModalAsync();
+            await MainThread.InvokeOnMainThreadAsync(() =>
+                Shell.Current.DisplayAlert("Error", $"No se pudo publicar la reseña: {ex.Message}", "OK"));
+        }
+        finally
+        {
+            _publishing = false;
+            PublishAsyncCommand.NotifyCanExecuteChanged();
+        }
     }
 
     private async Task CancelAsync()
     {
+        _cts.Cancel();
         _tcs.TrySetResult(null);
         await _navigation.PopModalAsync();
     }
 
-    public static Task<ServiceReview?> ShowAsync(int? barberId = null, int? serviceId = null, string? userName = null)
+    public static async Task<ServiceReview?> ShowAsync(int? barberId = null, int? serviceId = null, string? userName = null)
     {
         var navigation = Shell.Current?.Navigation ?? throw new InvalidOperationException("Shell.Current no está disponible.");
+        var sp = Application.Current?.Handler?.MauiContext?.Services;
+
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            var userService = sp?.GetService<IUserService>();
+            if (userService is not null)
+            {
+                var me = await userService.GetMeAsync();
+                if (me is not null)
+                {
+                    userName = !string.IsNullOrWhiteSpace(me.Name)
+                        ? me.Name
+                        : (!string.IsNullOrWhiteSpace(me.Username) ? me.Username : null);
+                }
+            }
+        }
+
+        var reviewService = sp?.GetService<IReviewService>();
         var tcs = new TaskCompletionSource<ServiceReview?>();
-        var vm = new ReviewDialogPageModel(navigation, tcs, barberId, serviceId, userName);
+        var vm = new ReviewDialogPageModel(navigation, tcs, barberId, serviceId, userName, reviewService);
         var page = new Pages.ReviewDialogPage(vm);
-        navigation.PushModalAsync(page);
-        return tcs.Task;
+        await navigation.PushModalAsync(page);
+        return await tcs.Task;
     }
+}
+
+public partial class StarItem(int value) : ObservableObject
+{
+    public int Value { get; } = value;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Glyph))]
+    [NotifyPropertyChangedFor(nameof(Color))]
+    private bool isFilled;
+
+    public string Glyph => IsFilled ? "★" : "☆";
+
+    public Color Color =>
+        IsFilled
+            ? (Color)Application.Current.Resources["Accent"]
+            : (Color)Application.Current.Resources["TextSecondary"];
 }

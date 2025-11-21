@@ -11,14 +11,15 @@
                HasShadow="True"
                Padding="16"
                Background="{DynamicResource CardBackgroundBrush}">
-            <VerticalStackLayout Spacing="14">
+            <VerticalStackLayout Spacing="14"
+                                 IsEnabled="{Binding IsPublishing, Converter={StaticResource InverseBoolConverter}}">
 
                 <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
                     <Label Text="Escribe tu reseña" Style="{StaticResource SectionTitleStyle}" />
                     <Button Text="✕"
                             BackgroundColor="Transparent"
                             TextColor="{DynamicResource TextSecondary}"
-                            Command="{Binding CancelCommand}"/>
+                            Command="{Binding CancelAsyncCommand}"/>
                 </Grid>
 
                 <Label Text="Comparte tu experiencia con nosotros"
@@ -26,32 +27,20 @@
 
                 <VerticalStackLayout>
                     <Label Text="Valoración" Style="{StaticResource MutedTextStyle}" />
-                    <HorizontalStackLayout Spacing="8">
-                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star1Text}">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="1"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star2Text}">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="2"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star3Text}">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="3"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star4Text}">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="4"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                        <Label FontSize="28" TextColor="{DynamicResource Accent}" Text="{Binding Star5Text}">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="5"/>
-                            </Label.GestureRecognizers>
-                        </Label>
+                    <HorizontalStackLayout Spacing="8"
+                                            BindableLayout.ItemsSource="{Binding Stars}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Label FontSize="28"
+                                       TextColor="{Binding Color}"
+                                       Text="{Binding Glyph}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.SetRatingCommand}"
+                                                              CommandParameter="{Binding Value}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
 
@@ -69,14 +58,19 @@
                     <Button Text="Cancelar"
                             Padding="18,10"
                             Style="{StaticResource OutlineButtonStyle}"
-                            Command="{Binding CancelCommand}" />
+                            Command="{Binding CancelAsyncCommand}"
+                            IsEnabled="{Binding IsPublishing, Converter={StaticResource InverseBoolConverter}}" />
                     <Button Grid.Column="1"
                             Text="Publicar reseña"
                             Padding="18,10"
                             Style="{StaticResource PrimaryButtonStyle}"
-                            Command="{Binding PublishCommand}"
+                            Command="{Binding PublishAsyncCommand}"
                             IsEnabled="{Binding CanPublish}" />
                 </Grid>
+
+                <ActivityIndicator IsRunning="{Binding IsPublishing}"
+                                   IsVisible="{Binding IsPublishing}"
+                                   Color="{DynamicResource Accent}" />
             </VerticalStackLayout>
         </Frame>
     </Grid>
