@@ -161,4 +161,7 @@
             Opacity="0.18"
             Offset="0,6" />
 
+    <!-- Alias para pista de barras de rating -->
+    <Color x:Key="ProgressTrackColor">#E5E7EB</Color>
+    <SolidColorBrush x:Key="ProgressTrackColorBrush" Color="{StaticResource ProgressTrackColor}" />
 </ResourceDictionary>

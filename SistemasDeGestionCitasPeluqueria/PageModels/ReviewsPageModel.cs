@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SistemasDeGestionCitasPeluqueria.Models;
@@ -28,6 +22,9 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
         [ObservableProperty] private int count3;
         [ObservableProperty] private int count2;
         [ObservableProperty] private int count1;
+
+        // Nueva colección para las barras
+        [ObservableProperty] private ObservableCollection<RatingDistributionItem> ratingDistribution = [];
 
         [RelayCommand]
         public async Task LoadAsync(CancellationToken ct = default)
@@ -97,6 +94,7 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             {
                 AverageRating = 0;
                 Count1 = Count2 = Count3 = Count4 = Count5 = 0;
+                RatingDistribution = [];
                 return;
             }
 
@@ -106,6 +104,31 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
             Count3 = Reviews.Count(r => r.Rating == 3);
             Count2 = Reviews.Count(r => r.Rating == 2);
             Count1 = Reviews.Count(r => r.Rating == 1);
+
+            RatingDistribution = new ObservableCollection<RatingDistributionItem>(
+            [
+                CreateItem(5, Count5),
+                CreateItem(4, Count4),
+                CreateItem(3, Count3),
+                CreateItem(2, Count2),
+                CreateItem(1, Count1)
+            ]);
         }
+
+        private RatingDistributionItem CreateItem(int rating, int count) =>
+            new()
+            {
+                Rating = rating,
+                Count = count,
+                Percentage = TotalReviews == 0 ? 0 : (double)count / TotalReviews
+            };
+    }
+
+    // POCO para la barra
+    public sealed class RatingDistributionItem
+    {
+        public int Rating { get; set; }
+        public int Count { get; set; }
+        public double Percentage { get; set; } // 0..1
     }
 }

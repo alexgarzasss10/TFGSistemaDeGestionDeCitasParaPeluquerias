@@ -15,15 +15,13 @@
             <conv:RatingToStarsConverter x:Key="StarsConverter" />
             <conv:TimeAgoConverter x:Key="TimeAgoConverter" />
             <conv:RatingToProgressConverter x:Key="ProgressConv" />
-            <!-- Nuevo: para inicial del nombre -->
             <conv:NameInitialConverter x:Key="NameInitialConverter" />
+            <!-- Se eliminaron color y estilo locales: ahora están en Colors.xaml y Styles.xaml -->
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
-
-            <!-- Cabecera + botón -->
             <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
                 <VerticalStackLayout Spacing="2">
                     <Label Text="Reseñas" Style="{StaticResource TitleLargeStyle}" />
@@ -39,8 +37,9 @@
 
             <!-- Tarjeta de estadísticas -->
             <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True">
-                <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto" ColumnSpacing="16">
-                    <VerticalStackLayout Grid.RowSpan="2" Spacing="4" VerticalOptions="Center">
+                <Grid ColumnDefinitions="120,*" ColumnSpacing="16">
+                    <!-- Izquierda: promedio -->
+                    <VerticalStackLayout Spacing="4" VerticalOptions="Center">
                         <Label Text="{Binding AverageRating, StringFormat='{}{0:F1}'}"
                                FontSize="44" FontAttributes="Bold"
                                TextColor="{DynamicResource TextPrimary}" />
@@ -50,34 +49,27 @@
                                Style="{StaticResource MutedTextStyle}" />
                     </VerticalStackLayout>
 
-                    <!-- Barras 5..1 -->
-                    <Grid Grid.Column="1" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="20,*,Auto" RowSpacing="6">
-                        <!-- 5 -->
-                        <Label Grid.Row="0" Text="5" VerticalOptions="Center" />
-                        <ProgressBar Grid.Row="0" Grid.Column="1"
-                                     Progress="{Binding Count5, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
-                        <Label Grid.Row="0" Grid.Column="2" Text="{Binding Count5}" />
-                        <!-- 4 -->
-                        <Label Grid.Row="1" Text="4" VerticalOptions="Center" />
-                        <ProgressBar Grid.Row="1" Grid.Column="1"
-                                     Progress="{Binding Count4, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
-                        <Label Grid.Row="1" Grid.Column="2" Text="{Binding Count4}" />
-                        <!-- 3 -->
-                        <Label Grid.Row="2" Text="3" VerticalOptions="Center" />
-                        <ProgressBar Grid.Row="2" Grid.Column="1"
-                                     Progress="{Binding Count3, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
-                        <Label Grid.Row="2" Grid.Column="2" Text="{Binding Count3}" />
-                        <!-- 2 -->
-                        <Label Grid.Row="3" Text="2" VerticalOptions="Center" />
-                        <ProgressBar Grid.Row="3" Grid.Column="1"
-                                     Progress="{Binding Count2, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
-                        <Label Grid.Row="3" Grid.Column="2" Text="{Binding Count2}" />
-                        <!-- 1 -->
-                        <Label Grid.Row="4" Text="1" VerticalOptions="Center" />
-                        <ProgressBar Grid.Row="4" Grid.Column="1"
-                                     Progress="{Binding Count1, Converter={StaticResource ProgressConv}, ConverterParameter={Binding TotalReviews}}"/>
-                        <Label Grid.Row="4" Grid.Column="2" Text="{Binding Count1}" />
-                    </Grid>
+                    <!-- Derecha: distribución -->
+                    <VerticalStackLayout Grid.Column="1" Spacing="8"
+                                          BindableLayout.ItemsSource="{Binding RatingDistribution}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:RatingDistributionItem">
+                                <Grid ColumnDefinitions="20,20,*,30" RowDefinitions="Auto" ColumnSpacing="4">
+                                    <Label Grid.Column="0" Text="{Binding Rating}" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="★"
+                                           TextColor="{DynamicResource Accent}"
+                                           VerticalOptions="Center" />
+                                    <ProgressBar Grid.Column="2"
+                                                 Style="{StaticResource RatingProgressBarStyle}"
+                                                 Progress="{Binding Percentage}" />
+                                    <Label Grid.Column="3"
+                                           Text="{Binding Count}"
+                                           HorizontalTextAlignment="End"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
                 </Grid>
             </Frame>
 
@@ -87,7 +79,6 @@
                     <DataTemplate x:DataType="models:ServiceReview">
                         <Frame Style="{StaticResource CardFrameStyle}" HasShadow="True" Margin="0,6">
                             <Grid ColumnDefinitions="48,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12">
-                                <!-- Avatar simple -->
                                 <Frame Grid.RowSpan="2" HeightRequest="40" WidthRequest="40" CornerRadius="20"
                                        BackgroundColor="{DynamicResource SidebarIconBg}" HasShadow="False" Padding="0" VerticalOptions="Start">
                                     <Label Text="{Binding UserName, Converter={StaticResource NameInitialConverter}}"
@@ -95,7 +86,6 @@
                                            FontAttributes="Bold" />
                                 </Frame>
 
-                                <!-- Aquí se muestra el nombre completo. Fallback si viene nulo -->
                                 <Label Grid.Column="1"
                                        Text="{Binding UserName, FallbackValue=Usuario, TargetNullValue=Usuario}"
                                        TextColor="{DynamicResource TextPrimary}"
@@ -122,5 +112,4 @@
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

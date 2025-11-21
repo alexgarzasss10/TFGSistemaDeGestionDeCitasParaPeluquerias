@@ -475,6 +475,12 @@
         <Setter Property="TextColor" Value="{StaticResource White}" />
         <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Padding" Value="14,10" />
-    </Style>    
+    </Style>
+
+    <Style x:Key="RatingProgressBarStyle" TargetType="ProgressBar">
+        <Setter Property="HeightRequest" Value="8" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource ProgressTrackColor}" />
+        <Setter Property="ProgressColor" Value="{DynamicResource Accent}" />
+    </Style>
 
 </ResourceDictionary>
