@@ -469,4 +469,12 @@
         <Setter Property="TextColor" Value="{StaticResource White}" />
     </Style>
 
+    <!-- NUEVO: botón peligro/destructivo (rojo) -->
+    <Style x:Key="PrimaryDangerButton" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="BackgroundColor" Value="{DynamicResource ErrorBrush}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="14,10" />
+    </Style>    
+
 </ResourceDictionary>

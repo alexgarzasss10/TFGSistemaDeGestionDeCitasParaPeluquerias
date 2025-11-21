@@ -150,10 +150,10 @@
                                                     Direction="Row" Wrap="Wrap"
                                                     JustifyContent="End" AlignItems="Center" AlignContent="End" Padding="0">
 
-                                            <!-- Botón Cancelar: enlazamos comando del VM usando x:Reference al ContentPage -->
-                                            <Button Text="Cancelar"
-                                                    Style="{StaticResource SecondaryButtonStyle}"
-                                                    WidthRequest="100"
+                                            <!-- Botón Cancelar en rojo -->
+                                            <Button Text="Cancelar cita"
+                                                    Style="{StaticResource PrimaryDangerButton}"
+                                                    WidthRequest="140"
                                                     Margin="0,0,12,12"
                                                     Command="{Binding Source={x:Reference ProfilePageRoot}, Path=BindingContext.CancelBookingCommand}"
                                                     CommandParameter="{Binding .}">
@@ -171,10 +171,7 @@
                                                 </Button.Triggers>
                                             </Button>
 
-                                            <Button Text="Ver detalles"
-                                                    Style="{StaticResource PrimaryButtonSmall}"
-                                                    WidthRequest="120"
-                                                    Margin="0,0,12,12" />
+                                            <!-- Eliminado el botón "Ver detalles" -->
                                         </FlexLayout>
                                     </Grid>
                                 </Frame>

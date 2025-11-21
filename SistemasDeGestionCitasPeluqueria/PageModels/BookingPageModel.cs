@@ -272,7 +272,6 @@ public partial class BookingPageModel(IBarberService barberService, IAvailabilit
 
             await Shell.Current.DisplayAlert(
                 "Reserva confirmada",
-                $"Reserva #{created.Id}\n" +
                 $"Servicio: {ServiceName}\n" +
                 $"Barbero: {SelectedBarber.Name}\n" +
                 $"Fecha: {SelectedDate:dd/MM/yyyy}\n" +
