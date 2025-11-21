@@ -16,8 +16,9 @@ public partial class ReviewDialogPageModel : ObservableObject
     private readonly TaskCompletionSource<ServiceReview?> _tcs;
     private readonly INavigation _navigation;
     private readonly IReviewService? _reviewService;
+    private readonly IBarberService? _barberService;
+    private readonly IServiceOfferingService? _serviceOfferingService;
     private readonly CancellationTokenSource _cts = new();
-    private bool _publishing;
 
     public int? BarberId { get; }
     public int? ServiceId { get; }
@@ -26,6 +27,13 @@ public partial class ReviewDialogPageModel : ObservableObject
     public ObservableCollection<StarItem> Stars { get; } =
         new(Enumerable.Range(1, 5).Select(i => new StarItem(i)));
 
+    // Listas y selección opcionales para los pickers
+    [ObservableProperty] private ObservableCollection<Barber> barbers = [];
+    [ObservableProperty] private Barber? selectedBarber;
+
+    [ObservableProperty] private ObservableCollection<ServiceOffering> services = [];
+    [ObservableProperty] private ServiceOffering? selectedService;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanPublish))]
     private int rating;
@@ -33,7 +41,12 @@ public partial class ReviewDialogPageModel : ObservableObject
     [ObservableProperty]
     private string? comment;
 
-    public bool CanPublish => Rating > 0 && !_publishing;
+    // Exponer el estado de publicación para el XAML
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanPublish))]
+    private bool isPublishing;
+
+    public bool CanPublish => Rating > 0 && !IsPublishing;
 
     public IRelayCommand SetRatingCommand { get; }
     public IAsyncRelayCommand PublishAsyncCommand { get; }
@@ -45,11 +58,16 @@ public partial class ReviewDialogPageModel : ObservableObject
         int? barberId = null,
         int? serviceId = null,
         string? userName = null,
-        IReviewService? reviewService = null)
+        IReviewService? reviewService = null,
+        IBarberService? barberService = null,
+        IServiceOfferingService? serviceOfferingService = null)
     {
         _navigation = navigation;
         _tcs = tcs;
         _reviewService = reviewService;
+        _barberService = barberService;
+        _serviceOfferingService = serviceOfferingService;
+
         BarberId = barberId;
         ServiceId = serviceId;
         UserName = string.IsNullOrWhiteSpace(userName) ? null : userName;
@@ -57,6 +75,8 @@ public partial class ReviewDialogPageModel : ObservableObject
         SetRatingCommand = new RelayCommand<int>(value => Rating = value);
         PublishAsyncCommand = new AsyncRelayCommand(PublishAsync, () => CanPublish);
         CancelAsyncCommand = new AsyncRelayCommand(CancelAsync);
+
+        _ = LoadPickersAsync(_cts.Token);
     }
 
     partial void OnRatingChanged(int value)
@@ -66,12 +86,41 @@ public partial class ReviewDialogPageModel : ObservableObject
         PublishAsyncCommand.NotifyCanExecuteChanged();
     }
 
+    partial void OnIsPublishingChanged(bool value)
+        => PublishAsyncCommand.NotifyCanExecuteChanged();
+
+    private async Task LoadPickersAsync(CancellationToken ct)
+    {
+        try
+        {
+            if (_barberService is not null)
+            {
+                var list = await _barberService.GetAllAsync(ct);
+                Barbers = new ObservableCollection<Barber>(list);
+                if (BarberId is int bId)
+                    SelectedBarber = Barbers.FirstOrDefault(b => b.Id == bId);
+            }
+
+            if (_serviceOfferingService is not null)
+            {
+                var list = await _serviceOfferingService.GetAllAsync(ct);
+                Services = new ObservableCollection<ServiceOffering>(list);
+                if (ServiceId is int sId)
+                    SelectedService = Services.FirstOrDefault(s => s.Id == sId);
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch
+        {
+            // Son campos opcionales: no bloqueamos la UI si falla la carga
+        }
+    }
+
     private async Task PublishAsync()
     {
         if (!CanPublish) return;
 
-        _publishing = true;
-        PublishAsyncCommand.NotifyCanExecuteChanged();
+        IsPublishing = true;
 
         try
         {
@@ -79,8 +128,8 @@ public partial class ReviewDialogPageModel : ObservableObject
             {
                 Rating = Rating,
                 Comment = string.IsNullOrWhiteSpace(Comment) ? null : Comment!.Trim(),
-                BarberId = BarberId,
-                ServiceId = ServiceId,
+                BarberId = SelectedBarber?.Id ?? BarberId,
+                ServiceId = SelectedService?.Id ?? ServiceId,
                 UserName = UserName,
                 Date = DateTimeOffset.UtcNow
             };
@@ -102,8 +151,7 @@ public partial class ReviewDialogPageModel : ObservableObject
         }
         finally
         {
-            _publishing = false;
-            PublishAsyncCommand.NotifyCanExecuteChanged();
+            IsPublishing = false;
         }
     }
 
@@ -135,8 +183,14 @@ public partial class ReviewDialogPageModel : ObservableObject
         }
 
         var reviewService = sp?.GetService<IReviewService>();
+        var barberService = sp?.GetService<IBarberService>();
+        var serviceOfferingService = sp?.GetService<IServiceOfferingService>();
+
         var tcs = new TaskCompletionSource<ServiceReview?>();
-        var vm = new ReviewDialogPageModel(navigation, tcs, barberId, serviceId, userName, reviewService);
+        var vm = new ReviewDialogPageModel(
+            navigation, tcs, barberId, serviceId, userName,
+            reviewService, barberService, serviceOfferingService);
+
         var page = new Pages.ReviewDialogPage(vm);
         await navigation.PushModalAsync(page);
         return await tcs.Task;

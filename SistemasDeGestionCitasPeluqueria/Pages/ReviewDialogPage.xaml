@@ -25,6 +25,28 @@
                 <Label Text="Comparte tu experiencia con nosotros"
                        Style="{StaticResource MutedTextStyle}" />
 
+                <!-- NUEVO: selección opcional de barbero -->
+                <VerticalStackLayout>
+                    <Label Text="Barbero (opcional)" Style="{StaticResource MutedTextStyle}" />
+                    <Picker Title="Selecciona un barbero (opcional)"
+                            ItemsSource="{Binding Barbers}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedBarber}"
+                            TextColor="{DynamicResource TextPrimary}"
+                            BackgroundColor="Transparent" />
+                </VerticalStackLayout>
+
+                <!-- NUEVO: selección opcional de servicio -->
+                <VerticalStackLayout>
+                    <Label Text="Servicio (opcional)" Style="{StaticResource MutedTextStyle}" />
+                    <Picker Title="Selecciona un servicio (opcional)"
+                            ItemsSource="{Binding Services}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedService}"
+                            TextColor="{DynamicResource TextPrimary}"
+                            BackgroundColor="Transparent" />
+                </VerticalStackLayout>
+
                 <VerticalStackLayout>
                     <Label Text="Valoración" Style="{StaticResource MutedTextStyle}" />
                     <HorizontalStackLayout Spacing="8"

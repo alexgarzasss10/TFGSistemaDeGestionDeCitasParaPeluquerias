@@ -1,11 +1,9 @@
-﻿using SistemasDeGestionCitasPeluqueria.Models;
-using SistemasDeGestionCitasPeluqueria.PageModels;
+﻿using SistemasDeGestionCitasPeluqueria.PageModels;
 
 namespace SistemasDeGestionCitasPeluqueria.Pages;
 
 public partial class ReviewDialogPage : ContentPage
 {
-    // Constructor usado internamente por el ViewModel.
     public ReviewDialogPage(ReviewDialogPageModel vm)
     {
         InitializeComponent();
