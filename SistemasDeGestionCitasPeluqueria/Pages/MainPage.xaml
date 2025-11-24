@@ -283,29 +283,28 @@
                 <Grid ColumnDefinitions="2*,1*" ColumnSpacing="24" RowSpacing="6">
                     <VerticalStackLayout Spacing="8">
                         <Label Text="Sobre Nosotros" Style="{StaticResource SectionTitleStyle}" />
-                        <Label Text="Somos una barbería moderna con más de 10 años de experiencia en el sector. Nuestro equipo de profesionales altamente capacitados está comprometido con brindarte el mejor servicio y los cortes más actuales."
-                               Style="{StaticResource BodyTextStyle}" />
-                        <Label Text="Utilizamos productos de primera calidad y las técnicas más avanzadas para garantizar que salgas luciendo impecable en cada visita."
-                               Style="{StaticResource BodyTextStyle}" />
+                        <VerticalStackLayout Spacing="8"
+                                             BindableLayout.ItemsSource="{Binding AboutParagraphs}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Label Text="{Binding .}"
+                                           Style="{StaticResource BodyTextStyle}" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout Grid.Column="1" Spacing="14">
-                        <HorizontalStackLayout Spacing="10">
-                            <Border Style="{StaticResource AccentDotStyle}" />
-                            <Label Text="Profesionales certificados" Style="{StaticResource BodyTextStyle}" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="10">
-                            <Border Style="{StaticResource AccentDotStyle}" />
-                            <Label Text="Productos premium" Style="{StaticResource BodyTextStyle}" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="10">
-                            <Border Style="{StaticResource AccentDotStyle}" />
-                            <Label Text="Ambiente moderno y limpio" Style="{StaticResource BodyTextStyle}" />
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="10">
-                            <Border Style="{StaticResource AccentDotStyle}" />
-                            <Label Text="Atención personalizada" Style="{StaticResource BodyTextStyle}" />
-                        </HorizontalStackLayout>
+                    <VerticalStackLayout Grid.Column="1"
+                                         Spacing="14"
+                                         BindableLayout.ItemsSource="{Binding AboutHighlights}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Border Style="{StaticResource AccentDotStyle}" />
+                                    <Label Text="{Binding .}" Style="{StaticResource BodyTextStyle}" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                 </Grid>
             </Frame>

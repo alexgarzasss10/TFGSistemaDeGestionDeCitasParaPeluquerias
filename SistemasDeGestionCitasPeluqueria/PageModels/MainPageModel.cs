@@ -37,6 +37,10 @@ public partial class MainPageModel(
     [ObservableProperty] private string addressText = string.Empty;
     [ObservableProperty] private string contactText = string.Empty;
 
+    // NUEVO: contenido dinámico “Sobre Nosotros”
+    [ObservableProperty] private ObservableCollection<string> aboutParagraphs = [];
+    [ObservableProperty] private ObservableCollection<string> aboutHighlights = [];
+
     [ObservableProperty] private bool isBusy;
     [ObservableProperty] private string? error;
 
@@ -72,6 +76,8 @@ public partial class MainPageModel(
 
                     OpeningText = BuildOpeningText(shop.OpeningHours);
                     BuildOpeningLines(shop.OpeningHours);
+
+                    ParseAbout(shop.About);
                 }
             }
             catch (Exception ex)
@@ -107,9 +113,47 @@ public partial class MainPageModel(
                     OnPropertyChanged(nameof(HeroImageUrl));
                 }
             }
+
+            // Fallback si el backend no trae nada en about
+            if (AboutParagraphs.Count == 0 && AboutHighlights.Count == 0)
+            {
+                AboutParagraphs.Add("Información de la barbería no disponible actualmente.");
+            }
         }
         catch (OperationCanceledException) { }
         finally { IsBusy = false; }
+    }
+
+    private void ParseAbout(string? about)
+    {
+        AboutParagraphs.Clear();
+        AboutHighlights.Clear();
+        if (string.IsNullOrWhiteSpace(about)) return;
+
+        var normalized = about.Replace("\r\n", "\n").Trim();
+        var blocks = normalized.Split("\n\n", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        foreach (var block in blocks)
+        {
+            var lines = block.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            // Si todas las líneas parecen bullets, añadimos cada una como highlight
+            if (lines.Length > 0 && lines.All(l => l.StartsWith("- ") || l.StartsWith("* ")))
+            {
+                foreach (var l in lines)
+                {
+                    var text = l[2..].Trim();
+                    if (!string.IsNullOrWhiteSpace(text))
+                        AboutHighlights.Add(text);
+                }
+            }
+            else
+            {
+                // Bloque como párrafo completo
+                var paragraph = string.Join(" ", lines).Trim();
+                if (!string.IsNullOrWhiteSpace(paragraph))
+                    AboutParagraphs.Add(paragraph);
+            }
+        }
     }
 
     private static string BuildOpeningText(OpeningHours? oh)
@@ -157,16 +201,11 @@ public partial class MainPageModel(
     {
         if (string.IsNullOrWhiteSpace(s)) return false;
         s = s.Trim();
-
         if (s.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
             return true;
-
         if (Uri.TryCreate(s, UriKind.Absolute, out var uri) &&
             (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
-        {
-            return true; // Aceptamos cualquier URL absoluta (idealmente directa a imagen)
-        }
-
+            return true;
         return false;
     }
 
