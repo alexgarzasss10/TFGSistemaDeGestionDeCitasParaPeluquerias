@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Text.Json.Serialization;
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -8,16 +10,9 @@ public class ServiceReview
 {
     public int Id { get; set; }
 
-    [JsonPropertyName("userId")]
     public int? UserId { get; set; }
-
-    [JsonPropertyName("appointmentId")]
     public int? AppointmentId { get; set; }
-
-    [JsonPropertyName("barberId")]
     public int? BarberId { get; set; }
-
-    [JsonPropertyName("serviceId")]
     public int? ServiceId { get; set; }
 
     [Range(1, 5)]
@@ -25,21 +20,25 @@ public class ServiceReview
 
     public string? Comment { get; set; }
 
-    [JsonPropertyName("userName")]
     public string? UserName { get; set; }
 
-    [JsonPropertyName("createdAt")]
-    public DateTimeOffset Date { get; set; }
+    // Renombrada de Date -> CreatedAt para coincidir con createdAt del backend legacy
+    public DateTimeOffset CreatedAt { get; set; }
 
-    // NUEVO: foto de perfil del usuario que hizo la reseña
-    [JsonPropertyName("userPhotoUrl")]
     public string? UserPhotoUrl { get; set; }
 
-    // Enriquecidas en cliente
     public string? BarberName { get; set; }
     public string? ServiceName { get; set; }
 
-    // NUEVO: propiedades auxiliares para la UI (ignoradas en JSON)
+    // Compatibilidad: evitar romper código antiguo que aún usa Date
+    [Obsolete("Usa CreatedAt")]
+    [JsonIgnore]
+    public DateTimeOffset Date
+    {
+        get => CreatedAt;
+        set => CreatedAt = value;
+    }
+
     [JsonIgnore]
     public bool HasBarberOrService =>
         !string.IsNullOrWhiteSpace(BarberName) || !string.IsNullOrWhiteSpace(ServiceName);

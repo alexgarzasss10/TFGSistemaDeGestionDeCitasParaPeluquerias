@@ -111,7 +111,7 @@
                                        FontAttributes="Bold" />
 
                                 <Label Grid.Column="2"
-                                       Text="{Binding Date, Converter={StaticResource TimeAgoConverter}}"
+                                       Text="{Binding CreatedAt, Converter={StaticResource TimeAgoConverter}}"
                                        Style="{StaticResource MutedTextStyle}"
                                        HorizontalTextAlignment="End" />
 

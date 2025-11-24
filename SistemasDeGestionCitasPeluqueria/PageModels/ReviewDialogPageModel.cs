@@ -133,7 +133,7 @@ public partial class ReviewDialogPageModel : ObservableObject
                 BarberName = SelectedBarber?.Name,
                 ServiceName = SelectedService?.Name,
                 UserName = UserName,
-                Date = DateTimeOffset.UtcNow,
+                CreatedAt = DateTimeOffset.UtcNow, // antes: Date
                 UserPhotoUrl = await TryGetCurrentUserPhotoAsync()
             };
 

@@ -17,17 +17,15 @@ namespace SistemasDeGestionCitasPeluqueria.Services
             var list = await _http.GetFromJsonAsync<List<ServiceReview>>("reviews", JsonDefaults.Web, ct)
                        ?? new List<ServiceReview>();
 
-            // Normaliza las URLs de foto (por si alguna es relativa)
             foreach (var r in list)
                 r.UserPhotoUrl = UrlHelper.EnsureAbsolute(r.UserPhotoUrl, _http.BaseAddress);
 
-            // Más recientes primero
-            return list.OrderByDescending(r => r.Date).ToList();
+            // Más recientes primero (usar CreatedAt)
+            return list.OrderByDescending(r => r.CreatedAt).ToList();
         }
 
         public async Task AddAsync(ServiceReview review, CancellationToken ct = default)
         {
-            // Payload legacy + envío de userPhotoUrl
             var payload = new
             {
                 barberId = review.BarberId ?? 0,
@@ -35,7 +33,7 @@ namespace SistemasDeGestionCitasPeluqueria.Services
                 rating = review.Rating,
                 comment = review.Comment ?? string.Empty,
                 userName = review.UserName ?? "Usuario",
-                userPhotoUrl = review.UserPhotoUrl // NUEVO
+                userPhotoUrl = review.UserPhotoUrl
             };
 
             var response = await _http.PostAsJsonAsync("reviews", payload, JsonDefaults.Web, ct);
@@ -50,16 +48,15 @@ namespace SistemasDeGestionCitasPeluqueria.Services
             if (created is not null)
             {
                 review.Id = created.Id;
-                review.Date = created.Date;
+                review.CreatedAt = created.CreatedAt;
                 review.BarberId = created.BarberId;
                 review.ServiceId = created.ServiceId;
                 review.UserName = created.UserName;
-                // Asegura URL absoluta
                 review.UserPhotoUrl = UrlHelper.EnsureAbsolute(created.UserPhotoUrl, _http.BaseAddress);
             }
             else
             {
-                review.Date = DateTimeOffset.UtcNow;
+                review.CreatedAt = DateTimeOffset.UtcNow;
                 review.UserPhotoUrl = UrlHelper.EnsureAbsolute(review.UserPhotoUrl, _http.BaseAddress);
             }
         }
