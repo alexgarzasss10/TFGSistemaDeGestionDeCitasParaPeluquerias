@@ -13,6 +13,17 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <conv:ImageSourceFromStringConverter x:Key="ImageSourceFromStringConverter" />
+
+            <!-- Nuevo estilo para insignia de marca (más discreto que ChipStyle) -->
+            <Style x:Key="BrandBadgeStyle" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceVariant}" />
+                <Setter Property="Stroke" Value="{DynamicResource SurfaceVariant}" />
+                <Setter Property="Padding" Value="6,2" />
+                <Setter Property="Shadow" Value="{x:Null}" />
+                <Setter Property="StrokeShape">
+                    <RoundRectangle CornerRadius="8" />
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -58,47 +69,56 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="models:InventoryItem">
                 <Frame Style="{StaticResource CardFrameStyle}" Margin="6" HasShadow="True">
-                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                    <!-- Ajustamos la rejilla: quitamos la fila exclusiva para la marca -->
+                    <Grid RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="*,Auto">
 
-                        <!-- Imagen (como en Main: fondo blanco + AspectFit, sin recortes) -->
+                        <!-- Imagen con overlay de marca -->
                         <Frame Grid.Row="0" Grid.ColumnSpan="2"
                                Style="{StaticResource ImageCardStyle}"
                                Padding="0"
                                IsClippedToBounds="True"
                                BackgroundColor="{DynamicResource CardBackground}">
-                            <Image Aspect="AspectFit"
-                                   HeightRequest="220"
-                                   HorizontalOptions="Fill"
-                                   VerticalOptions="Center"
-                                   BackgroundColor="{DynamicResource CardBackground}"
-                                   Source="{Binding ImageUrl,
-                                                    Converter={StaticResource ImageSourceFromStringConverter},
-                                                    TargetNullValue='https://picsum.photos/800/400?blur=2',
-                                                    FallbackValue='https://picsum.photos/800/400?blur=2'}" />
+                            <Grid>
+                                <Image Aspect="AspectFit"
+                                       HeightRequest="220"
+                                       HorizontalOptions="Fill"
+                                       VerticalOptions="Center"
+                                       BackgroundColor="{DynamicResource CardBackground}"
+                                       Source="{Binding ImageUrl,
+                                                        Converter={StaticResource ImageSourceFromStringConverter},
+                                                        TargetNullValue='https://picsum.photos/800/400?blur=2',
+                                                        FallbackValue='https://picsum.photos/800/400?blur=2'}" />
+
+                                <!-- Badge pequeña para la marca -->
+                                <Border Style="{StaticResource BrandBadgeStyle}"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Start"
+                                        Margin="8">
+                                    <Label Text="{Binding Brand}"
+                                           FontSize="12"
+                                           TextColor="{DynamicResource TextPrimary}" />
+                                </Border>
+                            </Grid>
                         </Frame>
 
-                        <!-- Etiqueta -->
-                        <Border Grid.Row="1" Grid.Column="0"
-                                Style="{StaticResource ChipStyle}" Margin="0,8,0,0">
-                            <Label Text="{Binding Brand}" />
-                        </Border>
-
-                        <!-- Precio -->
+                        <!-- Precio arriba a la derecha (misma fila que antes) -->
                         <Label Grid.Row="1" Grid.Column="1"
                                Text="{Binding Price, StringFormat='{}{0:C}'}"
                                TextColor="{DynamicResource Accent}"
                                FontAttributes="Bold"
                                HorizontalOptions="End"
                                VerticalOptions="Center"
-                               Margin="8,8,0,0"/>
+                               Margin="8,12,8,0"/>
 
                         <!-- Nombre -->
-                        <Label Grid.Row="2" Grid.ColumnSpan="2"
+                        <Label Grid.Row="1" Grid.Column="0"
                                Text="{Binding Name}"
-                               Style="{StaticResource SectionTitleStyle}" />
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="12,12,0,0" />
 
                         <!-- Descripción + Stock -->
-                        <VerticalStackLayout Grid.Row="3" Grid.ColumnSpan="2" Spacing="6">
+                        <VerticalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="6" Margin="12,4,12,8">
                             <Label Text="{Binding Description}"
                                    Style="{StaticResource BodyTextStyle}" />
                             <Label Text="{Binding Stock, StringFormat='Stock: {0} unidades'}"
