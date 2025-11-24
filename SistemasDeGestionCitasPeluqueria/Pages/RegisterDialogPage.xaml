@@ -46,8 +46,16 @@
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="6">
+                            <Label Text="Teléfono (opcional)" FontSize="12" TextColor="{DynamicResource TextPrimary}" />
+                            <Border Style="{StaticResource LoginInputBorderStyle}">
+                                <Entry Style="{StaticResource LoginEntryStyle}" Placeholder="600123456" Keyboard="Telephone" Text="{Binding Phone}" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="6">
                             <Label Text="Usuario" FontSize="12" TextColor="{DynamicResource TextPrimary}" />
                             <Border Style="{StaticResource LoginInputBorderStyle}">
+
                                 <Entry Style="{StaticResource LoginEntryStyle}" Placeholder="juan.diaz" Text="{Binding Username}" />
                             </Border>
                         </VerticalStackLayout>

@@ -15,6 +15,7 @@ public partial class RegisterDialogPageModel : ObservableObject
 
     [ObservableProperty] private string fullName = string.Empty;
     [ObservableProperty] private string email = string.Empty;
+    [ObservableProperty] private string phone = string.Empty; // NUEVO
     [ObservableProperty] private string username = string.Empty;
     [ObservableProperty] private string password = string.Empty;
     [ObservableProperty] private string confirmPassword = string.Empty;
@@ -131,12 +132,17 @@ public partial class RegisterDialogPageModel : ObservableObject
                 emailVal = Email.Trim();
             }
 
+            string? phoneVal = null;
+            if (!string.IsNullOrWhiteSpace(Phone))
+                phoneVal = Phone.Trim();
+
             var dto = new RegisterRequestDto
             {
                 Username = Username.Trim(),
                 Password = Password,
                 Email = emailVal,
-                Name = string.IsNullOrWhiteSpace(FullName) ? null : FullName.Trim()
+                Name = string.IsNullOrWhiteSpace(FullName) ? null : FullName.Trim(),
+                Phone = phoneVal
             };
 
             _tcs.TrySetResult(dto);
