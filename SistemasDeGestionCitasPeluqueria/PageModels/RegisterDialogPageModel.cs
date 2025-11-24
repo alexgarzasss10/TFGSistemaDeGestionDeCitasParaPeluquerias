@@ -15,7 +15,7 @@ public partial class RegisterDialogPageModel : ObservableObject
 
     [ObservableProperty] private string fullName = string.Empty;
     [ObservableProperty] private string email = string.Empty;
-    [ObservableProperty] private string phone = string.Empty; // NUEVO
+    [ObservableProperty] private string phone = string.Empty;
     [ObservableProperty] private string username = string.Empty;
     [ObservableProperty] private string password = string.Empty;
     [ObservableProperty] private string confirmPassword = string.Empty;
@@ -35,11 +35,17 @@ public partial class RegisterDialogPageModel : ObservableObject
     [ObservableProperty] private bool isConfirmMatch;
     [ObservableProperty] private string confirmMessage = string.Empty;
 
+    // Validación teléfono
+    [ObservableProperty] private bool showPhoneError;
+    [ObservableProperty] private string phoneError = string.Empty;
+    [ObservableProperty] private bool isPhoneValid = true;
+
     partial void OnPasswordChanged(string value) => EvaluatePassword();
     partial void OnConfirmPasswordChanged(string value) => EvaluateConfirm();
     partial void OnErrorChanged(string? value) => HasError = !string.IsNullOrEmpty(value);
     partial void OnUsernameChanged(string value) => RegisterCommand.NotifyCanExecuteChanged();
     partial void OnIsBusyChanged(bool value) => RegisterCommand.NotifyCanExecuteChanged();
+    partial void OnPhoneChanged(string value) => EvaluatePhone();
 
     void EvaluatePassword()
     {
@@ -52,9 +58,7 @@ public partial class RegisterDialogPageModel : ObservableObject
         IsSymbolOk = symbol;
         IsPasswordHintsVisible = !string.IsNullOrEmpty(pwd);
 
-        // reevaluar confirm
         EvaluateConfirm();
-
         RegisterCommand.NotifyCanExecuteChanged();
     }
 
@@ -78,6 +82,32 @@ public partial class RegisterDialogPageModel : ObservableObject
         RegisterCommand.NotifyCanExecuteChanged();
     }
 
+    void EvaluatePhone()
+    {
+        var raw = Phone?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(raw))
+        {
+            // Teléfono opcional: si está vacío es válido y no muestra error
+            IsPhoneValid = true;
+            PhoneError = string.Empty;
+            ShowPhoneError = false;
+        }
+        else
+        {
+            IsPhoneValid = IsValidPhone(raw);
+            ShowPhoneError = !IsPhoneValid;
+            PhoneError = IsPhoneValid ? string.Empty : "El teléfono debe tener exactamente 9 dígitos (solo números).";
+        }
+
+        RegisterCommand.NotifyCanExecuteChanged();
+    }
+
+    static bool IsValidPhone(string value)
+    {
+        // Acepta exactamente 9 dígitos (ej. móviles españoles). Se puede ampliar si hace falta.
+        return value.Length == 9 && value.All(char.IsDigit);
+    }
+
     static (bool len, bool upper, bool lower, bool digit, bool symbol) ValidatePassword(string pwd)
         => (pwd.Length >= 8,
             pwd.Any(char.IsUpper),
@@ -91,7 +121,8 @@ public partial class RegisterDialogPageModel : ObservableObject
         !IsBusy
         && !string.IsNullOrWhiteSpace(Username)
         && IsLenOk && IsUpperOk && IsLowerOk && IsDigitOk && IsSymbolOk
-        && Password == ConfirmPassword;
+        && Password == ConfirmPassword
+        && IsPhoneValid; // Bloquea si teléfono inválido
 
     [RelayCommand(CanExecute = nameof(CanRegister))]
     async Task RegisterAsync()
@@ -121,6 +152,13 @@ public partial class RegisterDialogPageModel : ObservableObject
                 return;
             }
 
+            // Revalidar teléfono (defensivo)
+            if (!IsPhoneValid)
+            {
+                Error = "Revisa el teléfono: debe tener 9 dígitos.";
+                return;
+            }
+
             string? emailVal = null;
             if (!string.IsNullOrWhiteSpace(Email))
             {
@@ -134,7 +172,15 @@ public partial class RegisterDialogPageModel : ObservableObject
 
             string? phoneVal = null;
             if (!string.IsNullOrWhiteSpace(Phone))
-                phoneVal = Phone.Trim();
+            {
+                var trimmed = Phone.Trim();
+                if (!IsValidPhone(trimmed))
+                {
+                    Error = "Revisa el teléfono: debe tener 9 dígitos.";
+                    return;
+                }
+                phoneVal = trimmed;
+            }
 
             var dto = new RegisterRequestDto
             {
@@ -147,7 +193,6 @@ public partial class RegisterDialogPageModel : ObservableObject
 
             _tcs.TrySetResult(dto);
 
-            // cerrar modal
             if (Shell.Current?.Navigation is not null)
                 await Shell.Current.Navigation.PopModalAsync();
             else if (Application.Current?.MainPage?.Navigation is not null)

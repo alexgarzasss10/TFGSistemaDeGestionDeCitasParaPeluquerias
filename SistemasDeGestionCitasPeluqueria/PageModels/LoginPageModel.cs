@@ -104,7 +104,15 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
 
                 IsBusy = true;
 
-                var ok = await _authService.RegisterAsync(dto.Username.Trim(), dto.Password, dto.Email, dto.Name, signIn: false, ct: ct);
+                var ok = await _authService.RegisterAsync(
+                    dto.Username.Trim(),
+                    dto.Password,
+                    dto.Email,
+                    dto.Name,
+                    dto.Phone,        // NUEVO: enviamos teléfono
+                    signIn: false,
+                    ct: ct);
+
                 if (!ok)
                 {
                     Error = "No se pudo registrar el usuario.";

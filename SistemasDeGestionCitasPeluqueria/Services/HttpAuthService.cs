@@ -23,21 +23,34 @@ public sealed class HttpAuthService(HttpClient http, ITokenStore tokenStore) : I
         if (tokens is null || string.IsNullOrWhiteSpace(tokens.AccessToken) || string.IsNullOrWhiteSpace(tokens.RefreshToken))
             return false;
 
-        var expiry = DateTimeOffset.UtcNow.AddSeconds(Math.Max(0, tokens.ExpiresIn - 30)); // margen
+        var expiry = DateTimeOffset.UtcNow.AddSeconds(Math.Max(0, tokens.ExpiresIn - 30));
         await _tokenStore.SaveAsync(tokens.AccessToken, tokens.RefreshToken, expiry);
         return true;
     }
 
-    public async Task<bool> RegisterAsync(string username, string password, string? email = null, string? name = null, bool signIn = true, CancellationToken ct = default)
+    public async Task<bool> RegisterAsync(
+        string username,
+        string password,
+        string? email = null,
+        string? name = null,
+        string? phone = null,          // NUEVO parámetro
+        bool signIn = true,
+        CancellationToken ct = default)
     {
-        var req = new RegisterRequestDto { Username = username, Password = password, Email = email, Name = name };
+        var req = new RegisterRequestDto
+        {
+            Username = username,
+            Password = password,
+            Email = email,
+            Name = name,
+            Phone = phone // incluir en JSON
+        };
+
         var resp = await _http.PostAsJsonAsync("auth/register", req, JsonDefaults.Web, ct);
         if (!resp.IsSuccessStatusCode)
         {
-            // Leer cuerpo y extraer mensaje de validación (Pydantic / FastAPI)
             string body = string.Empty;
-            try { body = await resp.Content.ReadAsStringAsync(ct); }
-            catch { /* ignorar lectura */ }
+            try { body = await resp.Content.ReadAsStringAsync(ct); } catch { }
 
             Debug.WriteLine($"Register failed: {(int)resp.StatusCode} {resp.ReasonPhrase} - {body}");
 
@@ -73,7 +86,7 @@ public sealed class HttpAuthService(HttpClient http, ITokenStore tokenStore) : I
                     }
                 }
             }
-            catch { /* no JSON válido -> usar body tal cual */ }
+            catch { }
 
             throw new InvalidOperationException($"Registro fallido: {message}");
         }
@@ -114,7 +127,8 @@ public sealed class HttpAuthService(HttpClient http, ITokenStore tokenStore) : I
         return true;
     }
 
-    public Task<bool> IsLoggedInAsync(CancellationToken ct = default) => GetAccessTokenAsync(ct).ContinueWith(t => !string.IsNullOrWhiteSpace(t.Result), ct);
+    public Task<bool> IsLoggedInAsync(CancellationToken ct = default) =>
+        GetAccessTokenAsync(ct).ContinueWith(t => !string.IsNullOrWhiteSpace(t.Result), ct);
 
     public Task LogoutAsync() => _tokenStore.ClearAsync();
 }
