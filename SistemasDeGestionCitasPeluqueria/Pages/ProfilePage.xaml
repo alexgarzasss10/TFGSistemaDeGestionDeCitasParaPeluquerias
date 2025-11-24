@@ -77,8 +77,8 @@
                                                CornerRadius="8"
                                                Padding="12"
                                                HasShadow="False"
-                                               WidthRequest="480"
-                                               HorizontalOptions="Start">
+                                               HorizontalOptions="Start"
+                                               MinimumWidthRequest="240">
                                             <Grid ColumnDefinitions="Auto,*,Auto"
                                                   RowDefinitions="Auto,Auto,Auto"
                                                   ColumnSpacing="10"
@@ -128,12 +128,19 @@
                                                     </Label>
                                                 </Frame>
 
-                                                <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="12" VerticalOptions="Center">
-                                                    <Label FontFamily="{StaticResource SymbolThemeFontFamily}" Text="{StaticResource IconGlyph.Schedule}" TextColor="{StaticResource Gray600}" />
-                                                    <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                    <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                                    <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                </HorizontalStackLayout>
+                                                <!-- CONTENIDO RESPONSIVO (próxima cita) -->
+                                                <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                                       FontSize="12"
+                                                       TextColor="{StaticResource Gray600}"
+                                                       LineBreakMode="WordWrap">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" />
+                                                            <Span Text="  •  " />
+                                                            <Span Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
 
                                                 <FlexLayout Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
                                                             Direction="Row" Wrap="Wrap"
@@ -190,8 +197,6 @@
                     <VerticalStackLayout Grid.Column="0" Spacing="12" HorizontalOptions="FillAndExpand">
                         <!-- Header del perfil -->
                         <Frame Style="{StaticResource CardFrameStyle}" Padding="16" HasShadow="False" HorizontalOptions="FillAndExpand">
-                            <!-- (sin cambios) -->
-                            <!-- ... contenido del perfil ... -->
                             <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto" ColumnSpacing="16" RowSpacing="8">
                                 <!-- Avatar y datos -->
                                 <VerticalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Spacing="8" HorizontalOptions="Start" Margin="0,0,8,0">
@@ -286,7 +291,6 @@
                             <VerticalStackLayout Spacing="12">
                                 <Label Text="Historial de Citas" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" />
 
-                                <!-- Altura fija para ~4 ítems; scroll interno para el resto -->
                                 <ScrollView HeightRequest="280"
                                             VerticalScrollBarVisibility="Always">
                                     <CollectionView ItemsSource="{Binding Bookings}"
@@ -348,15 +352,23 @@
                                                             </Label>
                                                         </Frame>
 
-                                                        <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="8" VerticalOptions="Center">
-                                                            <Label Text="{Binding CustomerName}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                            <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                                            <Label Text="{Binding DisplayBarber}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                            <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                                            <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                            <Label Text="•" TextColor="{StaticResource Gray600}" />
-                                                            <Label Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" FontSize="12" TextColor="{StaticResource Gray600}" />
-                                                        </HorizontalStackLayout>
+                                                        <!-- CONTENIDO RESPONSIVO (historial) -->
+                                                        <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                                               FontSize="12"
+                                                               TextColor="{StaticResource Gray600}"
+                                                               LineBreakMode="WordWrap">
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="{Binding CustomerName}" />
+                                                                    <Span Text="  •  " />
+                                                                    <Span Text="{Binding DisplayBarber}" />
+                                                                    <Span Text="  •  " />
+                                                                    <Span Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=date}" />
+                                                                    <Span Text="  •  " />
+                                                                    <Span Text="{Binding Start, Converter={StaticResource BookingIsoToDisplayConverter}, ConverterParameter=time}" />
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
                                                     </Grid>
                                                 </Frame>
                                             </DataTemplate>
