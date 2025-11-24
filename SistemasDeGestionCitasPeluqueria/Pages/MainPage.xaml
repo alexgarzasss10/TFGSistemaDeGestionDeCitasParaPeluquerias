@@ -278,37 +278,63 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <!-- SOBRE NOSOTROS  -->
-            <Frame Style="{StaticResource CardFrameStyle}">
-                <Grid ColumnDefinitions="2*,1*" ColumnSpacing="24" RowSpacing="6">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Sobre Nosotros" Style="{StaticResource SectionTitleStyle}" />
+            <!-- SOBRE NOSOTROS -->
+            <Frame Style="{StaticResource CardFrameStyle}"
+                   Padding="20"
+                   Background="{StaticResource AboutCardBackgroundBrush}">
+                <Grid ColumnDefinitions="Auto,*,12,Auto"
+                      RowDefinitions="Auto"
+                      ColumnSpacing="0">
+
+                    <!-- Barra vertical -->
+                    <Border Grid.Column="0"
+                            Style="{StaticResource AboutAccentBarStyle}" />
+
+                    <!-- Contenido principal (sin icono) -->
+                    <VerticalStackLayout Grid.Column="1" Spacing="10">
+                        <Label Text="Sobre Nosotros"
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="0,0,0,4" />
+
                         <VerticalStackLayout Spacing="8"
                                              BindableLayout.ItemsSource="{Binding AboutParagraphs}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="x:String">
                                     <Label Text="{Binding .}"
-                                           Style="{StaticResource BodyTextStyle}" />
+                                           Style="{StaticResource AboutParagraphStyle}" />
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout Grid.Column="1"
-                                         Spacing="14"
+                    <!-- Separador -->
+                    <BoxView Grid.Column="2"
+                             WidthRequest="1"
+                             BackgroundColor="{DynamicResource CardBorder}"
+                             Opacity="0.6"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Fill" />
+
+                    <!-- Destacados -->
+                    <VerticalStackLayout Grid.Column="3"
+                                         Spacing="10"
+                                         Padding="16,4,0,4"
                                          BindableLayout.ItemsSource="{Binding AboutHighlights}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
-                                <HorizontalStackLayout Spacing="10">
-                                    <Border Style="{StaticResource AccentDotStyle}" />
-                                    <Label Text="{Binding .}" Style="{StaticResource BodyTextStyle}" />
-                                </HorizontalStackLayout>
+                                <Border Style="{StaticResource AboutHighlightChipStyle}">
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Border Style="{StaticResource AccentDotStyle}" />
+                                        <Label Text="{Binding .}"
+                                               TextColor="{DynamicResource TextPrimary}"
+                                               FontSize="13" />
+                                    </HorizontalStackLayout>
+                                </Border>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                 </Grid>
             </Frame>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

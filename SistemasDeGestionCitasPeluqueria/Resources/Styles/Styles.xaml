@@ -498,5 +498,78 @@
     <Style x:Key="InlineTitleMutedStyle" TargetType="Label" BasedOn="{StaticResource InlineTitleStyle}">
         <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
     </Style>
-    
+
+    <!-- Gradiente suave para tarjeta ABOUT -->
+    <LinearGradientBrush x:Key="AboutCardBackgroundBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FFFFFFFF" Offset="0.0"/>
+        <GradientStop Color="#FFF9FAFB" Offset="1.0"/>
+    </LinearGradientBrush>
+
+    <!-- Barra/acento vertical -->
+    <Style x:Key="AboutAccentBarStyle" TargetType="Border">
+        <Setter Property="WidthRequest" Value="4" />
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="Margin" Value="0,0,12,0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Chip para highlights About -->
+    <Style x:Key="AboutHighlightChipStyle" TargetType="Border" BasedOn="{StaticResource ChipStyle}">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Opacity="0.08" Radius="8" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="#EEFDF9" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="#DDF7F1" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Título secundario dentro de About -->
+    <Style x:Key="AboutSectionTitleStyle" TargetType="Label" BasedOn="{StaticResource SectionTitleStyle}">
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="FontSize" Value="18" />
+    </Style>
+
+    <!-- Párrafo con ancho legible -->
+    <Style x:Key="AboutParagraphStyle" TargetType="Label" BasedOn="{StaticResource BodyTextStyle}">
+        <Setter Property="Margin" Value="0,0,0,2" />
+        <Setter Property="MaximumWidthRequest" Value="680" />
+        <Setter Property="LineHeight" Value="1.25" />
+    </Style>
+
+    <!-- Icono cabecera About -->
+    <Style x:Key="AboutIconStyle" TargetType="Label" BasedOn="{StaticResource IconGlyphStyle}">
+        <Setter Property="TextColor" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="Margin" Value="0,0,12,0" />
+        <Setter Property="Opacity" Value="0.85" />
+    </Style>
+
 </ResourceDictionary>
