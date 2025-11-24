@@ -483,4 +483,20 @@
         <Setter Property="ProgressColor" Value="{DynamicResource Accent}" />
     </Style>
 
+    <!-- Estilos movidos desde BookingPage -->
+    <Style x:Key="CardSection" TargetType="Frame" BasedOn="{StaticResource CardFrameStyle}">
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <Style x:Key="InlineTitleStyle" TargetType="Label" BasedOn="{StaticResource SectionTitleStyle}">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="InlineTitleMutedStyle" TargetType="Label" BasedOn="{StaticResource InlineTitleStyle}">
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+    </Style>
+    
 </ResourceDictionary>
