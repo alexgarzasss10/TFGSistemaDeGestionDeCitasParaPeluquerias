@@ -46,11 +46,21 @@
                 </Border>
             </Frame>
 
-            <!-- Tarjetas de información -->
-            <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto" ColumnSpacing="16" RowSpacing="16">
+            <!-- Tarjetas de información (responsivas, sin colapsar texto y con columnas equilibradas) -->
+            <FlexLayout Direction="Row"
+                        Wrap="Wrap"
+                        AlignItems="Stretch"
+                        AlignContent="Stretch"
+                        JustifyContent="SpaceBetween">
 
                 <!-- Horario -->
-                <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource CardFrameStyle}" Padding="14">
+                <Frame Style="{StaticResource CardFrameStyle}"
+                       Padding="14"
+                       Margin="0,0,0,16"
+                       MinimumWidthRequest="260"
+                       FlexLayout.Basis="260"
+                       FlexLayout.Grow="1"
+                       FlexLayout.Shrink="1">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
                             <Border.StrokeShape>
@@ -63,7 +73,7 @@
                         </Border>
                         <VerticalStackLayout Spacing="4">
                             <Label Text="Horario" Style="{StaticResource InfoCardTitleStyle}" />
-                            <Label Style="{StaticResource InfoCardSubTextStyle}">
+                            <Label Style="{StaticResource InfoCardSubTextStyle}" LineBreakMode="WordWrap">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding OpeningLine1Label}" FontAttributes="Bold" />
@@ -72,7 +82,7 @@
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
-                            <Label Style="{StaticResource InfoCardSubTextStyle}">
+                            <Label Style="{StaticResource InfoCardSubTextStyle}" LineBreakMode="WordWrap">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding OpeningLine2Label}" FontAttributes="Bold" />
@@ -86,7 +96,13 @@
                 </Frame>
 
                 <!-- Ubicación -->
-                <Frame Grid.Row="0" Grid.Column="1" Style="{StaticResource CardFrameStyle}" Padding="14">
+                <Frame Style="{StaticResource CardFrameStyle}"
+                       Padding="14"
+                       Margin="0,0,0,16"
+                       MinimumWidthRequest="260"
+                       FlexLayout.Basis="260"
+                       FlexLayout.Grow="1"
+                       FlexLayout.Shrink="1">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
                             <Border.StrokeShape>
@@ -99,13 +115,19 @@
                         </Border>
                         <VerticalStackLayout Spacing="4">
                             <Label Text="Ubicación" Style="{StaticResource InfoCardTitleStyle}" />
-                            <Label Text="{Binding AddressText}" Style="{StaticResource InfoCardSubTextStyle}" />
+                            <Label Text="{Binding AddressText}" Style="{StaticResource InfoCardSubTextStyle}" LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
 
                 <!-- Contacto -->
-                <Frame Grid.Row="0" Grid.Column="2" Style="{StaticResource CardFrameStyle}" Padding="14">
+                <Frame Style="{StaticResource CardFrameStyle}"
+                       Padding="14"
+                       Margin="0,0,0,16"
+                       MinimumWidthRequest="260"
+                       FlexLayout.Basis="260"
+                       FlexLayout.Grow="1"
+                       FlexLayout.Shrink="1">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
                             <Border.StrokeShape>
@@ -118,13 +140,19 @@
                         </Border>
                         <VerticalStackLayout Spacing="4">
                             <Label Text="Contacto" Style="{StaticResource InfoCardTitleStyle}" />
-                            <Label Text="{Binding ContactText}" Style="{StaticResource InfoCardSubTextStyle}" />
+                            <Label Text="{Binding ContactText}" Style="{StaticResource InfoCardSubTextStyle}" LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
 
                 <!-- Reservas -->
-                <Frame Grid.Row="0" Grid.Column="3" Style="{StaticResource CardFrameStyle}" Padding="14">
+                <Frame Style="{StaticResource CardFrameStyle}"
+                       Padding="14"
+                       Margin="0,0,0,16"
+                       MinimumWidthRequest="260"
+                       FlexLayout.Basis="260"
+                       FlexLayout.Grow="1"
+                       FlexLayout.Shrink="1">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
                             <Border.StrokeShape>
@@ -137,13 +165,13 @@
                         </Border>
                         <VerticalStackLayout Spacing="4">
                             <Label Text="Reservas" Style="{StaticResource InfoCardTitleStyle}" />
-                            <Label Text="Reserva en línea" Style="{StaticResource InfoCardSubTextStyle}" />
-                            <Label Text="Fácil y rápido" Style="{StaticResource InfoCardSubTextStyle}" />
+                            <Label Text="Reserva en línea" Style="{StaticResource InfoCardSubTextStyle}" LineBreakMode="WordWrap" />
+                            <Label Text="Fácil y rápido" Style="{StaticResource InfoCardSubTextStyle}" LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
                 </Frame>
 
-            </Grid>
+            </FlexLayout>
 
             <!-- Nuestros Trabajos -->
             <Label Text="Nuestros Trabajos" Style="{StaticResource SectionTitleStyle}" />
