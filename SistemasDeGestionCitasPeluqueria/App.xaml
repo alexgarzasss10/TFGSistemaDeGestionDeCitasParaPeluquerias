@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Resources/Styles/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Convertidores globales existentes -->
             <conv:ImageSourceFromStringConverter x:Key="ImageSourceFromStringConverter" />
             <conv:BoolToGlyphTextConverter x:Key="BoolToGlyphTextConverter" />
             <conv:BoolToColorConverter x:Key="BoolToColorConverter" />
@@ -24,6 +25,13 @@
             <conv:NullToInverseBoolConverter x:Key="NullToInverseBoolConverter" />
             <conv:InitialsConverter x:Key="InitialsConverter" />
             <conv:IsNotNullConverter x:Key="IsNotNullConverter" />
+            <conv:TimeAgoConverter x:Key="TimeAgoConverter" />
+            <conv:RatingToStarsConverter x:Key="StarsConverter" />
+            <conv:RatingToProgressConverter x:Key="ProgressConv" />
+            <conv:NullOrWhiteToBoolConverter x:Key="NullOrWhiteToBoolConverter" />
+
+            <!-- NUEVO: convertidor global para duración -->
+            <conv:DurationMinutesToTextConverter x:Key="DurationConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

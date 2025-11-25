@@ -4,18 +4,11 @@
              xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
              xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
              xmlns:models="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
-             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ServicesPage"
              x:DataType="vm:ServicesPageModel"
              x:Name="Root"
              Title="Servicios"
              BackgroundColor="{DynamicResource Surface}">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <conv:DurationMinutesToTextConverter x:Key="DurationConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">

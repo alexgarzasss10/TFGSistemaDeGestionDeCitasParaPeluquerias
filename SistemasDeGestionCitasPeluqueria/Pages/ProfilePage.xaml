@@ -3,19 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
              xmlns:models="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
-             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ProfilePage"
              x:DataType="pageModels:ProfilePageModel"
              x:Name="ProfilePageRoot"
              Title="Mi Perfil"
              BackgroundColor="{StaticResource SurfaceAlt}"
              Padding="12">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <conv:BookingIsoToDisplayConverter x:Key="BookingIsoToDisplayConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <ScrollView>
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">

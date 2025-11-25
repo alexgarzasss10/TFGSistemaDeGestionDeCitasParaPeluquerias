@@ -8,13 +8,6 @@
              Title="Registro"
              BackgroundColor="Transparent">
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <conv:BoolToGlyphTextConverter x:Key="BoolToGlyphTextConverter" />
-            <conv:BoolToColorConverter x:Key="BoolToColorConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
-
     <Grid Padding="24">
         <BoxView BackgroundColor="{DynamicResource Black}" Opacity="0.45" />
 
