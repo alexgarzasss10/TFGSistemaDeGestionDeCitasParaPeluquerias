@@ -560,8 +560,9 @@
     <!-- Párrafo con ancho legible -->
     <Style x:Key="AboutParagraphStyle" TargetType="Label" BasedOn="{StaticResource BodyTextStyle}">
         <Setter Property="Margin" Value="0,0,0,2" />
-        <Setter Property="MaximumWidthRequest" Value="680" />
         <Setter Property="LineHeight" Value="1.25" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <!-- Eliminado: <Setter Property="MaximumWidthRequest" Value="680" /> -->
     </Style>
 
     <!-- Icono cabecera About -->

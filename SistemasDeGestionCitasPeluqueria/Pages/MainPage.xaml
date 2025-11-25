@@ -40,17 +40,14 @@
                             <Label Text="{Binding BarbershopName}"
                                    TextColor="{StaticResource White}"
                                    FontAttributes="Bold"
-                                   FontSize="24" />
-                            <Label Text="Tu estilo, nuestra pasión"
-                                   TextColor="{StaticResource Gray200}"
-                                   FontSize="14" />
+                                   FontSize="24"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
             </Frame>
 
             <!-- Tarjetas de información -->
-            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+            <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto" ColumnSpacing="16" RowSpacing="16">
 
                 <!-- Horario -->
                 <Frame Grid.Row="0" Grid.Column="0" Style="{StaticResource CardFrameStyle}" Padding="14">
@@ -108,7 +105,7 @@
                 </Frame>
 
                 <!-- Contacto -->
-                <Frame Grid.Row="1" Grid.Column="0" Style="{StaticResource CardFrameStyle}" Padding="14">
+                <Frame Grid.Row="0" Grid.Column="2" Style="{StaticResource CardFrameStyle}" Padding="14">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
                             <Border.StrokeShape>
@@ -127,7 +124,7 @@
                 </Frame>
 
                 <!-- Reservas -->
-                <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource CardFrameStyle}" Padding="14">
+                <Frame Grid.Row="0" Grid.Column="3" Style="{StaticResource CardFrameStyle}" Padding="14">
                     <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                         <Border BackgroundColor="{DynamicResource ServiceIconBgLight}" Padding="10">
                             <Border.StrokeShape>
@@ -174,12 +171,12 @@
                                        Aspect="AspectFill"
                                        HorizontalOptions="Fill"
                                        VerticalOptions="Fill" />
-                                <BoxView Color="#000000" Opacity="0.22"
+                                <BoxView Color="{StaticResource Black}" Opacity="0.22"
                                          HeightRequest="44"
                                          VerticalOptions="End"
                                          HorizontalOptions="Fill" />
                                 <Label Text="{Binding Title}"
-                                       TextColor="White"
+                                       TextColor="{StaticResource White}"
                                        FontAttributes="Bold"
                                        FontSize="13"
                                        Margin="10,0,10,8"
@@ -197,7 +194,7 @@
             <!-- Barberos -->
             <Label Text="Barberos" Style="{StaticResource SectionTitleStyle}" />
 
-            <!-- FlexLayout responsivo sin estirar -->
+            <!-- Tarjetas de barbero (más pequeñas) -->
             <FlexLayout Direction="Row"
                         Wrap="Wrap"
                         AlignItems="Start"
@@ -205,30 +202,87 @@
                         BindableLayout.ItemsSource="{Binding Barbers}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="m:Barber">
-                        <Frame Padding="10"
+                        <Frame Padding="0"
                                HasShadow="True"
                                Style="{StaticResource CardFrameStyle}"
-                               WidthRequest="180"
-                               FlexLayout.Basis="180"
+                               WidthRequest="200"
+                               HeightRequest="260"
+                               FlexLayout.Basis="200"
                                FlexLayout.Grow="0"
                                Margin="0,0,12,12">
-                            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
-                                <Frame Padding="0"
-                                       WidthRequest="160"
-                                       HeightRequest="120"
-                                       CornerRadius="12"
-                                       IsClippedToBounds="True"
-                                       HorizontalOptions="Fill"
-                                       BackgroundColor="Transparent"
-                                       HasShadow="False">
-                                    <Image Source="{Binding PhotoUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
-                                           Aspect="AspectFit"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                </Frame>
-                                <Label Text="{Binding Name}" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="{DynamicResource TextPrimary}" />
-                                <Label Text="{Binding Specialty}" FontSize="12" TextColor="{DynamicResource TextSecondary}" HorizontalTextAlignment="Center" />
-                            </VerticalStackLayout>
+                            <Grid RowDefinitions="Auto,Auto">
+                                <!-- Hero de la tarjeta -->
+                                <Border Grid.Row="0">
+                                    <Border.StrokeShape>
+                                        <shapes:RoundRectangle CornerRadius="12,12,0,0" />
+                                    </Border.StrokeShape>
+                                    <Grid HeightRequest="190">
+                                        <Image Source="{Binding PhotoUrl, Converter={StaticResource ImageSourceFromStringConverter}}"
+                                               Aspect="AspectFill"
+                                               HorizontalOptions="Fill"
+                                               VerticalOptions="Fill" />
+                                        <Grid InputTransparent="True" Opacity="0.35">
+                                            <Grid.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="{DynamicResource HeroOverlayTop}" Offset="0" />
+                                                    <GradientStop Color="{StaticResource Black}" Offset="1" />
+                                                </LinearGradientBrush>
+                                            </Grid.Background>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Contenido -->
+                                <VerticalStackLayout Grid.Row="1"
+                                                     Spacing="6"
+                                                     Padding="12,8,12,10">
+                                    <Label Text="{Binding Name}"
+                                           TextColor="{DynamicResource TextPrimary}"
+                                           FontAttributes="Bold"
+                                           FontSize="16"
+                                           LineBreakMode="TailTruncation" />
+
+                                    <!-- Chip de especialidad -->
+                                    <Border BackgroundColor="{DynamicResource ServiceIconBgLight}"
+                                            Padding="6,3"
+                                            StrokeThickness="0"
+                                            HorizontalOptions="Start">
+                                        <Border.StrokeShape>
+                                            <shapes:RoundRectangle CornerRadius="10" />
+                                        </Border.StrokeShape>
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Border WidthRequest="6"
+                                                    HeightRequest="6"
+                                                    BackgroundColor="{DynamicResource ServiceIconAccent}">
+                                                <Border.StrokeShape>
+                                                    <shapes:RoundRectangle CornerRadius="3" />
+                                                </Border.StrokeShape>
+                                            </Border>
+                                            <Label Text="{Binding Specialty}"
+                                                   FontSize="12"
+                                                   TextColor="{DynamicResource TextSecondary}" />
+                                        </HorizontalStackLayout>
+                                    </Border>
+
+                                    <BoxView HeightRequest="1"
+                                             BackgroundColor="{DynamicResource CardBorder}"
+                                             Opacity="0.6"
+                                             HorizontalOptions="Fill" />
+
+                                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                                        <Label Text="Disponible"
+                                               FontSize="12"
+                                               TextColor="{DynamicResource Accent}"
+                                               FontAttributes="Bold" />
+                                        <Label Text="•"
+                                               FontSize="12"
+                                               TextColor="{DynamicResource TextSecondary}" />
+                                        <Label Text="Citas bajo demanda"
+                                               FontSize="12"
+                                               TextColor="{DynamicResource TextSecondary}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Grid>
                         </Frame>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
@@ -284,17 +338,22 @@
                             Style="{StaticResource AboutAccentBarStyle}" />
 
                     <!-- Contenido principal (sin icono) -->
-                    <VerticalStackLayout Grid.Column="1" Spacing="10">
+                    <VerticalStackLayout Grid.Column="1"
+                                         Spacing="10"
+                                         HorizontalOptions="FillAndExpand"> <!-- + rellena la columna -->
                         <Label Text="Sobre Nosotros"
                                Style="{StaticResource SectionTitleStyle}"
                                Margin="0,0,0,4" />
 
                         <VerticalStackLayout Spacing="8"
+                                             HorizontalOptions="FillAndExpand" 
                                              BindableLayout.ItemsSource="{Binding AboutParagraphs}">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="x:String">
                                     <Label Text="{Binding .}"
-                                           Style="{StaticResource AboutParagraphStyle}" />
+                                           Style="{StaticResource AboutParagraphStyle}"
+                                           HorizontalOptions="FillAndExpand"   
+                                           LineBreakMode="WordWrap" />
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
