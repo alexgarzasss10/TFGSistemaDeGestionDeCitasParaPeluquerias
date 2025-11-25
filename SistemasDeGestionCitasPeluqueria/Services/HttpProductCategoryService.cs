@@ -9,8 +9,7 @@ public sealed class HttpProductCategoryService(HttpClient http) : IProductCatego
 
     public async Task<IReadOnlyList<ProductCategory>> GetAllAsync(CancellationToken ct = default)
     {
-        var list = await _http.GetFromJsonAsync<List<ProductCategory>>("product-categories", cancellationToken: ct)
-                   ?? new List<ProductCategory>();
-        return list.OrderBy(c => c.Order).ToList();
+        var list = await _http.GetFromJsonAsync<List<ProductCategory>>("product-categories", JsonDefaults.Web, ct);
+        return list ?? new List<ProductCategory>();
     }
 }

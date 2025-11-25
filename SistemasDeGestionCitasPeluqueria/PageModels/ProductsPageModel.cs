@@ -15,11 +15,13 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
     {
         private readonly IInventoryService _inventoryService = inventoryService;
         private readonly IProductCategoryService _categoryService = categoryService;
+
         private List<InventoryItem> _all = [];
+        private ProductCategory _allCategory = new() { Id = 0, Name = "Todos", Order = int.MinValue };
 
         [ObservableProperty] private ObservableCollection<InventoryItem> products = [];
-        [ObservableProperty] private ObservableCollection<string> categories = ["Todos"];
-        [ObservableProperty] private string? selectedCategory = "Todos";
+        [ObservableProperty] private ObservableCollection<ProductCategory> categories = [];
+        [ObservableProperty] private ProductCategory? selectedCategory;
         [ObservableProperty] private bool isBusy;
         [ObservableProperty] private string? error;
 
@@ -32,19 +34,25 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
                 IsBusy = true;
                 Error = null;
 
-                // 1) Cargar categorías si aún no están cargadas 
-                if (Categories.Count <= 1)
+                // 1) Cargar categorías desde la API
+                if (Categories.Count == 0)
                 {
                     var cats = await _categoryService.GetAllAsync(ct);
-                    var names = new[] { "Todos" }.Concat(cats.OrderBy(c => c.Order).Select(c => c.Name));
-                    Categories = new ObservableCollection<string>(names);
-                    // Mantener la selección en "Todos" si no hay otra
-                    SelectedCategory ??= "Todos";
+                    var ordered = cats.OrderBy(c => c.Order).ToList();
+
+                    // Insertar "Todos" (opción sintética)
+                    ordered.Insert(0, _allCategory);
+
+                    Categories = new ObservableCollection<ProductCategory>(ordered);
+
+                    // Mantener la selección; por defecto "Todos"
+                    SelectedCategory ??= _allCategory;
                 }
 
-                // 2) Cargar productos
+                // 2) Cargar productos desde la API
                 var items = await _inventoryService.GetAllAsync(ct);
                 _all = items.ToList();
+
                 ApplyFilter();
             }
             catch (OperationCanceledException) { }
@@ -54,43 +62,28 @@ namespace SistemasDeGestionCitasPeluqueria.PageModels
 
         // Se invoca al tocar un chip
         [RelayCommand]
-        private void SelectCategory(string? category)
+        private void SelectCategory(ProductCategory? category)
         {
-            if (string.IsNullOrWhiteSpace(category)) return;
-            if (!string.Equals(SelectedCategory, category, StringComparison.Ordinal))
+            if (category is null) return;
+            if (!ReferenceEquals(SelectedCategory, category))
                 SelectedCategory = category;
         }
 
-        partial void OnSelectedCategoryChanged(string? value) => ApplyFilter();
+        partial void OnSelectedCategoryChanged(ProductCategory? value) => ApplyFilter();
 
         private void ApplyFilter()
         {
-            var cat = SelectedCategory ?? "Todos";
+            var selected = SelectedCategory ?? _allCategory;
+
             IEnumerable<InventoryItem> query = _all;
 
-            if (!string.Equals(cat, "Todos", StringComparison.OrdinalIgnoreCase))
+            // Filtrado por CategoryId real. "Todos" usa Id=0.
+            if (selected.Id != 0)
             {
-                query = _all.Where(p => MatchesCategory(p, cat));
+                query = _all.Where(p => p.CategoryId == selected.Id);
             }
 
             Products = new ObservableCollection<InventoryItem>(query);
-        }
-
-        private static bool MatchesCategory(InventoryItem p, string cat)
-        {
-            var text = $"{p.Name} {p.Brand} {p.Description}".ToLowerInvariant();
-
-            return cat switch
-            {
-                "Champús" => text.Contains("champú") || text.Contains("shampoo"),
-                "Ceras y Pomadas" => text.Contains("cera") || text.Contains("pomada") || text.Contains("mate"),
-                "Cuidado de Barba" => text.Contains("barba") || text.Contains("beard"),
-                "Tratamientos" => text.Contains("mascarilla") || text.Contains("tratam"),
-                "Afeitado" => text.Contains("afeit") || text.Contains("aftershave") || text.Contains("shav"),
-                "Polvos y Sprays" => text.Contains("spray") || text.Contains("polvo") || text.Contains("polvos") || text.Contains("gel"),
-                "Accesorios y Herramientas" => text.Contains("tijeras") || text.Contains("peine") || text.Contains("cepillo") || text.Contains("toalla"),
-                _ => true
-            };
         }
     }
 }

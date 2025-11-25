@@ -13,8 +13,6 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <conv:ImageSourceFromStringConverter x:Key="ImageSourceFromStringConverter" />
-
-            <!-- Nuevo estilo para insignia de marca (más discreto que ChipStyle) -->
             <Style x:Key="BrandBadgeStyle" TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceVariant}" />
                 <Setter Property="Stroke" Value="{DynamicResource SurfaceVariant}" />
@@ -40,6 +38,7 @@
 
                 <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
 
+                <!-- Chips de categorías: ahora ProductCategory -->
                 <CollectionView ItemsSource="{Binding Categories}"
                                 SelectionMode="Single"
                                 SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
@@ -47,9 +46,9 @@
                         <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="x:String">
+                        <DataTemplate x:DataType="models:ProductCategory">
                             <Border Style="{StaticResource CategoryChipStyle}">
-                                <Label Text="{Binding .}" TextColor="{DynamicResource TextPrimary}" />
+                                <Label Text="{Binding Name}" TextColor="{DynamicResource TextPrimary}" />
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -69,11 +68,9 @@
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="models:InventoryItem">
                 <Frame Style="{StaticResource CardFrameStyle}" Margin="6" HasShadow="True">
-                    <!-- Ajustamos la rejilla: quitamos la fila exclusiva para la marca -->
                     <Grid RowDefinitions="Auto,Auto,Auto"
                           ColumnDefinitions="*,Auto">
 
-                        <!-- Imagen con overlay de marca -->
                         <Frame Grid.Row="0" Grid.ColumnSpan="2"
                                Style="{StaticResource ImageCardStyle}"
                                Padding="0"
@@ -90,7 +87,6 @@
                                                         TargetNullValue='https://picsum.photos/800/400?blur=2',
                                                         FallbackValue='https://picsum.photos/800/400?blur=2'}" />
 
-                                <!-- Badge pequeña para la marca -->
                                 <Border Style="{StaticResource BrandBadgeStyle}"
                                         HorizontalOptions="Start"
                                         VerticalOptions="Start"
@@ -102,7 +98,6 @@
                             </Grid>
                         </Frame>
 
-                        <!-- Precio arriba a la derecha (misma fila que antes) -->
                         <Label Grid.Row="1" Grid.Column="1"
                                Text="{Binding Price, StringFormat='{}{0:C}'}"
                                TextColor="{DynamicResource Accent}"
@@ -111,13 +106,11 @@
                                VerticalOptions="Center"
                                Margin="8,12,8,0"/>
 
-                        <!-- Nombre -->
                         <Label Grid.Row="1" Grid.Column="0"
                                Text="{Binding Name}"
                                Style="{StaticResource SectionTitleStyle}"
                                Margin="12,12,0,0" />
 
-                        <!-- Descripción + Stock -->
                         <VerticalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="6" Margin="12,4,12,8">
                             <Label Text="{Binding Description}"
                                    Style="{StaticResource BodyTextStyle}" />

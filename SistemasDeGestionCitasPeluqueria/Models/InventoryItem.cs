@@ -9,4 +9,5 @@ public class InventoryItem
     public decimal Price { get; set; }                  // PRODUCTO.precio
     public int Stock { get; set; }                      // PRODUCTO.stock
     public string? ImageUrl { get; set; }               // PRODUCTO.imagen_url
+    public int CategoryId { get; set; }                 // Nuevo: alineado con la API FastAPI (Product.categoryId)
 }
