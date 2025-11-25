@@ -27,7 +27,6 @@ public partial class ReviewDialogPageModel : ObservableObject
     public ObservableCollection<StarItem> Stars { get; } =
         new(Enumerable.Range(1, 5).Select(i => new StarItem(i)));
 
-    // Listas y selección opcionales para los pickers
     [ObservableProperty] private ObservableCollection<Barber> barbers = [];
     [ObservableProperty] private Barber? selectedBarber;
 
@@ -41,7 +40,6 @@ public partial class ReviewDialogPageModel : ObservableObject
     [ObservableProperty]
     private string? comment;
 
-    // Exponer el estado de publicación para el XAML
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanPublish))]
     private bool isPublishing;
@@ -51,6 +49,13 @@ public partial class ReviewDialogPageModel : ObservableObject
     public IRelayCommand SetRatingCommand { get; }
     public IAsyncRelayCommand PublishAsyncCommand { get; }
     public IAsyncRelayCommand CancelAsyncCommand { get; }
+
+    // NUEVO: comandos para limpiar selección
+    [RelayCommand]
+    private void ClearBarber() => SelectedBarber = null;
+
+    [RelayCommand]
+    private void ClearService() => SelectedService = null;
 
     public ReviewDialogPageModel(
         INavigation navigation,
@@ -112,7 +117,7 @@ public partial class ReviewDialogPageModel : ObservableObject
         catch (OperationCanceledException) { }
         catch
         {
-            // Son campos opcionales: no bloqueamos la UI si falla la carga
+            // Campos opcionales: ignorar errores de carga
         }
     }
 
@@ -133,7 +138,7 @@ public partial class ReviewDialogPageModel : ObservableObject
                 BarberName = SelectedBarber?.Name,
                 ServiceName = SelectedService?.Name,
                 UserName = UserName,
-                CreatedAt = DateTimeOffset.UtcNow, // antes: Date
+                CreatedAt = DateTimeOffset.UtcNow,
                 UserPhotoUrl = await TryGetCurrentUserPhotoAsync()
             };
 

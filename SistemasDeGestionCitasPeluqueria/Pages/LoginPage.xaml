@@ -95,17 +95,5 @@
                 </VerticalStackLayout>
             </Border>
         </VerticalStackLayout>
-
-        <!-- Botón ayuda -->
-        <Button Text="?"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                WidthRequest="36"
-                HeightRequest="36"
-                Margin="0,0,12,12"
-                FontAttributes="Bold"
-                BackgroundColor="{DynamicResource Primary}"
-                TextColor="{DynamicResource White}"
-                CornerRadius="18" />
     </Grid>
 </ContentPage>

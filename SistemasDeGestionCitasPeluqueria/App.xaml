@@ -23,6 +23,7 @@
             <conv:NullToBoolConverter x:Key="NullToBoolConverter" />
             <conv:NullToInverseBoolConverter x:Key="NullToInverseBoolConverter" />
             <conv:InitialsConverter x:Key="InitialsConverter" />
+            <conv:IsNotNullConverter x:Key="IsNotNullConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

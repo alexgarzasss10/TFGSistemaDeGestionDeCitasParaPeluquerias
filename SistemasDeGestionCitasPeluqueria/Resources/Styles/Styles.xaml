@@ -573,4 +573,17 @@
         <Setter Property="Opacity" Value="0.85" />
     </Style>
 
+    <!-- Estilo sencillo para pickers dentro de diálogos -->
+    <Style x:Key="ReviewOutlinedPickerStyle" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="TitleColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HeightRequest" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="4,0,0,0" />
+    </Style>
+
 </ResourceDictionary>
