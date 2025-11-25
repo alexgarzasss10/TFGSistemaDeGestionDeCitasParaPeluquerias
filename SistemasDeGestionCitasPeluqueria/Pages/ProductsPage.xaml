@@ -3,27 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
              xmlns:models="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
-             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.ProductsPage"
              x:DataType="vm:ProductsPageModel"
              x:Name="Root"
              Title="Productos"
              BackgroundColor="{DynamicResource Surface}">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <conv:ImageSourceFromStringConverter x:Key="ImageSourceFromStringConverter" />
-            <Style x:Key="BrandBadgeStyle" TargetType="Border">
-                <Setter Property="BackgroundColor" Value="{DynamicResource SurfaceVariant}" />
-                <Setter Property="Stroke" Value="{DynamicResource SurfaceVariant}" />
-                <Setter Property="Padding" Value="6,2" />
-                <Setter Property="Shadow" Value="{x:Null}" />
-                <Setter Property="StrokeShape">
-                    <RoundRectangle CornerRadius="8" />
-                </Setter>
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <CollectionView ItemsSource="{Binding Products}"
                     SelectionMode="None"
@@ -38,7 +22,7 @@
 
                 <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
 
-                <!-- Chips de categorías: ahora ProductCategory -->
+                <!-- Chips de categorías -->
                 <CollectionView ItemsSource="{Binding Categories}"
                                 SelectionMode="Single"
                                 SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
@@ -74,14 +58,13 @@
                         <Frame Grid.Row="0" Grid.ColumnSpan="2"
                                Style="{StaticResource ImageCardStyle}"
                                Padding="0"
-                               IsClippedToBounds="True"
-                               BackgroundColor="{DynamicResource CardBackground}">
+                               IsClippedToBounds="True">
                             <Grid>
                                 <Image Aspect="AspectFit"
                                        HeightRequest="220"
                                        HorizontalOptions="Fill"
                                        VerticalOptions="Center"
-                                       BackgroundColor="{DynamicResource CardBackground}"
+                                       BackgroundColor="Transparent"
                                        Source="{Binding ImageUrl,
                                                         Converter={StaticResource ImageSourceFromStringConverter},
                                                         TargetNullValue='https://picsum.photos/800/400?blur=2',

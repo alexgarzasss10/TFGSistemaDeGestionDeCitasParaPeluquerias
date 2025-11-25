@@ -586,4 +586,19 @@
         <Setter Property="Margin" Value="4,0,0,0" />
     </Style>
 
+    <!-- Badge para marca del producto (global) -->
+    <Style x:Key="BrandBadgeStyle" TargetType="Border" BasedOn="{StaticResource ChipStyle}">
+        <Setter Property="Padding" Value="6,2" />
+        <Setter Property="Shadow" Value="{x:Null}" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+        <!-- Usa brushes globales en lugar de colores locales -->
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+    </Style>
+
 </ResourceDictionary>
