@@ -203,31 +203,26 @@
         <Setter Property="Padding" Value="10,4" />
     </Style>
 
-    <!-- Chip categorías (hover/pressed/selected desde recursos) -->
+    <!-- Chip categorías: solo uno verde (el seleccionado) -->
     <Style x:Key="CategoryChipStyle" TargetType="Border" BasedOn="{StaticResource ChipStyle}">
         <Setter Property="VisualStateManager.VisualStateGroups">
             <Setter.Value>
                 <VisualStateGroupList>
                     <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal" />
-                        <VisualState x:Name="PointerOver">
+                        <VisualState x:Name="Normal">
                             <VisualState.Setters>
-                                <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}" />
-                                <Setter Property="Stroke" Value="{DynamicResource AccentStrokeHoverBrush}" />
+                                <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
                             </VisualState.Setters>
                         </VisualState>
-                        <VisualState x:Name="Pressed">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
-                                <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
-                            </VisualState.Setters>
-                        </VisualState>
+
                         <VisualState x:Name="Selected">
                             <VisualState.Setters>
                                 <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
                                 <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
                             </VisualState.Setters>
                         </VisualState>
+
                         <VisualState x:Name="Disabled" />
                     </VisualStateGroup>
                 </VisualStateGroupList>
