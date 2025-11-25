@@ -22,6 +22,7 @@ public partial class MainPageModel(
 
     [ObservableProperty] private ObservableCollection<ServiceOffering> services = [];
     [ObservableProperty] private ObservableCollection<Barber> barbers = [];
+    [ObservableProperty] private Barber? selectedBarber; // NUEVO
     [ObservableProperty] private ObservableCollection<InventoryItem> featuredProducts = [];
     [ObservableProperty] private ObservableCollection<GalleryItem> gallery = [];
 
@@ -221,4 +222,11 @@ public partial class MainPageModel(
         }
         return s;
     }
+
+    // (Opcional) Comando para seleccionar desde un TapGesture si no usas SelectedItem
+    [RelayCommand]
+    private void SelectBarber(Barber barber) => SelectedBarber = barber;
+
+    // En LoadHomeAsync NO cambia nada; la selección inicial (si deseas) puedes hacer:
+    // if (SelectedBarber is null && Barbers.Count > 0) SelectedBarber = Barbers.First();
 }

@@ -4,17 +4,10 @@
              xmlns:vm="clr-namespace:SistemasDeGestionCitasPeluqueria.PageModels"
              xmlns:m="clr-namespace:SistemasDeGestionCitasPeluqueria.Models"
              xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
-             xmlns:conv="clr-namespace:SistemasDeGestionCitasPeluqueria.Converters"
              x:Class="SistemasDeGestionCitasPeluqueria.Pages.MainPage"
              x:DataType="vm:MainPageModel"
              Title="Inicio"
              BackgroundColor="{DynamicResource Surface}">
-
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <conv:ImageSourceFromStringConverter x:Key="ImageSourceFromStringConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <ScrollView VerticalScrollBarVisibility="Always"
                 HorizontalScrollBarVisibility="Never">
@@ -233,7 +226,7 @@
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center" />
                                 </Frame>
-                                <Label Text="{Binding Name}" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                                <Label Text="{Binding Name}" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="{DynamicResource TextPrimary}" />
                                 <Label Text="{Binding Specialty}" FontSize="12" TextColor="{DynamicResource TextSecondary}" HorizontalTextAlignment="Center" />
                             </VerticalStackLayout>
                         </Frame>
