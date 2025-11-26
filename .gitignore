@@ -1,0 +1,11 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+data.db
+
+# VS Code
+.vscode/
+
+# Docker
+*.env
