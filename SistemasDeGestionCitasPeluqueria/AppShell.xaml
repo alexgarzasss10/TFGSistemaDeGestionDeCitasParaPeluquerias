@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SistemasDeGestionCitasPeluqueria.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:SistemasDeGestionCitasPeluqueria.Pages"
+    Shell.FlyoutBehavior="Locked"
+    FlyoutWidth="260"
+    FlyoutBackgroundColor="{DynamicResource SidebarBg}"
+    ForegroundColor="{DynamicResource SidebarText}"
+    Title="SistemasDeGestionCitasPeluqueria">
+
+  <Shell.Resources>
+    <ResourceDictionary>
+      <DataTemplate x:Key="FlyoutItemTemplate">
+        <Grid Style="{StaticResource FlyoutItemContainerStyle}">
+          <HorizontalStackLayout Spacing="12">
+            <Label Style="{StaticResource IconGlyphStyle}" Text="{StaticResource IconGlyph.Home}">
+              <Label.Triggers>
+                <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Servicios">
+                  <Setter Property="Text" Value="{StaticResource IconGlyph.Services}" />
+                </DataTrigger>
+                <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Productos">
+                  <Setter Property="Text" Value="{StaticResource IconGlyph.Products}" />
+                </DataTrigger>
+                <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Reseñas">
+                  <Setter Property="Text" Value="{StaticResource IconGlyph.Reviews}" />
+                </DataTrigger>
+                <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Perfil">
+                  <Setter Property="Text" Value="{StaticResource IconGlyph.Profile}" />
+                </DataTrigger>
+                <DataTrigger TargetType="Label" Binding="{Binding Title}" Value="Ajustes">
+                  <Setter Property="Text" Value="{StaticResource IconGlyph.Settings}" />
+                </DataTrigger>
+              </Label.Triggers>
+            </Label>
+
+            <Label Text="{Binding Title}" Style="{StaticResource SidebarTextStyle}" VerticalOptions="Center"/>
+          </HorizontalStackLayout>
+        </Grid>
+      </DataTemplate>
+    </ResourceDictionary>
+  </Shell.Resources>
+
+  <!-- Encabezado -->
+  <Shell.FlyoutHeader>
+    <Grid Padding="16"
+          Margin="0,0,0,20"
+          BackgroundColor="{DynamicResource SidebarBg2}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="40"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+
+      <Label Grid.Column="0" Style="{StaticResource IconGlyphStyle}"
+             Text="{StaticResource IconGlyph.Services}"
+             TextColor="{DynamicResource SidebarAccent}" />
+
+      <VerticalStackLayout Grid.Column="1" Spacing="0" Margin="12,0,0,0" VerticalOptions="Center">
+        <Label Text="BarberShop" Style="{StaticResource SidebarTitleStyle}" />
+      </VerticalStackLayout>
+    </Grid>
+  </Shell.FlyoutHeader>
+
+  <Shell.FlyoutFooter>
+    <Grid Padding="16" BackgroundColor="{DynamicResource SidebarBg2}">
+      <Label Text="© 2025 BarberShop" Style="{StaticResource SidebarMutedTextStyle}" />
+    </Grid>
+  </Shell.FlyoutFooter>
+
+  <Shell.ItemTemplate>
+    <StaticResource Key="FlyoutItemTemplate"/>
+  </Shell.ItemTemplate>
+
+  <!-- Navegación -->
+  <FlyoutItem Title="Inicio" Route="home">
+    <ShellContent Title="Inicio" ContentTemplate="{DataTemplate pages:MainPage}" />
+  </FlyoutItem>
+  <FlyoutItem Title="Servicios" Route="services">
+    <ShellContent Title="Servicios" ContentTemplate="{DataTemplate pages:ServicesPage}" />
+  </FlyoutItem>
+  <FlyoutItem Title="Productos" Route="products">
+    <ShellContent Title="Productos" ContentTemplate="{DataTemplate pages:ProductsPage}" />
+  </FlyoutItem>
+  <FlyoutItem Title="Reseñas" Route="reviews">
+    <ShellContent Title="Reseñas" ContentTemplate="{DataTemplate pages:ReviewsPage}" />
+  </FlyoutItem>
+  <FlyoutItem Title="Ajustes" Route="settings">
+    <ShellContent Title="Ajustes" ContentTemplate="{DataTemplate pages:SettingsPage}" />
+  </FlyoutItem>
+  <FlyoutItem Title="Perfil" Route="profile">
+    <ShellContent Title="Perfil" ContentTemplate="{DataTemplate pages:ProfilePage}" />
+  </FlyoutItem>
+</Shell>

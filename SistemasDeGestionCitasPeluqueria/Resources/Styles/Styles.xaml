@@ -1,0 +1,599 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Sidebar -->
+    <Style x:Key="SidebarTitleStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource SidebarText}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="SidebarSubtitleStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource SidebarMuted}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <Style x:Key="SidebarTextStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource SidebarText}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style x:Key="SidebarMutedTextStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource SidebarMuted}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Ítem del flyout -->
+    <Style x:Key="FlyoutItemContainerStyle" TargetType="Grid">
+        <Setter Property="Padding" Value="16,12"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <!-- Iconos de fuente -->
+    <Style x:Key="IconGlyphStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="{DynamicResource FluentIconFontFamily}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="{DynamicResource SidebarText}" />
+        <Setter Property="Opacity" Value="0.92" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!-- Tipografía general -->
+    <Style x:Key="TitleLargeStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="SectionTitleStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="Margin" Value="0,8,0,4" />
+    </Style>
+
+    <Style x:Key="BodyTextStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="1.2" />
+    </Style>
+
+    <Style x:Key="MutedTextStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Estilo global para Editor: evita hardcoded colors -->
+    <Style TargetType="Editor">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
+    <!-- NUEVO: Títulos y subtítulos para tarjetas de información -->
+    <Style x:Key="InfoCardTitleStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <!-- Si lo quieres todo en mayúsculas, descomenta: -->
+        <!-- <Setter Property="TextTransform" Value="Uppercase" /> -->
+    </Style>
+
+    <Style x:Key="InfoCardSubTextStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Botones -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Accent}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="18,10" />
+    </Style>
+
+    <!-- Alias para coincidir con la página -->
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}" />
+
+    <Style x:Key="OutlineButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource Accent}" />
+        <Setter Property="BorderColor" Value="{DynamicResource Accent}" />
+        <Setter Property="BorderWidth" Value="2" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="16,8" />
+    </Style>
+
+    <!-- NUEVO: botón secundario (cancelar) y botón de éxito (guardar) -->
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Surface}" />
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+    </Style>
+
+    <Style x:Key="PrimarySuccessButton" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="BackgroundColor" Value="{DynamicResource SaveAccent}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="14,10" />
+    </Style>
+
+    <!-- Card -->
+    <Style x:Key="CardFrameStyle" TargetType="Frame">
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="14" />
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
+        <Setter Property="BorderColor" Value="{DynamicResource CardBorder}" />
+    </Style>
+
+    <!-- Info icon frame (36x36) -->
+    <Style x:Key="InfoIconFrameStyle" TargetType="Frame">
+        <Setter Property="Padding" Value="6" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="WidthRequest" Value="36" />
+        <Setter Property="HeightRequest" Value="36" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!-- Chip pequeño para horas (modo no seleccionado) -->
+    <Style x:Key="TimeSlotPillStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="HeightRequest" Value="36" />
+        <Setter Property="MinimumWidthRequest" Value="72" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Margin" Value="8,0,0,0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="14" />
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource AccentStrokeHoverBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled" />
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Botón principal más contenido (compacto) -->
+    <Style x:Key="PrimaryButtonSmall" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="14,10" />
+    </Style>
+
+    <!-- Chip / Etiqueta base -->
+    <Style x:Key="ChipStyle" TargetType="Border">
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="10,4" />
+    </Style>
+
+    <!-- Chip categorías: solo uno verde (el seleccionado) -->
+    <Style x:Key="CategoryChipStyle" TargetType="Border" BasedOn="{StaticResource ChipStyle}">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource AccentBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="Disabled" />
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Icono circular (card) -->
+    <Style x:Key="IconCircleStyle" TargetType="Frame">
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource SidebarIconBg}" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="WidthRequest" Value="40" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Label Style="{StaticResource IconGlyphStyle}" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ImageCardStyle" TargetType="Frame">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0,0,12,0" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+    </Style>
+
+    <!-- Estilo reutilizable para ítems seleccionables (barberos) -->
+    <Style x:Key="SelectableListItemBorder" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource BarberItemBackgroundBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource BarberItemStrokeBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Margin" Value="0,4" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10" />
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource BarberItemHoverBackgroundBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource BarberItemHoverStrokeBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="{DynamicResource BarberItemHoverBackgroundBrush}" />
+                                <Setter Property="Stroke" Value="{DynamicResource BarberItemHoverStrokeBrush}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled" />
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Viñeta/acento para listas -->
+    <Style x:Key="AccentDotStyle" TargetType="Border">
+        <Setter Property="HeightRequest" Value="8" />
+        <Setter Property="WidthRequest" Value="8" />
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="4" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Style para tarjetas de imagen redondeadas -->
+    <Style x:Key="RoundedImageCard" TargetType="Frame">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="CornerRadius" Value="12" />
+    </Style>
+
+    <!-- ESTILO GLOBAL PARA SWITCH EN AJUSTES -->
+    <Style x:Key="SettingsSwitchStyle" TargetType="Switch">
+        <!-- Track encendido tenue -->
+        <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+        <!-- Pulgar mantiene el accent completo -->
+        <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+        <Setter Property="Scale" Value="1.0" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="SwitchStates">
+                        <VisualState x:Name="On">
+                            <VisualState.Setters>
+                                <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+                                <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Off">
+                            <VisualState.Setters>
+                                <!-- Track apagado gris claro -->
+                                <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+                                <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Estilo global Switch (aplica a todos los Switch) -->
+    <Style TargetType="Switch">
+        <!-- Pulgar con accent; track encendido tenue -->
+        <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+        <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+        <Setter Property="Scale" Value="1.0" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="SwitchStates">
+                        <VisualState x:Name="On">
+                            <VisualState.Setters>
+                                <Setter Property="OnColor" Value="{DynamicResource SwitchTrackOn}" />
+                                <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Off">
+                            <VisualState.Setters>
+                                <!-- Pulgar sigue siendo accent (puedes cambiar a Gray400 si prefieres) -->
+                                <Setter Property="ThumbColor" Value="{DynamicResource Accent}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="ThumbColor" Value="{DynamicResource Gray300}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Contenedor con borde gris claro para Pickers -->
+    <Style x:Key="OutlinedPickerBorderStyle" TargetType="Border">
+        <!-- Gris claro (usa el brush ya definido) -->
+        <Setter Property="Stroke" Value="{DynamicResource Gray300Brush}" />
+        <Setter Property="StrokeThickness" Value="1.5" />
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Texto del Picker claramente visible dentro del recuadro -->
+    <Style x:Key="PickerBaseStyle" TargetType="Picker">
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="TitleColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Margin" Value="4,0,0,0" />
+    </Style>
+
+    <!-- Chevron para el Picker -->
+    <Style x:Key="PickerChevronStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="Margin" Value="8,0,10,0" />
+        <Setter Property="Text" Value="▼" />
+    </Style>
+
+    <!-- LOGIN: tarjeta principal -->
+    <Style x:Key="LoginCardBorderStyle" TargetType="Border">
+        <Setter Property="Padding" Value="36,28" />
+        <Setter Property="Background" Value="{StaticResource LoginCardBackgroundBrush}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="14" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow" Value="{StaticResource LoginCardShadow}" />
+        <Setter Property="WidthRequest" Value="420" />
+    </Style>
+
+    <!-- Contenedor de cada campo (simula caja con borde gris claro) -->
+    <Style x:Key="LoginInputBorderStyle" TargetType="Border">
+        <Setter Property="Stroke" Value="{DynamicResource Gray300Brush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Background" Value="{StaticResource LoginInputBackgroundBrush}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Entry limpio dentro del contenedor -->
+    <Style x:Key="LoginEntryStyle" TargetType="Entry">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="HeightRequest" Value="34" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <!-- Botón principal ancho completo dentro de la tarjeta -->
+    <Style x:Key="LoginPrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="0,16,0,0" />
+    </Style>
+
+    <!-- NUEVO: variante sin accent verde (usa Primary morado) -->
+    <Style x:Key="LoginPrimaryButtonNoAccent" TargetType="Button" BasedOn="{StaticResource LoginPrimaryButtonStyle}">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+    </Style>
+
+    <!-- NUEVO: botón peligro/destructivo (rojo) -->
+    <Style x:Key="PrimaryDangerButton" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="BackgroundColor" Value="{DynamicResource ErrorBrush}" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="14,10" />
+    </Style>
+
+    <Style x:Key="RatingProgressBarStyle" TargetType="ProgressBar">
+        <Setter Property="HeightRequest" Value="8" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource ProgressTrackColor}" />
+        <Setter Property="ProgressColor" Value="{DynamicResource Accent}" />
+    </Style>
+
+    <!-- Estilos movidos desde BookingPage -->
+    <Style x:Key="CardSection" TargetType="Frame" BasedOn="{StaticResource CardFrameStyle}">
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <Style x:Key="InlineTitleStyle" TargetType="Label" BasedOn="{StaticResource SectionTitleStyle}">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="InlineTitleMutedStyle" TargetType="Label" BasedOn="{StaticResource InlineTitleStyle}">
+        <Setter Property="TextColor" Value="{DynamicResource TextSecondary}" />
+    </Style>
+
+    <!-- Gradiente suave para tarjeta ABOUT -->
+    <LinearGradientBrush x:Key="AboutCardBackgroundBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#FFFFFFFF" Offset="0.0"/>
+        <GradientStop Color="#FFF9FAFB" Offset="1.0"/>
+    </LinearGradientBrush>
+
+    <!-- Barra/acento vertical -->
+    <Style x:Key="AboutAccentBarStyle" TargetType="Border">
+        <Setter Property="WidthRequest" Value="4" />
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="Margin" Value="0,0,12,0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="2" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Chip para highlights About -->
+    <Style x:Key="AboutHighlightChipStyle" TargetType="Border" BasedOn="{StaticResource ChipStyle}">
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Opacity="0.08" Radius="8" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <Setter.Value>
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="PointerOver">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="#EEFDF9" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="#DDF7F1" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Título secundario dentro de About -->
+    <Style x:Key="AboutSectionTitleStyle" TargetType="Label" BasedOn="{StaticResource SectionTitleStyle}">
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="FontSize" Value="18" />
+    </Style>
+
+    <!-- Párrafo con ancho legible -->
+    <Style x:Key="AboutParagraphStyle" TargetType="Label" BasedOn="{StaticResource BodyTextStyle}">
+        <Setter Property="Margin" Value="0,0,0,2" />
+        <Setter Property="LineHeight" Value="1.25" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <!-- Eliminado: <Setter Property="MaximumWidthRequest" Value="680" /> -->
+    </Style>
+
+    <!-- Icono cabecera About -->
+    <Style x:Key="AboutIconStyle" TargetType="Label" BasedOn="{StaticResource IconGlyphStyle}">
+        <Setter Property="TextColor" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="Margin" Value="0,0,12,0" />
+        <Setter Property="Opacity" Value="0.85" />
+    </Style>
+
+    <!-- Estilo sencillo para pickers dentro de diálogos -->
+    <Style x:Key="ReviewOutlinedPickerStyle" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="TitleColor" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HeightRequest" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="4,0,0,0" />
+    </Style>
+
+    <!-- Badge para marca del producto (global) -->
+    <Style x:Key="BrandBadgeStyle" TargetType="Border" BasedOn="{StaticResource ChipStyle}">
+        <Setter Property="Padding" Value="6,2" />
+        <Setter Property="Shadow" Value="{x:Null}" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+        <!-- Usa brushes globales en lugar de colores locales -->
+        <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="StrokeThickness" Value="1" />
+    </Style>
+
+</ResourceDictionary>
