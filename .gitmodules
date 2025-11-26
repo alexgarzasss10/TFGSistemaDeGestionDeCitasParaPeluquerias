@@ -1,0 +1,3 @@
+[submodule "frontend/TFGSistemaDeGestionCitasParaPeluquerias"]
+	path = frontend/TFGSistemaDeGestionCitasParaPeluquerias
+	url = https://github.com/alexgarzasss10/TFGSistemaDeGestionDeCitasParaPeluquerias
