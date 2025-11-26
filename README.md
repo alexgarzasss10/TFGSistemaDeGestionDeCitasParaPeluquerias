@@ -1,10 +1,81 @@
-# API Barbería 💈 (TFG) – FastAPI + SQLModel
+# Sistema de Gestión de Citas para Peluquerías (TFG)
+
+Aplicación full‑stack para gestionar citas, servicios, productos y reseñas de una peluquería.
+
+## Qué incluye
+- Backend FastAPI (Python).
+- Frontend .NET MAUI (Android, iOS, Mac Catalyst) con MVVM y DI.
+
+## Requisitos
+- Windows + PowerShell.
+- Docker Desktop (opcional) o Python 3.11+ para el backend.
+- .NET 9 SDK y Visual Studio 2022 con workload MAUI para el frontend.
+
+## Cómo ejecutar
+
+### Backend (FastAPI)
+Opción rápida con Docker Compose:
+```powershell
+cd backend; docker compose up -d; cd ..
+```
+- API: `http://localhost:8000`
+- Docs: `http://localhost:8000/docs`
+
+Ejecución local sin Docker:
+```powershell
+python -m venv .venv; .\.venv\Scripts\Activate.ps1
+pip install -r backend\requirements.txt
+cd backend
+
+Fotos de usuario: `backend/static/user-photos/`.
+- Selecciona plataforma (Android/iOS/MacCatalyst) y ejecuta desde Visual Studio.
+
+CLI opcional:
+```powershell
+dotnet restore "frontend/TFGSistemaDeGestionCitasParaPeluquerias/SistemasDeGestionCitasPeluqueria/SistemasDeGestionCitasPeluqueria.csproj"
+dotnet build   "frontend/TFGSistemaDeGestionCitasParaPeluquerias/SistemasDeGestionCitasPeluqueria/SistemasDeGestionCitasPeluqueria.csproj"
+```
+
+- iOS simulador: normalmente `http://localhost:8000` (puede requerir ATS).
+Configura el `HttpClient` en `Services/ServiceRegistration.cs`.
+
+Snippet recomendado para `Services/ServiceRegistration.cs` (ajusta `BaseAddress` por plataforma):
+```csharp
+var handler = new AuthenticatedHttpMessageHandler(authService)
+{
+  InnerHandler = new HttpClientHandler()
+};
+var http = new HttpClient(handler)
+{
+#if ANDROID
+  BaseAddress = new Uri("http://10.0.2.2:8000/")
+  BaseAddress = new Uri("http://localhost:8000/")
+#endif
+};
+```
+
+## Funcionalidad principal
+- Login y refresh de token (Auth).
+- Barbershop y barberos (info y listado).
+- Disponibilidad por fecha y creación de reservas.
+- Perfil de usuario y subida de foto.
+
+  frontend/TFG.../    # Solución .NET MAUI (proyecto: SistemasDeGestionCitasPeluqueria)
+```
+
+## Entrega y uso
+1) Arranca el backend.
+2) Ajusta `BaseAddress` en el frontend según plataforma.
+3) Ejecuta la app MAUI, inicia sesión y prueba las reservas.
+
+## Notas
+- La carpeta raíz duplicada del proyecto MAUI fue eliminada; usa la solución bajo `frontend/...`.
+- Este README está simplificado y solo cubre lo que se usa en la app.
+
 
 Guía completa y reproducible para levantar la API de forma consistente en Windows (PowerShell). Todo orientado a copiar / pegar comandos sin ambigüedad.
 
 Docs interactivas: http://127.0.0.1:8000/docs
-
-## Requisitos
 
 - Python 3.11+ (funciona también con 3.12)
 - Windows PowerShell (ejecutar comandos tal cual)
@@ -12,9 +83,6 @@ Docs interactivas: http://127.0.0.1:8000/docs
  - Opcional: Git 2.40+ (para submódulos)
 
 ## Estructura resumida
-
-```
-backend/
   app/                # código FastAPI, routers y modelos
   Dockerfile
   docker-compose.yml
@@ -133,16 +201,10 @@ git commit -m "Remove frontend submodule"
 ### 4) Buenas prácticas de organización
 
 - Mantener todo el frontend dentro de `frontend/TFGSistemaDeGestionCitasParaPeluquerias`.
-- No copiar archivos sueltos del frontend a la raíz del backend.
-- Documentar en el README del frontend cómo se build/ejecuta, y desde aquí solo referenciarlo.
 
 ---
 
-Con esto el repositorio queda limpio y “bonito”: backend en `app/` y frontend referenciado en `frontend/` sin mezclar tecnologías ni llenar la raíz de archivos.
-APP_ENV=development
-DATABASE_URL=sqlite:///./data.db
 SECRET_KEY=pon-una-clave-larga-y-aleatoria
-ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_DAYS=7
 "@ | Out-File -Encoding utf8 .env
 ```
@@ -192,9 +254,6 @@ docker compose down
 
 Para desarrollo puedes dejar `--reload` (hot-reload). En producción, elimina esa bandera del `docker-compose.yml`.
 
-### Si Docker Desktop no está iniciado (Windows)
-
-Si al ejecutar Docker ves un error como:
 
 ```
 open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified
@@ -275,7 +334,6 @@ Ejecutar:
 | Problema | Causa | Solución |
 |----------|-------|----------|
 | Error TLS pip (CA bundle) | Variable global apunta a ruta inválida | Limpiar vars y reintentar (paso 4). |
-| `ModuleNotFoundError: pydantic_core` | Wheel corrupto o versión cruzada | Paso 8 (reinstalar). |
 | Docker named pipe no encontrado (`dockerDesktopLinuxEngine`) | Docker Desktop apagado o WSL2 no iniciado | Inicia Docker Desktop, espera a que `docker info` funcione y reintenta `docker compose up`. Ver sección "Si Docker Desktop no está iniciado". |
 | Puerto 8000 ocupado | Instancia previa | `Get-NetTCPConnection -LocalPort 8000` luego `Stop-Process -Id <PID>`. |
 | Cambios no recargan | Falta `--reload` | Usar comando del paso 9. |
@@ -310,14 +368,10 @@ JWT HS256 (`SECRET_KEY`). Expiración configurable: `ACCESS_TOKEN_EXPIRE_MINUTES
 
 ## Licencia / Uso
 Proyecto académico (TFG). Ajusta según políticas de tu institución.
-
----
-Fin de la guía paso a paso.
 # 4) Arranca de nuevo el servidor
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --log-level debug
 ```
 
-Notas:
 - FastAPI 0.110.x usa Pydantic v2 y depende de `pydantic-core` (binario). La reinstalación descarga el wheel correcto (`cp311-win_amd64` para Python 3.11 de 64-bit).
 - Si venías de un error de certificados TLS con pip, primero aplica el fix de CA (ver sección anterior) y luego repite la reinstalación.
 
