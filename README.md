@@ -14,15 +14,15 @@ Docs interactivas: http://127.0.0.1:8000/docs
 ## Estructura resumida
 
 ```
-app/
-  main.py  db.py
-  endpoints/ (routers FastAPI)
-  models/ (*Table para SQLModel + Pydantic)
+backend/
+  app/                # código FastAPI, routers y modelos
+  Dockerfile
+  docker-compose.yml
+  requirements.txt
+  scripts/
+  static/
 frontend/
-  TFGSistemaDeGestionCitasPeluquerias/ (submódulo Git; ver abajo)
-  helpers/ (seed, memoria, utilidades)
-Dockerfile
-requirements.txt
+  TFGSistemaDeGestionCitasParaPeluquerias/   # solución .NET MAUI
 .env (se genera)
 ```
 
